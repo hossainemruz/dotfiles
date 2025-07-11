@@ -11,6 +11,7 @@ return {
         "gomod",
         "gotmpl",
         "helm",
+        "proto",
         "scss",
         "terraform",
       })
