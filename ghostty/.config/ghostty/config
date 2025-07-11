@@ -1,4 +1,3 @@
-  GNU nano 8.3                                                                                                                /home/emruz/.config/ghostty/config
 # This is the configuration file for Ghostty.
 #
 # This template file has been automatically created at the following
@@ -45,3 +44,8 @@
 
 # theme
 theme = iTerm2 Tango Dark
+window-theme=ghostty
+
+# Linux Specific Customization
+gtk-adwaita=true
+gtk-titlebar-hide-when-maximized=true
