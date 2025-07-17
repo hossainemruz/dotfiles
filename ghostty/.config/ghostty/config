@@ -45,7 +45,9 @@
 # theme
 theme = iTerm2 Tango Dark
 window-theme=ghostty
+window-subtitle=working-directory
 
 # Linux Specific Customization
 gtk-adwaita=true
 gtk-titlebar-hide-when-maximized=true
+
