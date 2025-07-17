@@ -18,6 +18,7 @@ return {
         "lua-language-server",
         "markdownlint",
         "pyrefly",
+        "python-lsp-server",
         "stylua",
         "shellcheck",
         "shfmt",
