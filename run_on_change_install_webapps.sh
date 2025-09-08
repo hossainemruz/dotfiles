@@ -2,9 +2,11 @@
 
 # Predefined list of web apps with name, URL, and icon URL
 declare -A WEBAPPS=(
-  ["Todoist"]="https://app.todoist.com|https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/todoist.png"
   ["Finance Tracker"]="https://www.notion.so/hossainemruz/Finance-Tracker-7e65279d64aa4910a13fae92a3c21143|https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/google-finance.png"
+  ["Google Calendar"]="https://calendar.google.com|https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/google-calendar.png"
+  ["Google Meet"]="https://meet.google.com|https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/google-meet.png"
   ["Second Brain"]="https://www.notion.so/hossainemruz/Second-Brain-9918b10066a2463c8740f32f42b0f00b|https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/airsonic.png"
+  ["Todoist"]="https://app.todoist.com|https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/todoist.png"
 )
 
 # Directory for icons and .desktop files
