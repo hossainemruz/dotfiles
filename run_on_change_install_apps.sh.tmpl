@@ -1,3 +1,4 @@
+{{ if and (eq .chezmoi.os "linux") (eq .chezmoi.osRelease.id "arch") -}}
 #!/bin/bash
 
 # List of applications with package name and binary name
@@ -63,3 +64,4 @@ for pkg_name in "${!APPS[@]}"; do
 done
 
 echo "All checks and installations complete."
+{{ end }}
