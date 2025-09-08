@@ -1,0 +1,65 @@
+#!/bin/bash
+
+# List of applications with package name and binary name
+declare -A APPS=(
+    ["zen-browser-bin"]="zen"
+    ["ghostty"]="ghostty"
+    ["mailspring-bin"]="mailspring"
+    ["easyeffects"]="easyeffects"
+)
+
+# Package manager settings (for Arch Linux with pacman and yay for AUR)
+PKG_MANAGER="pacman"
+AUR_HELPER="yay"
+INSTALL_CMD="sudo $PKG_MANAGER -S --noconfirm"
+AUR_INSTALL_CMD="$AUR_HELPER -S --noconfirm"
+UPDATE_CMD="sudo $PKG_MANAGER -Syu --noconfirm"
+
+# Function to check if a binary is available
+check_installed() {
+    local binary=$1
+    if command -v "$binary" &>/dev/null; then
+        echo "$binary is already installed."
+        return 0
+    else
+        echo "$binary is not installed."
+        return 1
+    fi
+}
+
+
+# Update package lists
+echo "Updating package lists..."
+$UPDATE_CMD
+
+# Check if yay is installed for AUR packages
+if ! command -v "$AUR_HELPER" &>/dev/null; then
+    echo "AUR helper ($AUR_HELPER) not found. Installing it..."
+    sudo $PKG_MANAGER -S --noconfirm "$AUR_HELPER"
+fi
+
+# Check and install each application
+for pkg_name in "${!APPS[@]}"; do
+    binary_name="${APPS[$pkg_name]}"
+    echo "Checking for $binary_name (package: $pkg_name)..."
+    if ! check_installed "$binary_name"; then
+        echo "Installing $pkg_name..."
+        # Check if the package is an AUR package (contains -bin or not in pacman)
+        if [[ "$pkg_name" == *-bin ]] || ! pacman -Ss "^$pkg_name$" &>/dev/null; then
+            echo "$pkg_name seems to be an AUR package. Using $AUR_HELPER to install."
+            if $AUR_INSTALL_CMD "$pkg_name"; then
+                echo "$pkg_name installed successfully."
+            else
+                echo "Failed to install $pkg_name. Please check the package name or internet connection."
+            fi
+        else
+            if $INSTALL_CMD "$pkg_name"; then
+                echo "$pkg_name installed successfully."
+            else
+                echo "Failed to install $pkg_name. Please check the package name or internet connection."
+            fi
+        fi
+    fi
+done
+
+echo "All checks and installations complete."
