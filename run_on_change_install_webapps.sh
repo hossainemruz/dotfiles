@@ -1,0 +1,72 @@
+#!/bin/bash
+
+# Predefined list of web apps with name, URL, and icon URL
+declare -A WEBAPPS=(
+  ["Todoist"]="https://app.todoist.com|https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/todoist.png"
+  ["Finance Tracker"]="https://www.notion.so/hossainemruz/Finance-Tracker-7e65279d64aa4910a13fae92a3c21143|https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/google-finance.png"
+  ["Second Brain"]="https://www.notion.so/hossainemruz/Second-Brain-9918b10066a2463c8740f32f42b0f00b|https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/airsonic.png"
+)
+
+# Directory for icons and .desktop files
+ICON_DIR="$HOME/.local/share/applications/icons"
+DESKTOP_DIR="$HOME/.local/share/applications"
+
+# Function to check if a web app is already installed
+check_installed() {
+  local app_name=$1
+  local desktop_file="$DESKTOP_DIR/$app_name.desktop"
+  if [[ -f "$desktop_file" ]]; then
+    echo "$app_name is already installed."
+    return 0
+  else
+    echo "$app_name is not installed."
+    return 1
+  fi
+}
+
+# Create icon and desktop file directories
+mkdir -p "$ICON_DIR"
+mkdir -p "$DESKTOP_DIR"
+
+# Install each web app if not already installed
+for app_name in "${!WEBAPPS[@]}"; do
+  # Split URL and icon URL from the value
+  IFS='|' read -r app_url icon_url <<<"${WEBAPPS[$app_name]}"
+
+  echo "Checking for $app_name..."
+  if ! check_installed "$app_name"; then
+    echo "Installing $app_name..."
+
+    # Define paths
+    icon_path="$ICON_DIR/$app_name.png"
+    desktop_file="$DESKTOP_DIR/$app_name.desktop"
+
+    # Download icon
+    if ! curl -sL -o "$icon_path" "$icon_url"; then
+      echo "Error: Failed to download icon for $app_name."
+      continue
+    fi
+
+    # Create .desktop file
+    cat >"$desktop_file" <<EOF
+[Desktop Entry]
+Version=1.0
+Name=$app_name
+Comment=$app_name
+Exec=omarchy-launch-webapp $app_url
+Terminal=false
+Type=Application
+Icon=$icon_path
+StartupNotify=true
+EOF
+
+    # Make .desktop file executable
+    if chmod +x "$desktop_file"; then
+      echo "$app_name installed successfully."
+    else
+      echo "Error: Failed to set executable permissions for $app_name.desktop."
+    fi
+  fi
+done
+
+echo "All web app checks and installations complete."
