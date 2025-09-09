@@ -51,3 +51,5 @@ window-subtitle=working-directory
 gtk-adwaita=true
 gtk-titlebar-hide-when-maximized=true
 
+# Keyboard Shortcuts
+keybind = ctrl+shift+enter=toggle_split_zoom
