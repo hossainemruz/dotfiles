@@ -50,7 +50,7 @@
   "custom/events": {
     "format": "{}",
     "tooltip": true,
-    "interval": 5,
+    "interval": 300,
     "format-icons": {
         "default": ""
     },
