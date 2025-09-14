@@ -62,9 +62,21 @@ for row in rows[1:]:
 # adjust the table with new column width
 # Function to parse date and time into a datetime object
 adjusted_rows = []
-for row in rows:
+for index, row in enumerate(rows):
     ar = [str(item).ljust(width) for item, width in zip(row, col_widths)]
-    adjusted_rows.append(f"{ar[0]}   {ar[1]}   {ar[3]}   {ar[4]}")
+    if index > 0:
+        event_start = parse_datetime(row[0], row[1])
+        event_end = parse_datetime(row[2], row[3])
+        if event_end < current_time:
+            adjusted_rows.append(f"<s>{ar[0]}   {ar[1]}   {
+                                 ar[3]}   {ar[4]}</s>")
+        elif event_start <= current_time <= event_end:
+            adjusted_rows.append(f"<b>{ar[0]}   {ar[1]}   {
+                                 ar[3]}   {ar[4]}</b>")
+        else:
+            adjusted_rows.append(f"{ar[0]}   {ar[1]}   {ar[3]}   {ar[4]}")
+    else:
+        adjusted_rows.append(f"{ar[0]}   {ar[1]}   {ar[3]}   {ar[4]}")
 
 table = "\n".join(adjusted_rows)
 # print(table)
