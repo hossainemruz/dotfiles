@@ -110,7 +110,7 @@
     "format": "",
     "format-disabled": "󰂲",
     "format-connected": " {device_alias}",
-    "format-connected-battery": " {device_alias} {device_battery_percentage}%",
+    "format-connected-battery": " 🎧 {device_battery_percentage}%",
     "tooltip-format": "{device_alias}",
     "tooltip-format-enumerate-connected": "{device_alias}",
     "tooltip-format-enumerate-connected-battery": "{device_alias}\t{device_battery_percentage}%",
