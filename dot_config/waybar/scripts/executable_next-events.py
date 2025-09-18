@@ -25,6 +25,8 @@ col_widths = [max(len(str(item)) for item in col) for col in zip(*rows)]
 
 
 def parse_datetime(date_str, time_str):
+    if not time_str:
+        time_str = "00:00"
     nativ_dt = datetime.datetime.strptime(
         f"{date_str} {time_str}", "%Y-%m-%d %H:%M")
     return tz.localize(nativ_dt)
