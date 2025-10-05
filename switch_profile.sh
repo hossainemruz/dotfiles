@@ -79,6 +79,8 @@ switch_to_personal_profile() {
   switch_directory_profile "Documents" "personal"
   switch_directory_profile "Pictures" "personal"
   switch_directory_profile "projects" "personal"
+  # change the theme
+  omarchy-theme-set tokyo-night
 
   echo "Swithed to personal profile"
 }
@@ -92,6 +94,8 @@ switch_to_work_profile() {
   switch_directory_profile "Documents" "work"
   switch_directory_profile "Pictures" "work"
   switch_directory_profile "projects" "work"
+  # change the theme
+  omarchy-theme-set osaka-jade
 
   echo "Swithed to work profile"
 }
