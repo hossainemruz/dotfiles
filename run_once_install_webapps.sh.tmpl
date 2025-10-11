@@ -82,7 +82,7 @@ for app in "${webapps[@]}"; do
 Version=1.0
 Name=$app_name
 Comment=$app_name
-Exec=omarchy-launch-webapp $app_url --profile=$profile
+Exec=omarchy-launch-webapp $app_url --profile-directory=$profile
 Terminal=false
 Type=Application
 Icon=$icon_dest_path

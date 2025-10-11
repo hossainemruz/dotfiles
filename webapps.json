@@ -56,6 +56,13 @@
     "url": "https://app.todoist.com"
   },
   {
+    "name": "Jira",
+    "icon": "jira.png",
+    "desktop_file": "jira.desktop",
+    "profile": "Work",
+    "url": "https://qdrant.atlassian.net/jira/software/c/projects/CRC/boards/201"
+  },
+  {
     "name": "Omarchy Cheat Sheet",
     "desktop_file": "omarchy_cheat_sheet.desktop",
     "icon": "keyboard.png",
