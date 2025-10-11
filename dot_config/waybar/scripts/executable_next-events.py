@@ -3,13 +3,15 @@ import subprocess
 import datetime
 import json
 import pytz
+import html
 
 data = {}
 
 today = datetime.date.today().strftime("%Y-%m-%d")
 
 
-output = subprocess.check_output("gcalcli agenda --tsv --military", shell=True)
+output = subprocess.check_output(
+    "gcalcli agenda --tsv --military --calendar emruz.hossain@qdrant.com", shell=True)
 output = output.decode("utf-8")
 # print(output)
 
@@ -94,5 +96,7 @@ else:
     data['text'] = "  No events today"
 
 data['tooltip'] = table
+# escape special symbools
+data["tooltip"] = html.escape(data["tooltip"])
 
 print(json.dumps(data))
