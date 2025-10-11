@@ -1,10 +1,9 @@
 return {
   {
-    "williamboman/mason.nvim",
+    "mason-org/mason.nvim",
     opts = {
       ensure_installed = {
         "buf",
-        "buf-language-server",
         "gci",
         "goimports",
         "golangci-lint",
@@ -14,6 +13,8 @@ return {
         "helm-ls",
         "isort",
         "jq",
+        "json-lsp",
+        "jsonlint",
         "kube-linter",
         "lua-language-server",
         "markdownlint",

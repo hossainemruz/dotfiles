@@ -1,0 +1,65 @@
+[
+  {
+    "name": "Finance Tracker",
+    "icon": "accounting.png",
+    "desktop_file": "finance_tracker.desktop",
+    "profile": "Personal",
+    "url": "https://www.notion.so/hossainemruz/Finance-Tracker-7e65279d64aa4910a13fae92a3c21143"
+  },
+  {
+    "name": "Google Calendar (Work)",
+    "icon": "google_calendar.png",
+    "desktop_file": "google_calendar_work.desktop",
+    "profile": "Work",
+    "url": "https://calendar.google.com"
+  },
+  {
+    "name": "Google Meet (Work)",
+    "icon": "meet.png",
+    "desktop_file": "google_meet_work.desktop",
+    "profile": "Work",
+    "url": "https://meet.google.com"
+  },
+  {
+    "name": "Gmail (Personal)",
+    "icon": "gmail.png",
+    "desktop_file": "gmail_personal.desktop",
+    "profile": "Personal",
+    "url": "https://mail.google.com"
+  },
+  {
+    "name": "Gmail (Work)",
+    "icon": "gmail.png",
+    "desktop_file": "gmail_work.desktop",
+    "profile": "Work",
+    "url": "https://mail.google.com"
+  },
+  {
+    "name": "Second Brain",
+    "icon": "brains.png",
+    "desktop_file": "second_brain.desktop",
+    "profile": "Personal",
+    "url": "https://www.notion.so/hossainemruz/Second-Brain-9918b10066a2463c8740f32f42b0f00b"
+  },
+  {
+    "name": "Todoist (Personal)",
+    "icon": "todoist.png",
+    "desktop_file": "todoist_personal.desktop",
+    "profile": "Personal",
+    "url": "https://app.todoist.com"
+  },
+  {
+    "name": "Todoist (Work)",
+    "icon": "todoist.png",
+    "desktop_file": "todoist_work.desktop",
+    "profile": "Work",
+    "url": "https://app.todoist.com"
+  },
+  {
+    "name": "Omarchy Cheat Sheet",
+    "desktop_file": "omarchy_cheat_sheet.desktop",
+    "icon": "keyboard.png",
+    "profile": "Personal",
+    "url": "https://acrogenesis.com/omarchy-cheat-sheet"
+  }
+]

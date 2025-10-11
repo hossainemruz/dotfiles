@@ -1,76 +1,99 @@
 {{ if and (eq .chezmoi.os "linux") (eq .chezmoi.osRelease.id "arch") -}}
 #!/bin/bash
 
-# Predefined list of web apps with name, URL, and icon URL
-declare -A WEBAPPS=(
-  ["Finance Tracker"]="https://www.notion.so/hossainemruz/Finance-Tracker-7e65279d64aa4910a13fae92a3c21143|https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/google-finance.png"
-  ["Google Calendar"]="https://calendar.google.com|https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/google-calendar.png"
-  ["Google Meet"]="https://meet.google.com|https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/google-meet.png"
-  ["Gmail"]="https://mail.google.com|https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/gmail.png"
-  ["Second Brain"]="https://www.notion.so/hossainemruz/Second-Brain-9918b10066a2463c8740f32f42b0f00b|https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/airsonic.png"
-  ["Todoist"]="https://app.todoist.com|https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/todoist.png"
-  ["Omarchy Cheat Sheet"]="https://acrogenesis.com/omarchy-cheat-sheet|https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/booklogr-light.png"
-)
+# Path of the chezmoi repo
+CHEZMOI_DIR="$HOME/.local/share/chezmoi"
+
+# Path to the JSON file
+JSON_FILE="$CHEZMOI_DIR/webapps.json"
 
 # Directory for icons and .desktop files
-ICON_DIR="$HOME/.local/share/applications/icons"
+ICON_SRC_DIR="$CHEZMOI_DIR/icons"
+ICON_DEST_DIR="$HOME/.local/share/applications/icons"
 DESKTOP_DIR="$HOME/.local/share/applications"
 
 # Function to check if a web app is already installed
 check_installed() {
-  local app_name=$1
-  local desktop_file="$DESKTOP_DIR/$app_name.desktop"
-  if [[ -f "$desktop_file" ]]; then
-    echo "$app_name is already installed."
+  local desktop_file="$1"
+  if [[ -f "$DESKTOP_DIR/$desktop_file" ]]; then
+    echo "$desktop_file is already installed."
     return 0
   else
-    echo "$app_name is not installed."
+    echo "$desktop_file is not installed."
     return 1
   fi
 }
 
+# Check if jq is installed
+if ! command -v jq &> /dev/null; then
+  echo "Error: jq is not installed. Please install jq to parse JSON."
+  exit 1
+fi
+
+# Check if JSON file exists
+if [[ ! -f "$JSON_FILE" ]]; then
+  echo "Error: JSON file $JSON_FILE not found."
+  exit 1
+fi
+
+# Check if icon source directory exists
+if [[ ! -d "$ICON_SRC_DIR" ]]; then
+  echo "Error: Icon source directory $ICON_SRC_DIR not found."
+  exit 1
+fi
+
 # Create icon and desktop file directories
-mkdir -p "$ICON_DIR"
+mkdir -p "$ICON_DEST_DIR"
 mkdir -p "$DESKTOP_DIR"
 
-# Install each web app if not already installed
-for app_name in "${!WEBAPPS[@]}"; do
-  # Split URL and icon URL from the value
-  IFS='|' read -r app_url icon_url <<<"${WEBAPPS[$app_name]}"
+# Read webapps from JSON file
+mapfile -t webapps < <(jq -c '.[]' "$JSON_FILE")
 
-  echo "Checking for $app_name..."
-  if ! check_installed "$app_name"; then
-    echo "Installing $app_name..."
+# Install each web app
+for app in "${webapps[@]}"; do
+  # Extract fields using jq
+  app_name=$(echo "$app" | jq -r '.name')
+  app_url=$(echo "$app" | jq -r '.url')
+  icon_name=$(echo "$app" | jq -r '.icon')
+  desktop_file=$(echo "$app" | jq -r '.desktop_file')
+  profile=$(echo "$app" | jq -r '.profile')
 
-    # Define paths
-    icon_path="$ICON_DIR/$app_name.png"
-    desktop_file="$DESKTOP_DIR/$app_name.desktop"
+  echo "Processing $app_name..."
 
-    # Download icon
-    if ! curl -sL -o "$icon_path" "$icon_url"; then
-      echo "Error: Failed to download icon for $app_name."
-      continue
-    fi
+  # Define paths
+  icon_src_path="$ICON_SRC_DIR/$icon_name"
+  icon_dest_path="$ICON_DEST_DIR/$icon_name"
 
-    # Create .desktop file
-    cat >"$desktop_file" <<EOF
+  # Check if icon exists in source directory
+  if [[ ! -f "$icon_src_path" ]]; then
+    echo "Error: Icon $icon_name not found in $ICON_SRC_DIR."
+    continue
+  fi
+
+  # Copy icon to destination
+  if ! cp "$icon_src_path" "$icon_dest_path"; then
+    echo "Error: Failed to copy icon for $app_name."
+    continue
+  fi
+
+  # Create or overwrite .desktop file
+  cat >"$DESKTOP_DIR/$desktop_file" <<EOF
 [Desktop Entry]
 Version=1.0
 Name=$app_name
 Comment=$app_name
-Exec=omarchy-launch-webapp $app_url
+Exec=omarchy-launch-webapp $app_url --profile=$profile
 Terminal=false
 Type=Application
-Icon=$icon_path
+Icon=$icon_dest_path
 StartupNotify=true
 EOF
 
-    # Make .desktop file executable
-    if chmod +x "$desktop_file"; then
-      echo "$app_name installed successfully."
-    else
-      echo "Error: Failed to set executable permissions for $app_name.desktop."
-    fi
+  # Make .desktop file executable
+  if chmod +x "$DESKTOP_DIR/$desktop_file"; then
+    echo "$app_name processed successfully."
+  else
+    echo "Error: Failed to set executable permissions for $desktop_file."
   fi
 done
 
