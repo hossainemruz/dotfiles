@@ -88,10 +88,10 @@ table = "\n".join(adjusted_rows)
 
 if current_event:
     data['text'] = f"  {current_event[1]
-                         }-{current_event[3]} {current_event[4]}"
+                         }-{current_event[3]} {html.escape(current_event[4])}"
 elif next_event and next_event[0] == today:
     data['text'] = f"  {next_event[1]
-                         }-{next_event[3]} {next_event[4]}"
+                         }-{next_event[3]} {html.escape(next_event[4])}"
 else:
     data['text'] = "  No events today"
 
