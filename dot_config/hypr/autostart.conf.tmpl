@@ -1,0 +1,20 @@
+# Extra autostart processes
+# exec-once = uwsm app -- my-service
+
+# Profile independent apps
+exec-once = [workspace 1 silent] omarchy-launch-browser
+
+{{ if eq .profile "work"}}
+# Work profile specific apps
+exec-once = [workspace 4 silent] uwsm app -- slack
+exec-once = [workspace 1 silent] omarchy-launch-webapp "https://mail.google.com" --profile-directory=Work
+exec-once = [workspace 5 silent] omarchy-launch-webapp "https://qdrant.atlassian.net/jira/software/c/projects/CRC/boards/201" --profile-directory=Work
+exec-once = [workspace 5 silent] omarchy-launch-webapp "https://app.todoist.com" --profile-directory=Work
+{{ else }}
+# Personal profile specific app
+exec-once = [workspace 1 silent] omarchy-launch-webapp "https://mail.google.com" --profile-directory=Personal
+exec-once = [workspace 4 silent] omarchy-launch-webapp "https://grok.com"
+exec-once = [workspace 4 silent] omarchy-launch-webapp "https://app.todoist.com" --profile-directory=Personal
+{{ end }}
+
+
