@@ -1,0 +1,13 @@
+[data]
+profile="work"
+
+[data.personal]
+gitSigningKey="<REDUCTED>"
+email="hossainemruz@gmail.com"
+sshIdentityFile="<REDUCTED>"
+
+[data.work]
+gitSigningKey="<REDUCTED>"
+email="emruz.hossain@qdrant.com"
+sshIdentityFile="<REDUCTED>"
+
