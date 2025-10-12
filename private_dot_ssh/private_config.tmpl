@@ -1,4 +1,8 @@
+{{- $sshIdentityFile:= .personal.sshIdentityFile -}}
+{{- if eq .profile "work" -}}
+  {{- $sshIdentityFile = .work.sshIdentityFile -}}
+{{- end -}}
 Host github.com
   HostName github.com
   User git
-  IdentityFile {{ .sshIdentityFile }}
+  IdentityFile {{ $sshIdentityFile }}

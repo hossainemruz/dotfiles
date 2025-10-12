@@ -1,7 +1,13 @@
+{{- $email:= .personal.email -}}
+{{- $gitSigningKey:= .personal.gitSigningKey -}}
+{{- if eq .profile "work" -}}
+  {{- $email = .work.email -}}
+  {{- $gitSigningKey = .work.gitSigningKey -}}
+{{- end -}}
 [user]
-	signingkey = {{ .gitSigningKey }}
+	signingkey = {{ $gitSigningKey }}
 	name = Emruz Hossain
-	email = {{ .email }}
+	email = {{ $email }}
 [commit]
 	gpgsign = true
 [tag]

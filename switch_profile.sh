@@ -80,7 +80,8 @@ switch_to_personal_profile() {
   switch_directory_profile "Pictures" "personal"
   switch_directory_profile "projects" "personal"
   # apply profile specific configurations
-  chezmoi apply --config=$HOME/.config/chezmoi/personal.toml
+  sed -i 's/profile="work"/profile="personal"/' ~/.config/chezmoi/chezmoi.toml
+  chezmoi apply
   # change the theme
   omarchy-theme-set tokyo-night
 
@@ -97,7 +98,8 @@ switch_to_work_profile() {
   switch_directory_profile "Pictures" "work"
   switch_directory_profile "projects" "work"
   # apply profile specific configurations
-  chezmoi apply --config=$HOME/.config/chezmoi/work.toml
+  sed -i 's/profile="personal"/profile="work"/' ~/.config/chezmoi/chezmoi.toml
+  chezmoi apply
   # change the theme
   omarchy-theme-set osaka-jade
 
