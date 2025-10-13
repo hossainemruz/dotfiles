@@ -211,7 +211,7 @@
     "exec": "~/.config/waybar/scripts/tailscale.sh --status",
     "on-click": "exec ~/.config/waybar/scripts/tailscale.sh --toggle",
     "exec-on-event": true,
-    "format": "🌐 VPN: {icon} ",
+    "format": "🌐 VPN {icon} ",
     "format-icons": {
       "connected": "ON",
       "stopped": "OFF"
