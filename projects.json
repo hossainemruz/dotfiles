@@ -1,11 +1,16 @@
 [
   {
+    "name": "qdrant-cloud",
+    "directory": "/home/emruz/projects/qdrant-cloud",
+    "ide": "nvim"
+  },
+  {
     "name": "cluster-api",
     "directory": "/home/emruz/projects/cluster-api",
     "ide": "pycharm"
   },
   {
-    "name": "qdrant-cloud-agent",
+    "name": "agent",
     "directory": "/home/emruz/projects/agent",
     "ide": "nvim"
   },
