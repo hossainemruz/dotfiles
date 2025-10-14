@@ -75,5 +75,12 @@
     "icon": "icloud.png",
     "profile": "Personal",
     "url": "https://www.icloud.com"
+  },
+  {
+    "name": "LinkedIn",
+    "desktop_file": "linkedin.desktop",
+    "icon": "linkedin.png",
+    "profile": "Personal",
+    "url": "https://www.linkedin.com"
   }
 ]

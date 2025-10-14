@@ -23,6 +23,7 @@ return {
         "stylua",
         "shellcheck",
         "shfmt",
+        "taplo",
         "flake8",
         "yaml-language-server",
         "yamllint",
