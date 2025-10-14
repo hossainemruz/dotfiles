@@ -12,6 +12,7 @@ bindd = SUPER, M, Activity, exec, $terminal -e btop
 bindd = SUPER, D, Docker, exec, $terminal -e lazydocker
 bindd = SUPER, O, Obsidian, exec, omarchy-launch-or-focus obsidian "uwsm app -- obsidian -disable-gpu --enable-wayland-ime"
 bindd = SUPER, slash, Passwords, exec, uwsm app -- bitwarden-desktop
+bindd = SUPER ALT, P, Projects, exec, $terminal --class=TUI.float -e $HOME/projects.sh
 
 bindd = SUPER, A, ChatGPT, exec, omarchy-launch-webapp "https://chatgpt.com" --profile-directory=Personal
 bindd = SUPER, G, Grok, exec, omarchy-launch-webapp "https://grok.com" --profile-directory=Personal

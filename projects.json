@@ -1,0 +1,27 @@
+[
+  {
+    "name": "cluster-api",
+    "directory": "/home/emruz/projects/cluster-api",
+    "ide": "pycharm"
+  },
+  {
+    "name": "qdrant-cloud-agent",
+    "directory": "/home/emruz/projects/agent",
+    "ide": "nvim"
+  },
+  {
+    "name": "operator",
+    "directory": "/home/emruz/projects/operator",
+    "ide": "nvim"
+  },
+  {
+    "name": "kubernetes-api",
+    "directory": "/home/emruz/projects/kubernetes-api/",
+    "ide": "nvim"
+  },
+  {
+    "name": "cluster-exporter",
+    "directory": "/home/emruz/projects/cluster-exporter",
+    "ide": "nvim"
+  }
+]
