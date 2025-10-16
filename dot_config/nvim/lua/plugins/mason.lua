@@ -4,6 +4,7 @@ return {
     opts = {
       ensure_installed = {
         "buf",
+        "css-lsp",
         "gci",
         "goimports",
         "golangci-lint",
@@ -11,6 +12,7 @@ return {
         "gopls",
         "hadolint",
         "helm-ls",
+        "html-lsp",
         "isort",
         "jq",
         "json-lsp",
@@ -18,6 +20,7 @@ return {
         "kube-linter",
         "lua-language-server",
         "markdownlint",
+        "prettier",
         "pyrefly",
         "python-lsp-server",
         "stylua",

@@ -12,4 +12,4 @@ source ~/.local/share/omarchy/default/bash/rc
 alias gg='lazygit'
 alias j='autojump'
 alias yz='yazi'
-
+alias dot='chezmoi'

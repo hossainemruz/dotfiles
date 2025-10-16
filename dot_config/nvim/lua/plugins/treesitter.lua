@@ -1,20 +1,38 @@
 return {
-  {
-    "nvim-treesitter/nvim-treesitter",
-    opts = function(_, opts)
-      -- add tsx and treesitter
-      vim.list_extend(opts.ensure_installed, {
-        "cmake",
-        "css",
-        "dockerfile",
-        "go",
-        "gomod",
-        "gotmpl",
-        "helm",
-        "proto",
-        "scss",
-        "terraform",
-      })
-    end,
+  "nvim-treesitter/nvim-treesitter",
+  highlight = {
+    enable = true,
+    additional_vim_regex_highlighting = false, -- Disable legacy
+  },
+  indent = { enable = true },
+  folds = { enable = true },
+  opts = {
+    ensure_installed = {
+      "bash",
+      "c",
+      "diff",
+      "help",
+      "html",
+      "javascript",
+      "jsdoc",
+      "json",
+      "jsonc",
+      "lua",
+      "luadoc",
+      "luap",
+      "markdown",
+      "markdown_inline",
+      "printf",
+      "python",
+      "query",
+      "regex",
+      "toml",
+      "tsx",
+      "typescript",
+      "vim",
+      "vimdoc",
+      "xml",
+      "yaml",
+    },
   },
 }

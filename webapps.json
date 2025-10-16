@@ -70,6 +70,13 @@
     "url": "https://acrogenesis.com/omarchy-cheat-sheet"
   },
   {
+    "name": "NeoVim Cheat Sheet",
+    "desktop_file": "neovim_cheat_sheet.desktop",
+    "icon": "coding-guide.png",
+    "profile": "Personal",
+    "url": "https://hossainemruz.github.io/neovim-cheat-sheet"
+  },
+  {
     "name": "iCloud",
     "desktop_file": "icloud.desktop",
     "icon": "icloud.png",
