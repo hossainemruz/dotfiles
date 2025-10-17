@@ -13,3 +13,12 @@ alias gg='lazygit'
 alias j='autojump'
 alias yz='yazi'
 alias dot='chezmoi'
+
+# kubectl helpers
+alias kg='kubectl get'
+alias kd='kubectl describe'
+alias ky='kubectl get -oyaml'
+alias kw='watch -n 1'
+alias kl='kubectl logs'
+alias klf='kubectl logs -f'
+alias ke='kubectl exec -it'

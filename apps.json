@@ -1,0 +1,58 @@
+[
+  {
+    "name": "bitwarden-desktop",
+    "package_name": "bitwarden"
+  },
+  {
+    "name": "code",
+    "package_name": "code"
+  },
+  {
+    "name": "zen-browser",
+    "package_name": "zen-browser-bin"
+  },
+  {
+    "name": "ghostty",
+    "package_name": "ghostty"
+  },
+  {
+    "name": "easyeffects",
+    "package_name": "easyeffects"
+  },
+  {
+    "name": "gcalcli",
+    "package_name": "gcalcli"
+  },
+  {
+    "name": "libxcrypt-compat",
+    "package_name": "libxcrypt-compat"
+  },
+  {
+    "name": "megasync",
+    "package_name": "megasync-bin"
+  },
+  {
+    "name": "nautilus",
+    "package_name": "nautilus"
+  },
+  {
+    "name": "nautilus-megasync",
+    "package_name": "nautilus-megasync"
+  },
+  {
+    "name": "obsidian",
+    "package_name": "obsidian"
+  },
+  {
+    "name": "pycharm",
+    "package_name": "pycharm"
+  },
+  {
+    "name": "slack",
+    "package_name": "slack-desktop"
+  },
+  {
+    "name": "yazi",
+    "package_name": "yazi"
+  }
+]
