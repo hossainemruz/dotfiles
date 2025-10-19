@@ -12,7 +12,7 @@ bindd = SUPER SHIFT, M, Activity, exec, $terminal -e btop
 bindd = SUPER SHIFT, D, Docker, exec, $terminal -e lazydocker
 bindd = SUPER SHIFT, O, Obsidian, exec, omarchy-launch-or-focus obsidian "uwsm app -- obsidian -disable-gpu --enable-wayland-ime"
 bindd = SUPER SHIFT, slash, Passwords, exec, uwsm app -- bitwarden-desktop
-bindd = SUPER SHIFT ALT, P, Projects, exec, $terminal --class=TUI.float -e $HOME/projects.sh
+bindd = ALT, P, Projects, exec, $terminal --class=TUI.float -e $HOME/projects.sh
 
 bindd = SUPER SHIFT, A, ChatGPT, exec, omarchy-launch-webapp "https://chatgpt.com" --profile-directory=Personal
 bindd = SUPER SHIFT, G, Grok, exec, omarchy-launch-webapp "https://grok.com" --profile-directory=Personal
@@ -34,6 +34,11 @@ bindd = SUPER SHIFT, E, Email, exec, omarchy-launch-webapp "https://mail.google.
 bindd = SUPER SHIFT, C, Calendar, exec, omarchy-launch-webapp "https://calendar.google.com" --profile-directory=Personal
 bindd = SUPER SHIFT, T, Todoist, exec, omarchy-launch-webapp "https://app.todoist.com" --profile-directory=Personal
 {{ end }}
+
+# Special workspace related keybindings
+bind = ALT, T, togglespecialworkspace, termspace
+bind = ALT, G, togglespecialworkspace, grok
+bind = ALT, D, togglespecialworkspace, {{.profile}}-todo
 
 # Overwrite existing bindings, like putting Omarchy Menu on Super + Space
 # unbind = SUPER SHIFT, Space
