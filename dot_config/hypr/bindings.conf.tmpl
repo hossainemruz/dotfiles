@@ -3,38 +3,38 @@ $terminal = uwsm app -- $TERMINAL
 $browser = omarchy-launch-browser
 
 # Common bindings
-bindd = SUPER, return, Terminal, exec, $terminal
-bindd = SUPER, F, File manager, exec, uwsm app -- nautilus --new-window
-bindd = SUPER, B, Browser, exec, $browser
-bindd = SUPER SHIFT, B, Browser (private), exec, $browser --private
-bindd = SUPER, N, Editor, exec, omarchy-launch-editor
-bindd = SUPER, M, Activity, exec, $terminal -e btop
-bindd = SUPER, D, Docker, exec, $terminal -e lazydocker
-bindd = SUPER, O, Obsidian, exec, omarchy-launch-or-focus obsidian "uwsm app -- obsidian -disable-gpu --enable-wayland-ime"
-bindd = SUPER, slash, Passwords, exec, uwsm app -- bitwarden-desktop
-bindd = SUPER ALT, P, Projects, exec, $terminal --class=TUI.float -e $HOME/projects.sh
+bindd = SUPER, RETURN, Terminal, exec, $terminal
+bindd = SUPER SHIFT, F, File manager, exec, uwsm app -- nautilus --new-window
+bindd = SUPER SHIFT, B, Browser, exec, $browser
+bindd = SUPER SHIFT ALT, B, Browser (private), exec, $browser --private
+bindd = SUPER SHIFT, N, Editor, exec, omarchy-launch-editor
+bindd = SUPER SHIFT, M, Activity, exec, $terminal -e btop
+bindd = SUPER SHIFT, D, Docker, exec, $terminal -e lazydocker
+bindd = SUPER SHIFT, O, Obsidian, exec, omarchy-launch-or-focus obsidian "uwsm app -- obsidian -disable-gpu --enable-wayland-ime"
+bindd = SUPER SHIFT, slash, Passwords, exec, uwsm app -- bitwarden-desktop
+bindd = SUPER SHIFT ALT, P, Projects, exec, $terminal --class=TUI.float -e $HOME/projects.sh
 
-bindd = SUPER, A, ChatGPT, exec, omarchy-launch-webapp "https://chatgpt.com" --profile-directory=Personal
-bindd = SUPER, G, Grok, exec, omarchy-launch-webapp "https://grok.com" --profile-directory=Personal
-bindd = SUPER, Y, YouTube, exec, omarchy-launch-webapp "https://youtube.com/" --profile-directory=Personal
-bindd = SUPER SHIFT, G, WhatsApp, exec, omarchy-launch-or-focus-webapp WhatsApp "https://web.whatsapp.com/" --profile-directory=Personal
-bindd = SUPER ALT, G, Google Messages, exec, omarchy-launch-or-focus-webapp "Google Messages" "https://messages.google.com/web/conversations" --profile-directory=Personal
-bindd = SUPER, X, X, exec, omarchy-launch-webapp "https://x.com/" --profile-directory=Personal
-bindd = SUPER SHIFT, X, X Post, exec, omarchy-launch-webapp "https://x.com/compose/post" --profile-directory=Personal
+bindd = SUPER SHIFT, A, ChatGPT, exec, omarchy-launch-webapp "https://chatgpt.com" --profile-directory=Personal
+bindd = SUPER SHIFT, G, Grok, exec, omarchy-launch-webapp "https://grok.com" --profile-directory=Personal
+bindd = SUPER SHIFT, Y, YouTube, exec, omarchy-launch-webapp "https://youtube.com/" --profile-directory=Personal
+bindd = SUPER SHIFT ALT, G, WhatsApp, exec, omarchy-launch-or-focus-webapp WhatsApp "https://web.whatsapp.com/" --profile-directory=Personal
+bindd = SUPER SHIFT CTRL, G, Google Messages, exec, omarchy-launch-or-focus-webapp "Google Messages" "https://messages.google.com/web/conversations" --profile-directory=Personal
+bindd = SUPER SHIFT, X, X, exec, omarchy-launch-webapp "https://x.com/" --profile-directory=Personal
+bindd = SUPER SHIFT ALT, X, X Post, exec, omarchy-launch-webapp "https://x.com/compose/post" --profile-directory=Personal
 
 {{if eq .profile "work" }}
 # Work profile specific bindings
-bindd = SUPER, S, Slack, exec, omarchy-launch-or-focus slack
-bindd = SUPER, E, Email, exec, omarchy-launch-webapp "https://mail.google.com" --profile-directory=Work
-bindd = SUPER, C, Calendar, exec, omarchy-launch-webapp "https://calendar.google.com" --profile-directory=Work
-bindd = SUPER, T, Todoist, exec, omarchy-launch-webapp "https://app.todoist.com" --profile-directory=Work
+bindd = SUPER SHIFT, S, Slack, exec, omarchy-launch-or-focus slack
+bindd = SUPER SHIFT, E, Email, exec, omarchy-launch-webapp "https://mail.google.com" --profile-directory=Work
+bindd = SUPER SHIFT, C, Calendar, exec, omarchy-launch-webapp "https://calendar.google.com" --profile-directory=Work
+bindd = SUPER SHIFT, T, Todoist, exec, omarchy-launch-webapp "https://app.todoist.com" --profile-directory=Work
 {{ else }}
 # Personal profile specific bindings
-bindd = SUPER, E, Email, exec, omarchy-launch-webapp "https://mail.google.com" --profile-directory=Personal
-bindd = SUPER, C, Calendar, exec, omarchy-launch-webapp "https://calendar.google.com" --profile-directory=Personal
-bindd = SUPER, T, Todoist, exec, omarchy-launch-webapp "https://app.todoist.com" --profile-directory=Personal
+bindd = SUPER SHIFT, E, Email, exec, omarchy-launch-webapp "https://mail.google.com" --profile-directory=Personal
+bindd = SUPER SHIFT, C, Calendar, exec, omarchy-launch-webapp "https://calendar.google.com" --profile-directory=Personal
+bindd = SUPER SHIFT, T, Todoist, exec, omarchy-launch-webapp "https://app.todoist.com" --profile-directory=Personal
 {{ end }}
 
 # Overwrite existing bindings, like putting Omarchy Menu on Super + Space
-# unbind = SUPER, Space
-# bindd = SUPER, SPACE, Omarchy menu, exec, omarchy-menu
+# unbind = SUPER SHIFT, Space
+# bindd = SUPER SHIFT, SPACE, Omarchy menu, exec, omarchy-menu

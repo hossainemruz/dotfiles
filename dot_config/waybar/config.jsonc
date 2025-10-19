@@ -95,7 +95,7 @@
       "Atlantic/South_Georgia",
       "America/Buenos_Aires",
     ],
-    "on-click-right": "omarchy-cmd-tzupdate",
+    "on-click-right": "omarchy-launch-floating-terminal-with-presentation omarchy-tz-select",
   },
   "network": {
     "format-icons": [
