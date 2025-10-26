@@ -52,6 +52,10 @@
     "package_name": "slack-desktop"
   },
   {
+    "name": "skopeo",
+    "package_name": "skopeo"
+  },
+  {
     "name": "yazi",
     "package_name": "yazi"
   }
