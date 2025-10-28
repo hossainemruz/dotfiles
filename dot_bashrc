@@ -13,6 +13,11 @@ source ~/.local/share/omarchy/default/bash/rc
 # environment variables
 export GOPRIVATE=github.com/qdrant
 
+# Start ssh-agent if is not running already
+if [ -z "$SSH_AUTH_SOCK" ]; then
+    eval "$(ssh-agent -s)" > /dev/null
+fi
+
 # Make an alias for invoking commands you use constantly
 # alias p='python'
 alias gg='lazygit'
