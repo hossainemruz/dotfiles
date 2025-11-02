@@ -1,18 +1,20 @@
 return {
   "nvim-treesitter/nvim-treesitter",
-  highlight = {
-    enable = true,
-    additional_vim_regex_highlighting = false, -- Disable legacy
-  },
-  indent = { enable = true },
-  folds = { enable = true },
   opts = {
     ensure_installed = {
       "bash",
-      "c",
+      "css",
       "diff",
       "help",
+      "gitignore",
+      "go",
+      "gomod",
+      "gosum",
+      "gotmpl",
+      "gowork",
       "html",
+      "html_tags",
+      "http",
       "javascript",
       "jsdoc",
       "json",
@@ -23,9 +25,12 @@ return {
       "markdown",
       "markdown_inline",
       "printf",
+      "proto",
       "python",
       "query",
       "regex",
+      "sql",
+      "terraform",
       "toml",
       "tsx",
       "typescript",
@@ -34,5 +39,10 @@ return {
       "xml",
       "yaml",
     },
+    highlight = {
+      enable = true,
+      additional_vim_regex_highlighting = false, -- Disable legacy
+    },
+    indent = { enable = true },
   },
 }
