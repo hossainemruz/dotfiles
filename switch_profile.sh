@@ -121,4 +121,5 @@ else
   switch_to_personal_profile
 fi
 
-uwsm stop
+# Reboot
+reboot

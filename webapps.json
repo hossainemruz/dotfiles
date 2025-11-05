@@ -84,6 +84,13 @@
     "url": "https://www.icloud.com"
   },
   {
+    "name": "Proton Drive",
+    "desktop_file": "proton_drive.desktop",
+    "icon": "proton-drive.png",
+    "profile": "Personal",
+    "url": "https://drive.proton.me"
+  },
+  {
     "name": "LinkedIn",
     "desktop_file": "linkedin.desktop",
     "icon": "linkedin.png",
