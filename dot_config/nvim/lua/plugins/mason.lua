@@ -17,6 +17,7 @@ return {
         "jq",
         "json-lsp",
         "jsonlint",
+        "kulala-fmt",
         "kube-linter",
         "lua-language-server",
         "markdownlint",

@@ -36,16 +36,8 @@
     "package_name": "nautilus"
   },
   {
-    "name": "nautilus-megasync",
-    "package_name": "nautilus-megasync"
-  },
-  {
     "name": "obsidian",
     "package_name": "obsidian"
-  },
-  {
-    "name": "proton-pass",
-    "package_name": "proton-pass-bin"
   },
   {
     "name": "pycharm",
