@@ -12,7 +12,8 @@ bindd = SUPER SHIFT, M, Activity, exec, $terminal -e btop
 bindd = SUPER SHIFT, D, Docker, exec, $terminal -e lazydocker
 bindd = SUPER SHIFT, O, Obsidian, exec, omarchy-launch-or-focus obsidian "uwsm app -- obsidian -disable-gpu --enable-wayland-ime"
 bindd = SUPER SHIFT, slash, Passwords, exec, uwsm app -- bitwarden-desktop
-bindd = ALT, P, Projects, exec, $terminal --class=TUI.float -e $HOME/projects.sh
+bindd = ALT, P, Projects, exec, $terminal  --title="Projects" -e $HOME/projects.sh
+bindd = ALT, B, Bluetooth, exec, $terminal --title="bluetui" -e bluetui
 
 bindd = SUPER SHIFT, A, ChatGPT, exec, omarchy-launch-webapp "https://chatgpt.com" --profile-directory=Personal
 bindd = SUPER SHIFT, G, Grok, exec, omarchy-launch-webapp "https://grok.com" --profile-directory=Personal
