@@ -18,17 +18,3 @@ vim.filetype.add({
     ["helmfile.*%.ya?ml"] = "helm",
   },
 })
-
--- Filetype detection for templated HTML
-vim.filetype.add({
-  extension = {
-    gohtml = "gohtml", -- For files like example.gohtml
-  },
-  -- Apply the extension on files that match this pattern
-  pattern = {
-    [".*/layouts/.*%.html"] = "gohtml",
-  },
-})
-
--- Associate the custom filetype with the gotmpl parser
-vim.treesitter.language.register("gotmpl", "gohtml")

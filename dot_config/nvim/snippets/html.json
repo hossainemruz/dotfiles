@@ -1,0 +1,110 @@
+{
+  "Curlies": {
+    "prefix": "x",
+    "body": "{{ }}",
+    "description": "Inserts empty template action braces."
+  },
+  "Dot": {
+    "prefix": "dot",
+    "body": "{{ . }}",
+    "description": "Inserts the current context dot."
+  },
+  "If": {
+    "prefix": "if",
+    "body": [
+      "{{ if ${1:condition} }}",
+      "\t${2}",
+      "{{ end }}"
+    ],
+    "description": "If block."
+  },
+  "If/Else": {
+    "prefix": "ife",
+    "body": [
+      "{{ if ${1:condition} }}",
+      "\t${2}",
+      "{{ else }}",
+      "\t${3}",
+      "{{ end }}"
+    ],
+    "description": "If/else block."
+  },
+  "If/Else if": {
+    "prefix": "ifei",
+    "body": [
+      "{{ if ${1:condition1} }}",
+      "\t${2}",
+      "{{ else if ${3:condition2} }}",
+      "\t${4}",
+      "{{ end }}"
+    ],
+    "description": "If / else-if block."
+  },
+  "With": {
+    "prefix": "with",
+    "body": [
+      "{{ with ${1:expression} }}",
+      "\t${2}",
+      "{{ end }}"
+    ],
+    "description": "With block."
+  },
+  "With/Else": {
+    "prefix": "withe",
+    "body": [
+      "{{ with ${1:expression} }}",
+      "\t${2}",
+      "{{ else }}",
+      "\t${3}",
+      "{{ end }}"
+    ],
+    "description": "With/else block."
+  },
+  "Range": {
+    "prefix": "range",
+    "body": [
+      "{{ range ${1:collection} }}",
+      "\t${2}",
+      "{{ end }}"
+    ],
+    "description": "Range loop."
+  },
+  "Partial": {
+    "prefix": "partial",
+    "body": "{{ partial \"${1:name}\" . }}",
+    "description": "Include a partial template."
+  },
+  "Block": {
+    "prefix": "block",
+    "body": [
+      "{{ block \"${1:main}\" . }}",
+      "\t${2}",
+      "{{ end }}"
+    ],
+    "description": "Declare a block (can be overridden)."
+  },
+  "Block define": {
+    "prefix": "define",
+    "body": [
+      "{{ define \"${1:block}\" }}",
+      "\t${2}",
+      "{{ end }}"
+    ],
+    "description": "Define a named template block."
+  },
+  "Variable": {
+    "prefix": "vars",
+    "body": "{{ $ ${1:var} := ${2:value} }}",
+    "description": "Declare a variable."
+  },
+  "Debug": {
+    "prefix": "debug",
+    "body": "{{ printf \"%#v\" ${1:variable} }}",
+    "description": "Print debug info."
+  },
+  "Comment": {
+    "prefix": "comm",
+    "body": "{{/* ${1:comment} */}}",
+    "description": "Template comment."
+  }
+}
