@@ -12,6 +12,7 @@ source ~/.local/share/omarchy/default/bash/rc
 
 # environment variables
 export GOPRIVATE=github.com/qdrant
+export PATH="$HOME/.local/bin:$PATH"
 
 # Start ssh-agent if is not running already
 if [ -z "$SSH_AUTH_SOCK" ]; then
