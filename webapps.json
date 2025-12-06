@@ -35,6 +35,13 @@
     "url": "https://mail.google.com"
   },
   {
+    "name": "Gemini",
+    "icon": "google-gemini.png",
+    "desktop_file": "gemini.desktop",
+    "profile": "Personal",
+    "url": "https://gemini.google.com/app"
+  },
+  {
     "name": "Second Brain",
     "icon": "brains.png",
     "desktop_file": "second_brain.desktop",
