@@ -1,5 +1,9 @@
 [
   {
+    "name": "7z",
+    "package_name": "7zip"
+  },
+  {
     "name": "bluetui",
     "package_name": "bluetui"
   },
@@ -38,6 +42,10 @@
   {
     "name": "pycharm",
     "package_name": "pycharm"
+  },
+  {
+    "name": "pv",
+    "package_name": "pv"
   },
   {
     "name": "slack",
