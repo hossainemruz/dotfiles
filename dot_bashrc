@@ -25,6 +25,7 @@ alias gg='lazygit'
 alias j='autojump'
 alias yz='yazi'
 alias dot='chezmoi'
+alias zed='zeditor'
 
 # kubectl helpers
 alias ctx='kubectx'
@@ -38,3 +39,6 @@ alias klf='kubectl logs -f'
 alias kns='kubens'
 alias kw='watch -n 1'
 alias ky='kubectl get -oyaml'
+
+# opencode
+export PATH=/home/emruz/.opencode/bin:$PATH

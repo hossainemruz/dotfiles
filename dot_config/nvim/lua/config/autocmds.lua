@@ -28,3 +28,10 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.opt_local.foldmethod = "indent"
   end,
 })
+
+-- Workaround for frequent read-only file promt
+vim.api.nvim_create_autocmd("SwapExists", {
+  callback = function()
+    vim.v.swapchoice = "e" -- "e" = edit anyway; use "o" for read-only
+  end,
+})
