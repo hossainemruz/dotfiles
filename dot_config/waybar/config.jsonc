@@ -17,7 +17,8 @@
     "custom/screenrecording-indicator",
   ],
   "modules-right": [
-    "group/tray-expander",
+    "tray",
+    // "group/tray-expander",
     "bluetooth",
     "custom/rsync",
     "custom/tailscale",
