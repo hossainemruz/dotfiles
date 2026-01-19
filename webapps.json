@@ -91,6 +91,13 @@
     "url": "https://www.icloud.com"
   },
   {
+    "name": "Apple Podcasts",
+    "desktop_file": "apple-podcasts.desktop",
+    "icon": "apple-podcasts.png",
+    "profile": "Personal",
+    "url": "https://podcasts.apple.com"
+  },
+  {
     "name": "Proton Drive",
     "desktop_file": "proton_drive.desktop",
     "icon": "proton-drive.png",
