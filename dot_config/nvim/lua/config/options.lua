@@ -18,3 +18,6 @@ vim.filetype.add({
     ["helmfile.*%.ya?ml"] = "helm",
   },
 })
+
+-- Change python lsp server
+vim.g.lazyvim_python_lsp = "pyrefly"
