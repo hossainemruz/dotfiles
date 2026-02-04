@@ -39,6 +39,7 @@ alias klf='kubectl logs -f'
 alias kns='kubens'
 alias kw='watch -n 1'
 alias ky='kubectl get -oyaml'
+alias kpf='kubectl port-forward'
 
 # opencode
 export PATH=/home/emruz/.opencode/bin:$PATH

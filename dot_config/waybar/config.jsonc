@@ -5,10 +5,11 @@
   "spacing": 0,
   "height": 26,
   "monitor": "DP-3",
+  "output": "DP-3",
   "modules-left": [
     "custom/profile",
     "custom/omarchy",
-    "hyprland/workspaces"
+    "hyprland/workspaces",
   ],
   "modules-center": [
     "clock",
@@ -26,9 +27,11 @@
     "pulseaudio",
     "cpu",
     "battery",
+    "custom/notification"
   ],
   "hyprland/workspaces": {
     "on-click": "activate",
+    "persistent-only": true,
     "format": "{icon}",
     "format-icons": {
       "default": "",
@@ -50,10 +53,9 @@
         2,
         3
       ],
-      "HDMI-A-1": [
-        4,
-        5
-      ],
+      // "HDMI-A-1": [
+      //   3
+      // ]
     },
   },
   "custom/omarchy": {
@@ -249,5 +251,25 @@
     "tooltip": true,
     "return-type": "json",
     "interval": 5,
+  },
+  "custom/notification": {
+    "tooltip": true,
+    "format": "<span size='9pt'> {icon} </span>",
+    "format-icons": {
+      "notification": "󱅫",
+      "none": "󰂜",
+      "dnd-notification": "󰂠",
+      "dnd-none": "󰪓",
+      "inhibited-notification": "󰂛",
+      "inhibited-none": "󰪑",
+      "dnd-inhibited-notification": "󰂛",
+      "dnd-inhibited-none": "󰪑"
+    },
+    "return-type": "json",
+    "exec-if": "which swaync-client",
+    "exec": "swaync-client -swb",
+    "on-click": "swaync-client -t -sw",
+    "on-click-right": "swaync-client -d -sw",
+    "escape": true
   },
 }

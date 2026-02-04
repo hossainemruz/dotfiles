@@ -1,17 +1,28 @@
 # Extra autostart processes
 # exec-once = uwsm app -- my-service
 
-# Profile independent apps
-exec-once = [workspace 1 silent] omarchy-launch-browser
+# Start hyprscrolling plugin
+exec-once = hyprpm reload
 
-{{ if eq .profile "work"}}
-# Work profile specific apps
-exec-once = [workspace 4 silent] uwsm app -- slack
-exec-once = [workspace 1 silent] omarchy-launch-webapp "https://mail.google.com" --profile-directory=Work
-exec-once = [workspace 3 silent] omarchy-launch-webapp "https://qdrant.atlassian.net/jira/software/c/projects/CRC/boards/201" --profile-directory=Work
-{{ else }}
-# Personal profile specific app
-exec-once = [workspace 1 silent] omarchy-launch-webapp "https://mail.google.com" --profile-directory=Personal
-{{ end }}
+# Kill default mako and start SwayNC instead
+exec-once = killall mako || true ; swaync
 
+# Start autostart script to open apps maintaining order
+exec-once = ~/.config/hypr/autostart.sh
 
+# # Profile independent apps
+# exec-once = [workspace 1 silent] omarchy-launch-browser
+# exec-once = [workspace 2 silent] uwsm app -- $TERMINAL
+#
+#
+# {{ if eq .profile "work"}}
+# # Work profile specific apps
+# exec-once = [workspace 1 silent] uwsm app -- slack
+# exec-once = [workspace 3 silent] omarchy-launch-webapp "https://qdrant.atlassian.net/jira/software/c/projects/CRC/boards/201" --profile-directory=Work
+# exec-once = [workspace 3 silent] omarchy-launch-webapp "https://app.todoist.com" --profile-directory=Work
+# {{ else }}
+# # Personal profile specific app
+# exec-once = [workspace 1 silent] omarchy-launch-webapp "https://mail.google.com" --profile-directory=Personal
+# {{ end }}
+#
+#

@@ -12,16 +12,10 @@ bindd = SUPER SHIFT, M, Activity, exec, omarchy-launch-tui btop
 bindd = SUPER SHIFT, D, Docker, exec, omarchy-launch-tui lazydocker
 bindd = SUPER SHIFT, O, Obsidian, exec, omarchy-launch-or-focus obsidian "uwsm app -- obsidian -disable-gpu --enable-wayland-ime"
 bindd = SUPER SHIFT, slash, Passwords, exec, uwsm app -- 1password
-bindd = ALT, P, Projects, exec, $terminal  --title="Projects" -e $HOME/projects.sh
 bindd = ALT, B, Bluetooth, exec, $terminal --title="bluetui" -e bluetui
 
-bindd = SUPER SHIFT, A, ChatGPT, exec, omarchy-launch-webapp "https://chatgpt.com" --profile-directory=Personal
-bindd = SUPER SHIFT, G, Grok, exec, omarchy-launch-webapp "https://grok.com" --profile-directory=Personal
 bindd = SUPER SHIFT, Y, YouTube, exec, omarchy-launch-webapp "https://youtube.com/" --profile-directory=Personal
-bindd = SUPER SHIFT ALT, G, WhatsApp, exec, omarchy-launch-or-focus-webapp WhatsApp "https://web.whatsapp.com/" --profile-directory=Personal
-bindd = SUPER SHIFT CTRL, G, Google Messages, exec, omarchy-launch-or-focus-webapp "Google Messages" "https://messages.google.com/web/conversations" --profile-directory=Personal
 bindd = SUPER SHIFT, X, X, exec, omarchy-launch-webapp "https://x.com/" --profile-directory=Personal
-bindd = SUPER SHIFT ALT, X, X Post, exec, omarchy-launch-webapp "https://x.com/compose/post" --profile-directory=Personal
 
 {{if eq .profile "work" }}
 # Work profile specific bindings
@@ -37,16 +31,24 @@ bindd = SUPER SHIFT, T, Todoist, exec, omarchy-launch-webapp "https://app.todois
 {{ end }}
 
 # Special workspace related keybindings
-bind = ALT, T, togglespecialworkspace, termspace
-bind = ALT, G, togglespecialworkspace, grok
-bind = SUPER ALT, G, togglespecialworkspace, gemini
-bind = SUPER ALT, T, togglespecialworkspace, {{.profile}}-todo
+bind = SUPER ALT, T, togglespecialworkspace, termspace
+bind = SUPER ALT, G, togglespecialworkspace, grok
+bind = SUPER ALT, J, togglespecialworkspace, gemini
 bind = SUPER ALT, P, togglespecialworkspace, proton-pass
 bind = SUPER ALT, M, togglespecialworkspace, proton-mail
-bind = ALT, D, togglespecialworkspace, devtoolbox
-bind = SUPER ALT, E, togglespecialworkspace, easyeffects
+bind = SUPER ALT, D, togglespecialworkspace, devtoolbox
+bind = SUPER ALT, A, togglespecialworkspace, easyeffects
 bind = SUPER ALT, K, togglespecialworkspace, omarchy-cheat-sheet
 bind = SUPER ALT, N, togglespecialworkspace, neovim-cheat-sheet
 # Overwrite existing bindings, like putting Omarchy Menu on Super + Space
 # unbind = SUPER SHIFT, Space
 # bindd = SUPER SHIFT, SPACE, Omarchy menu, exec, omarchy-menu
+
+# Hyprscrolling bindings
+bind = SUPER, period, layoutmsg, move +col
+bind = SUPER, comma, layoutmsg, move -col
+bind = SUPER SHIFT, period, layoutmsg, movewindowto r
+bind = SUPER SHIFT, comma, layoutmsg, movewindowto l
+bind = SUPER SHIFT, up, layoutmsg, movewindowto u
+bind = SUPER SHIFT, down, layoutmsg, movewindowto d
+

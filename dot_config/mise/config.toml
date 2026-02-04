@@ -1,6 +1,6 @@
 [tools]
 awscli = "latest"
-aws-vault = "latest"
+aws-vault = "v7.2.0"
 azure = "latest"
 azure-kubelogin = "latest"
 buf = "latest"
