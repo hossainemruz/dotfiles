@@ -91,3 +91,42 @@ tooltip {
 #custom-voxtype.recording {
   color: #a55555;
 }
+
+#workspaces button {
+  font-family: "Cantarell";
+  font-weight: bold;
+  background-color: transparent;
+  color: #ffffff;
+  box-shadow: none;
+  text-shadow: none;
+  padding: 0px;
+  border-radius: 0;
+  padding-left: 5px;
+  padding-right: 2px;
+}
+
+#workspaces button.active {
+  border-top: solid 1px rgba(255, 255, 255, 0.5);
+}
+
+#workspaces .workspace-label {
+  padding-left: 3px;
+}
+
+#workspaces .taskbar-window {
+  font-weight: normal;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#workspaces .taskbar-window.active {
+  border-bottom: solid 2px rgba(255, 255, 255, 0.5);
+}
+
+#workspaces .taskbar-window image {
+  margin-top: 1px;
+}
+
+#workspaces button.urgent {
+  border-top: solid 1px red;
+}

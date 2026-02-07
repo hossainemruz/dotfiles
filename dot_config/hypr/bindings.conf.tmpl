@@ -45,8 +45,10 @@ bind = SUPER ALT, N, togglespecialworkspace, neovim-cheat-sheet
 # bindd = SUPER SHIFT, SPACE, Omarchy menu, exec, omarchy-menu
 
 # Hyprscrolling bindings
-bind = SUPER, period, layoutmsg, move +col
 bind = SUPER, comma, layoutmsg, move -col
+bind = SUPER, period, layoutmsg, move +col
+bind = SUPER, H, layoutmsg, colresize 0.5
+bind = SUPER, M, layoutmsg, colresize 1
 bind = SUPER SHIFT, period, layoutmsg, movewindowto r
 bind = SUPER SHIFT, comma, layoutmsg, movewindowto l
 bind = SUPER SHIFT, up, layoutmsg, movewindowto u

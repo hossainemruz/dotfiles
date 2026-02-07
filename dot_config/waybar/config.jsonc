@@ -27,12 +27,11 @@
     "pulseaudio",
     "cpu",
     "battery",
-    "custom/notification"
   ],
   "hyprland/workspaces": {
     "on-click": "activate",
     "persistent-only": true,
-    "format": "{icon}",
+    "format": "{icon}: {windows}",
     "format-icons": {
       "default": "",
       "1": "1",
@@ -45,7 +44,6 @@
       "8": "8",
       "9": "9",
       "10": "0",
-      "active": "󱓻",
     },
     "persistent-workspaces": {
       "DP-3": [
@@ -57,6 +55,21 @@
       //   3
       // ]
     },
+    "workspace-taskbar": {
+      // Enable the workspace taskbar. Default: false
+      "enable": true,
+      // If true, the active/focused window will have an 'active' class. Could cause higher CPU usage due to more frequent redraws. Default: false
+      "update-active-window": true,
+      // Format of the windows in the taskbar. Default: "{icon}". Allowed variables: {icon}, {title}
+      "format": "{icon}",
+      // Icon size in pixels. Default: 16
+      "icon-size": 16,
+      // Orientation of the taskbar ("horizontal" or "vertical"). Default: "horizontal".
+      "orientation": "horizontal",
+    },
+    "window-rewrite": {
+      "chrome-qdrant.atlassian.net__jira_software_c_projects_CRC_boards_201-Work": ""
+    }
   },
   "custom/omarchy": {
     "format": "<span font='omarchy'>\ue900</span>",
@@ -251,25 +264,5 @@
     "tooltip": true,
     "return-type": "json",
     "interval": 5,
-  },
-  "custom/notification": {
-    "tooltip": true,
-    "format": "<span size='9pt'> {icon} </span>",
-    "format-icons": {
-      "notification": "󱅫",
-      "none": "󰂜",
-      "dnd-notification": "󰂠",
-      "dnd-none": "󰪓",
-      "inhibited-notification": "󰂛",
-      "inhibited-none": "󰪑",
-      "dnd-inhibited-notification": "󰂛",
-      "dnd-inhibited-none": "󰪑"
-    },
-    "return-type": "json",
-    "exec-if": "which swaync-client",
-    "exec": "swaync-client -swb",
-    "on-click": "swaync-client -t -sw",
-    "on-click-right": "swaync-client -d -sw",
-    "escape": true
   },
 }
