@@ -18,10 +18,10 @@
     "custom/screenrecording-indicator",
   ],
   "modules-right": [
+    "custom/rsync",
     "tray",
     // "group/tray-expander",
     "bluetooth",
-    "custom/rsync",
     "custom/tailscale",
     "network",
     "pulseaudio",
@@ -101,10 +101,10 @@
     "exec": "cat /home/emruz/profile",
   },
   "custom/rsync": {
-    "format": "{} ",
+    "format": "{}",
     "tooltip": true,
     "format-icons": {
-      "default": "♻️",
+      "default": " 󰅠 ",
     },
     "restart-interval": 120,
     "return-type": "json",
@@ -256,10 +256,10 @@
     "exec": "~/.config/waybar/scripts/tailscale.sh --status",
     "on-click": "exec ~/.config/waybar/scripts/tailscale.sh --toggle",
     "exec-on-event": true,
-    "format": "🌐 VPN {icon} ",
+    "format": "{icon} ",
     "format-icons": {
-      "connected": "ON",
-      "stopped": "OFF",
+      "connected": "󰕥 ON",
+      "stopped": "󰫜 OFF",
     },
     "tooltip": true,
     "return-type": "json",
