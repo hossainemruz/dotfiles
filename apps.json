@@ -20,10 +20,6 @@
     "package_name": "ghostty"
   },
   {
-    "name": "gcalcli",
-    "package_name": "gcalcli"
-  },
-  {
     "name": "libxcrypt-compat",
     "package_name": "libxcrypt-compat"
   },
@@ -38,10 +34,6 @@
   {
     "name": "obsidian",
     "package_name": "obsidian"
-  },
-  {
-    "name": "pycharm",
-    "package_name": "pycharm"
   },
   {
     "name": "pv",

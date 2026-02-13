@@ -42,6 +42,13 @@
     "url": "https://gemini.google.com/app"
   },
   {
+    "name": "Grok",
+    "icon": "grok.png",
+    "desktop_file": "grok.desktop",
+    "profile": "Personal",
+    "url": "https://grok.com"
+  },
+  {
     "name": "Second Brain",
     "icon": "brains.png",
     "desktop_file": "second_brain.desktop",
