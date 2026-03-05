@@ -17,24 +17,23 @@ hyprctl dispatch exec "[workspace 2 silent] ghostty"
 timeout=30
 counter=0
 while ! hyprctl monitors | grep -q "HDMI-A-1"; do
-    sleep 1
-    counter=$((counter + 1))
-    if [ "$counter" -ge "$timeout" ]; then
-        echo "Second monitor not detected after $timeout seconds; continuing anyway."
-        break
-    fi
+  sleep 1
+  counter=$((counter + 1))
+  if [ "$counter" -ge "$timeout" ]; then
+    echo "Second monitor not detected after $timeout seconds; continuing anyway."
+    break
+  fi
 done
 
 # Now launch profile-specific apps once
 if grep -q "Work" "$HOME/profile"; then
-    # Work profile
-    hyprctl dispatch exec "slack"
-    sleep 1
-    hyprctl dispatch exec 'omarchy-launch-webapp "https://qdrant.atlassian.net/jira/software/c/projects/CRC/boards/201" --profile-directory=Work'
-    sleep 1
-    hyprctl dispatch exec 'omarchy-launch-webapp "https://app.todoist.com" --profile-directory=Work'
+  # Work profile
+  hyprctl dispatch exec "[workspace 3 silent] slack"
+  sleep 1
+  hyprctl dispatch exec 'omarchy-launch-webapp "https://qdrant.atlassian.net/jira/software/c/projects/CRC/boards/201" --profile-directory=Work'
+  sleep 1
+  hyprctl dispatch exec 'omarchy-launch-webapp "https://app.todoist.com" --profile-directory=Work'
 else
-    # Personal profile
-    hyprctl dispatch exec 'omarchy-launch-webapp "https://app.todoist.com" --profile-directory=Personal'
+  # Personal profile
+  hyprctl dispatch exec 'omarchy-launch-webapp "https://app.todoist.com" --profile-directory=Personal'
 fi
-

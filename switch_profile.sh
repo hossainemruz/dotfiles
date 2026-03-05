@@ -101,7 +101,7 @@ switch_to_work_profile() {
   sed -i 's/profile="personal"/profile="work"/' ~/.config/chezmoi/chezmoi.toml
   chezmoi apply
   # change the theme
-  omarchy-theme-set osaka-jade
+  omarchy-theme-set hackerman
 
   echo "Swithed to work profile"
 }
@@ -121,5 +121,7 @@ else
   switch_to_personal_profile
 fi
 
-# Reboot
-reboot
+# Logout from current session
+echo "Exiting from current session"
+hyprctl dispatch exit &
+sleep 2
