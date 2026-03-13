@@ -12,6 +12,10 @@
     "package_name": "code"
   },
   {
+    "name": "gcloud",
+    "package_name": "gcloud"
+  },
+  {
     "name": "zen-browser",
     "package_name": "zen-browser-bin"
   },
