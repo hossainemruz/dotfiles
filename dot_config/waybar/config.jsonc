@@ -117,7 +117,7 @@
     "on-click": "omarchy-launch-or-focus-tui btop",
   },
   "clock": {
-    "format": "{:L%A %H:%M (%Z)}",
+    "format": "{:L%d %B, %A %H:%M (%Z)}",
     "format-alt": "{:L%d %B W%V %Y}",
     "tooltip-format": "{tz_list}",
     "timezones": [

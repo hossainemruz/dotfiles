@@ -82,6 +82,7 @@ switch_to_personal_profile() {
   # apply profile specific configurations
   sed -i 's/profile="work"/profile="personal"/' ~/.config/chezmoi/chezmoi.toml
   chezmoi apply
+  ssh-add ~/.ssh/id_ed25519_personal
   # change the theme
   omarchy-theme-set tokyo-night
 
@@ -100,6 +101,7 @@ switch_to_work_profile() {
   # apply profile specific configurations
   sed -i 's/profile="personal"/profile="work"/' ~/.config/chezmoi/chezmoi.toml
   chezmoi apply
+  ssh-add ~/.ssh/id_ed25519_work
   # change the theme
   omarchy-theme-set hackerman
 
