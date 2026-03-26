@@ -77,6 +77,13 @@
     "url": "https://qdrant.atlassian.net/jira/software/c/projects/CRC/boards/201"
   },
   {
+    "name": "Linear",
+    "icon": "linear.png",
+    "desktop_file": "liner.desktop",
+    "profile": "Personal",
+    "url": "https://linear.app/expendwise"
+  },
+  {
     "name": "Omarchy Cheat Sheet",
     "desktop_file": "omarchy_cheat_sheet.desktop",
     "icon": "keyboard.png",
