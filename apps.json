@@ -54,5 +54,9 @@
   {
     "name": "yazi",
     "package_name": "yazi"
+  },
+  {
+    "name": "zellij",
+    "package_name": "zellij"
   }
 ]
