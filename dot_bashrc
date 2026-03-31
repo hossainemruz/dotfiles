@@ -16,7 +16,7 @@ export PATH="$HOME/.local/bin:$PATH"
 
 # Start ssh-agent if is not running already
 if [ -z "$SSH_AUTH_SOCK" ]; then
-    eval "$(ssh-agent -s)" > /dev/null
+  eval "$(ssh-agent -s)" >/dev/null
 fi
 
 # Make an alias for invoking commands you use constantly
@@ -41,27 +41,13 @@ alias kw='watch -n 1'
 alias ky='kubectl get -oyaml'
 alias kpf='kubectl port-forward'
 
-# opencode
-export PATH=/home/emruz/.opencode/bin:$PATH
-
 # Set KUBECONFIG based on active Zellij tab
 if [[ -n "$ZELLIJ" ]]; then
   _tab_name=$(zellij action current-tab-info -j 2>/dev/null | jq -r '.name')
   case "$_tab_name" in
-    Development) export KUBECONFIG="$HOME/.kube/qdrant-dev.yaml" ;;
-    Staging)     export KUBECONFIG="$HOME/.kube/qdrant-staging.yaml" ;;
-    Production)  export KUBECONFIG="$HOME/.kube/qdrant-prod.yaml" ;;
+  Development) export KUBECONFIG="$HOME/.kube/qdrant-dev.yaml" ;;
+  Staging) export KUBECONFIG="$HOME/.kube/qdrant-staging.yaml" ;;
+  Production) export KUBECONFIG="$HOME/.kube/qdrant-prod.yaml" ;;
   esac
   unset _tab_name
 fi
-
-# Launch zellij code layout with session name derived from current directory
-function ide() {
-  local session_name
-  session_name=$(basename "$PWD")
-  if zellij list-sessions 2>/dev/null | grep -q "^$session_name"; then
-    zellij attach "$session_name"
-  else
-    zellij --new-session-with-layout code options --session-name "$session_name"
-  fi
-}

@@ -16,10 +16,6 @@
     "package_name": "gcloud"
   },
   {
-    "name": "zen-browser",
-    "package_name": "zen-browser-bin"
-  },
-  {
     "name": "ghostty",
     "package_name": "ghostty"
   },
@@ -58,5 +54,9 @@
   {
     "name": "zellij",
     "package_name": "zellij"
+  },
+  {
+    "name": "zen-browser",
+    "package_name": "zen-browser-bin"
   }
 ]

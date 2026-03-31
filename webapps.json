@@ -1,5 +1,12 @@
 [
   {
+    "name": "Apple Podcasts",
+    "desktop_file": "apple-podcasts.desktop",
+    "icon": "apple-podcasts.png",
+    "profile": "Personal",
+    "url": "https://podcasts.apple.com"
+  },
+  {
     "name": "Finance Tracker",
     "icon": "expense.png",
     "desktop_file": "finance_tracker.desktop",
@@ -7,18 +14,11 @@
     "url": "https://www.notion.so/hossainemruz/Finance-Tracker-7e65279d64aa4910a13fae92a3c21143"
   },
   {
-    "name": "Google Calendar (Work)",
-    "icon": "google_calendar.png",
-    "desktop_file": "google_calendar_work.desktop",
-    "profile": "Work",
-    "url": "https://calendar.google.com"
-  },
-  {
-    "name": "Google Meet (Work)",
-    "icon": "meet.png",
-    "desktop_file": "google_meet_work.desktop",
-    "profile": "Work",
-    "url": "https://meet.google.com"
+    "name": "Gemini",
+    "icon": "google-gemini.png",
+    "desktop_file": "gemini.desktop",
+    "profile": "Personal",
+    "url": "https://gemini.google.com/app"
   },
   {
     "name": "Gmail (Personal)",
@@ -35,11 +35,18 @@
     "url": "https://mail.google.com"
   },
   {
-    "name": "Gemini",
-    "icon": "google-gemini.png",
-    "desktop_file": "gemini.desktop",
-    "profile": "Personal",
-    "url": "https://gemini.google.com/app"
+    "name": "Google Calendar (Work)",
+    "icon": "google_calendar.png",
+    "desktop_file": "google_calendar_work.desktop",
+    "profile": "Work",
+    "url": "https://calendar.google.com"
+  },
+  {
+    "name": "Google Meet (Work)",
+    "icon": "meet.png",
+    "desktop_file": "google_meet_work.desktop",
+    "profile": "Work",
+    "url": "https://meet.google.com"
   },
   {
     "name": "Grok",
@@ -47,6 +54,55 @@
     "desktop_file": "grok.desktop",
     "profile": "Personal",
     "url": "https://grok.com"
+  },
+  {
+    "name": "iCloud",
+    "desktop_file": "icloud.desktop",
+    "icon": "icloud.png",
+    "profile": "Personal",
+    "url": "https://www.icloud.com"
+  },
+  {
+    "name": "Jira",
+    "icon": "jira.png",
+    "desktop_file": "jira.desktop",
+    "profile": "Work",
+    "url": "https://qdrant.atlassian.net/jira/software/c/projects/CRC/boards/201"
+  },
+  {
+    "name": "Linear",
+    "icon": "linear.png",
+    "desktop_file": "liner.desktop",
+    "profile": "Personal",
+    "url": "https://linear.app/expendwise"
+  },
+  {
+    "name": "LinkedIn",
+    "desktop_file": "linkedin.desktop",
+    "icon": "linkedin.png",
+    "profile": "Personal",
+    "url": "https://www.linkedin.com"
+  },
+  {
+    "name": "NeoVim Cheat Sheet",
+    "desktop_file": "neovim_cheat_sheet.desktop",
+    "icon": "coding-guide.png",
+    "profile": "Personal",
+    "url": "https://hossainemruz.github.io/neovim-cheat-sheet"
+  },
+  {
+    "name": "Omarchy Cheat Sheet",
+    "desktop_file": "omarchy_cheat_sheet.desktop",
+    "icon": "keyboard.png",
+    "profile": "Personal",
+    "url": "https://acrogenesis.com/omarchy-cheat-sheet"
+  },
+  {
+    "name": "Proton Drive",
+    "desktop_file": "proton_drive.desktop",
+    "icon": "proton-drive.png",
+    "profile": "Personal",
+    "url": "https://drive.proton.me"
   },
   {
     "name": "Second Brain",
@@ -68,61 +124,5 @@
     "desktop_file": "todoist_work.desktop",
     "profile": "Work",
     "url": "https://app.todoist.com"
-  },
-  {
-    "name": "Jira",
-    "icon": "jira.png",
-    "desktop_file": "jira.desktop",
-    "profile": "Work",
-    "url": "https://qdrant.atlassian.net/jira/software/c/projects/CRC/boards/201"
-  },
-  {
-    "name": "Linear",
-    "icon": "linear.png",
-    "desktop_file": "liner.desktop",
-    "profile": "Personal",
-    "url": "https://linear.app/expendwise"
-  },
-  {
-    "name": "Omarchy Cheat Sheet",
-    "desktop_file": "omarchy_cheat_sheet.desktop",
-    "icon": "keyboard.png",
-    "profile": "Personal",
-    "url": "https://acrogenesis.com/omarchy-cheat-sheet"
-  },
-  {
-    "name": "NeoVim Cheat Sheet",
-    "desktop_file": "neovim_cheat_sheet.desktop",
-    "icon": "coding-guide.png",
-    "profile": "Personal",
-    "url": "https://hossainemruz.github.io/neovim-cheat-sheet"
-  },
-  {
-    "name": "iCloud",
-    "desktop_file": "icloud.desktop",
-    "icon": "icloud.png",
-    "profile": "Personal",
-    "url": "https://www.icloud.com"
-  },
-  {
-    "name": "Apple Podcasts",
-    "desktop_file": "apple-podcasts.desktop",
-    "icon": "apple-podcasts.png",
-    "profile": "Personal",
-    "url": "https://podcasts.apple.com"
-  },
-  {
-    "name": "Proton Drive",
-    "desktop_file": "proton_drive.desktop",
-    "icon": "proton-drive.png",
-    "profile": "Personal",
-    "url": "https://drive.proton.me"
-  },
-  {
-    "name": "LinkedIn",
-    "desktop_file": "linkedin.desktop",
-    "icon": "linkedin.png",
-    "profile": "Personal",
-    "url": "https://www.linkedin.com"
   }
 ]
