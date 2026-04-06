@@ -48,6 +48,10 @@
     "package_name": "skopeo"
   },
   {
+    "name": "vicinae",
+    "package_name": "vicinae-bin"
+  },
+  {
     "name": "yazi",
     "package_name": "yazi"
   },
