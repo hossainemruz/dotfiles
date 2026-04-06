@@ -13,7 +13,7 @@
   ],
   "modules-center": [
     "clock",
-    "custom/events",
+    "custom/next-events",
     "custom/update",
     "custom/screenrecording-indicator",
   ],
@@ -48,7 +48,12 @@
       "active": "󱓻",
     },
     "persistent-workspaces": {
-      "DP-3": [1, 2, 3, 4]
+      "DP-3": [
+        1,
+        2,
+        3,
+        4
+      ]
     },
   },
   "custom/omarchy": {
@@ -65,15 +70,15 @@
     "signal": 7,
     "interval": 3600,
   },
-  "custom/events": {
-    "format": "{}",
+  "custom/next-events": {
+    "format": " {}",
     "tooltip": true,
     "interval": 60,
     "format-icons": {
       "default": "",
     },
-    "exec": "python ~/.config/waybar/scripts/next-events.py",
-    "return-type": "json",
+    "exec": "/home/emruz/.local/share/mise/installs/go/1.26.1/bin/waybar-next-events list",
+    "return-type": "json"
   },
   "custom/profile": {
     "format": "{} ",

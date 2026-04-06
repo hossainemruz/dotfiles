@@ -84,7 +84,7 @@ switch_to_personal_profile() {
   chezmoi apply
   ssh-add ~/.ssh/id_ed25519_personal
   # change the theme
-  omarchy-theme-set tokyo-night
+  omarchy-theme-set matte-black
 
   echo "Swithed to personal profile"
 }
