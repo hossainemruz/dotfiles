@@ -5,3 +5,5 @@ chezmoi.toml
 README.md
 icons/
 .config/nvim/lazy-lock.json
+.opencode/
+.gitignore
