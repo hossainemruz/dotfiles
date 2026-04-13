@@ -77,7 +77,7 @@
     "format-icons": {
       "default": "",
     },
-    "exec": "/home/emruz/.local/share/mise/installs/go/1.26.1/bin/waybar-next-events list",
+    "exec": "/home/emruz/.local/share/mise/installs/go/1.26.2/bin/waybar-next-events list",
     "return-type": "json"
   },
   "custom/profile": {

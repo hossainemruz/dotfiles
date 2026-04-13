@@ -1,0 +1,48 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "opencode-go/kimi-k2.5",
+  "default_agent": "plan",
+  "agent": {
+    "build": {
+      "model": "opencode-go/glm-5.1",
+      "prompt": "{file:./prompts/coding-guideline-v2.md}",
+    },
+    "plan": {
+      "model": "opencode-go/kimi-k2.5",
+    },
+    "explore": {
+      "model": "opencode-go/minimax-m2.7",
+    },
+    "general": {
+      "model": "opencode-go/minimax-m2.7",
+    },
+    "pro-builder": {
+      "description": "Building with best expensive model",
+      "model": "github-copilot/gpt-5.4",
+      "mode": "primary",
+      "prompt": "{file:./prompts/coding-guideline-v2.md}",
+    },
+    "reviewer-gpt": {
+      "description": "Code review using best OpenAI model",
+      "model": "github-copilot/gpt-5.4",
+      "mode": "subagent",
+      "prompt": "{file:./prompts/code-review-strategy-v2.md}",
+    },
+    "reviewer-opus": {
+      "description": "Code review using best Antropic model",
+      "model": "github-copilot/claude-opus-4.6",
+      "mode": "subagent",
+      "prompt": "{file:./prompts/code-review-strategy-v2.md}",
+    },
+    "reviewer-glm": {
+      "description": "Code review using best Z.AI model",
+      "model": "opencode-go/glm-5.1",
+      "mode": "subagent",
+      "prompt": "{file:./prompts/code-review-strategy-v2.md}",
+    },
+  },
+  "plugin": [
+    "@plannotator/opencode@v0.17.8",
+    "@gotgenes/opencode-agent-identity@v3.0.1"
+  ]
+}
