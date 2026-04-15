@@ -1,48 +1,80 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "model": "opencode-go/kimi-k2.5",
-  "default_agent": "plan",
+  "permission": {
+    "read": {
+      "./**": "allow",
+      "~/projects/**": "allow",
+      "~/.ssh/**": "deny",
+      "~/.gnupg/**": "deny",
+      "~/.aws/**": "deny",
+      "~/.azure/**": "deny",
+      "~/.kube/**": "deny",
+      "~/.docker/**": "deny",
+      "~/.config/gcloud/**": "deny",
+      ".env*": "deny",
+      "*.pem": "deny",
+      "*.key": "deny",
+      "*.p12": "deny",
+      "*.jks": "deny",
+      "*credentials*": "deny"
+    },
+    "external_directory": {
+      "~/projects/**": "allow"
+    },
+    "edit": {
+      "*": "ask",
+      "./**": "allow",
+      "~/.aws/**": "deny",
+      "~/.azure/**": "deny",
+      "~/.ssh/**": "deny",
+      "~/.gnupg/**": "deny",
+      "~/.kube/**": "deny",
+      "~/.docker/**": "deny",
+      "~/.config/gcloud/**": "deny"
+    },
+    "bash": {
+      "*": "ask",
+      "rm *credentials*": "deny",
+      "rm *.env*": "deny"
+    }
+  },
+  "model": "opencode-go/minimax-m2.7",
+  "default_agent": "general",
   "agent": {
     "build": {
-      "model": "opencode-go/glm-5.1",
-      "prompt": "{file:./prompts/coding-guideline-v2.md}",
+      "description": "Primary coding agent",
+      "model": "opencode-go/kimi-k2.5",
+      "prompt": "{file:./prompts/coding-guideline.md}"
     },
     "plan": {
-      "model": "opencode-go/kimi-k2.5",
+      "description": "Structured implementation planning",
+      "model": "opencode-go/minimax-m2.7",
+      "prompt": "{file:./prompts/plan-guideline.md}"
     },
     "explore": {
+      "description": "Fast codebase exploration",
       "model": "opencode-go/minimax-m2.7",
+      "prompt": "{file:./prompts/explore-guideline.md}"
     },
     "general": {
+      "description": "General-purpose default agent",
       "model": "opencode-go/minimax-m2.7",
+      "prompt": "{file:./prompts/general-guideline.md}"
     },
-    "pro-builder": {
-      "description": "Building with best expensive model",
+    "GLM": {
+      "description": "Coding with GLM",
+      "model": "opencode-go/glm-5.1",
+      "mode": "primary",
+      "prompt": "{file:./prompts/coding-guideline.md}"
+    },
+    "GPT": {
+      "description": "Coding with GPT",
       "model": "github-copilot/gpt-5.4",
       "mode": "primary",
-      "prompt": "{file:./prompts/coding-guideline-v2.md}",
-    },
-    "reviewer-gpt": {
-      "description": "Code review using best OpenAI model",
-      "model": "github-copilot/gpt-5.4",
-      "mode": "subagent",
-      "prompt": "{file:./prompts/code-review-strategy-v2.md}",
-    },
-    "reviewer-opus": {
-      "description": "Code review using best Antropic model",
-      "model": "github-copilot/claude-opus-4.6",
-      "mode": "subagent",
-      "prompt": "{file:./prompts/code-review-strategy-v2.md}",
-    },
-    "reviewer-glm": {
-      "description": "Code review using best Z.AI model",
-      "model": "opencode-go/glm-5.1",
-      "mode": "subagent",
-      "prompt": "{file:./prompts/code-review-strategy-v2.md}",
-    },
+      "prompt": "{file:./prompts/coding-guideline.md}"
+    }
   },
   "plugin": [
-    "@plannotator/opencode@v0.17.8",
-    "@gotgenes/opencode-agent-identity@v3.0.1"
+    "@plannotator/opencode@v0.17.10"
   ]
 }
