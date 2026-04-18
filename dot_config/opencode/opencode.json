@@ -2,8 +2,6 @@
   "$schema": "https://opencode.ai/config.json",
   "permission": {
     "read": {
-      "./**": "allow",
-      "~/projects/**": "allow",
       "~/.ssh/**": "deny",
       "~/.gnupg/**": "deny",
       "~/.aws/**": "deny",
@@ -18,12 +16,7 @@
       "*.jks": "deny",
       "*credentials*": "deny"
     },
-    "external_directory": {
-      "~/projects/**": "allow"
-    },
     "edit": {
-      "*": "ask",
-      "./**": "allow",
       "~/.aws/**": "deny",
       "~/.azure/**": "deny",
       "~/.ssh/**": "deny",
@@ -33,7 +26,6 @@
       "~/.config/gcloud/**": "deny"
     },
     "bash": {
-      "*": "ask",
       "rm *credentials*": "deny",
       "rm *.env*": "deny"
     }
@@ -43,12 +35,13 @@
   "agent": {
     "build": {
       "description": "Primary coding agent",
+      "hidden": true,
       "model": "opencode-go/kimi-k2.5",
       "prompt": "{file:./prompts/coding-guideline.md}"
     },
     "plan": {
       "description": "Structured implementation planning",
-      "model": "opencode-go/minimax-m2.7",
+      "model": "github-copilot/gpt-5.4",
       "prompt": "{file:./prompts/plan-guideline.md}"
     },
     "explore": {
@@ -58,17 +51,24 @@
     },
     "general": {
       "description": "General-purpose default agent",
+      "mode": "primary",
       "model": "opencode-go/minimax-m2.7",
       "prompt": "{file:./prompts/general-guideline.md}"
     },
+    "kimi": {
+      "description": "Building with Kimi",
+      "model": "opencode-go/kimi-k2.5",
+      "mode": "primary",
+      "prompt": "{file:./prompts/coding-guideline.md}"
+    },
     "GLM": {
-      "description": "Coding with GLM",
+      "description": "Building with GLM",
       "model": "opencode-go/glm-5.1",
       "mode": "primary",
       "prompt": "{file:./prompts/coding-guideline.md}"
     },
     "GPT": {
-      "description": "Coding with GPT",
+      "description": "Building with GPT",
       "model": "github-copilot/gpt-5.4",
       "mode": "primary",
       "prompt": "{file:./prompts/coding-guideline.md}"

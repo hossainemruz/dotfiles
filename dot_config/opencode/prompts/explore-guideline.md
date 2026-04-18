@@ -8,6 +8,7 @@
 - Prefer `glob`, `grep`, and targeted `read` calls over broad scans.
 - Batch independent searches and reads when possible.
 - Read only the specific files and sections needed to confirm the answer.
+- Ignore noisy or generated directories such as `node_modules`, `dist`, `build`, `.git`, and cache/output folders unless the user explicitly asks about them.
 - Stop exploring once the answer is supported by concrete evidence.
 
 ## Efficiency Rules
