@@ -5,6 +5,9 @@
 -- Ensure shell PATH is available in Neovim (fixes lazygit and other tools)
 vim.env.PATH = vim.env.PATH or os.getenv("PATH")
 
+-- Enable 24-bit RGB colors in terminal (required for lazygit colors)
+vim.opt.termguicolors = true
+
 vim.opt.relativenumber = false
 vim.opt.foldmethod = "expr"
 vim.opt.foldexpr = "v:lua.require'nvim-treesitter.foldexpr'()"
