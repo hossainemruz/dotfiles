@@ -1,5 +1,6 @@
 {
   "$schema": "https://opencode.ai/config.json",
+  "autoupdate": true,
   "permission": {
     "read": {
       "~/.ssh/**": "deny",
@@ -30,13 +31,13 @@
       "rm *.env*": "deny"
     }
   },
-  "model": "opencode-go/minimax-m2.7",
+  "model": "opencode-go/qwen3.6-plus",
   "default_agent": "general",
   "agent": {
     "build": {
       "description": "Primary coding agent",
-      "hidden": true,
-      "model": "opencode-go/kimi-k2.5",
+      "hidden": false,
+      "model": "opencode-go/qwen3.6-plus",
       "prompt": "{file:./prompts/coding-guideline.md}"
     },
     "plan": {
@@ -52,12 +53,12 @@
     "general": {
       "description": "General-purpose default agent",
       "mode": "primary",
-      "model": "opencode-go/minimax-m2.7",
+      "model": "opencode-go/qwen3.6-plus",
       "prompt": "{file:./prompts/general-guideline.md}"
     },
     "kimi": {
       "description": "Building with Kimi",
-      "model": "opencode-go/kimi-k2.5",
+      "model": "opencode-go/kimi-k2.6",
       "mode": "primary",
       "prompt": "{file:./prompts/coding-guideline.md}"
     },
@@ -75,6 +76,6 @@
     }
   },
   "plugin": [
-    "@plannotator/opencode@v0.17.10"
+    "@plannotator/opencode@v0.18.0"
   ]
 }

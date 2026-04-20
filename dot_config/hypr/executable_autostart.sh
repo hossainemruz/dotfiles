@@ -13,6 +13,9 @@ hyprctl dispatch exec "[workspace 1 silent] megasync"
 # Terminal (workspace 2)
 hyprctl dispatch exec "[workspace 2 silent] ghostty"
 
+# Start Easy Effects in background on special workspace
+hyprctl dispatch exec "[workspace special:easyeffects silent] flatpak run com.github.wwmm.easyeffects"
+
 # Wait for second monitor (HDMI-A-1), max 30 seconds
 timeout=30
 counter=0
