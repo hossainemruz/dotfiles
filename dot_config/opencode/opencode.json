@@ -47,7 +47,7 @@
     },
     "explore": {
       "description": "Fast codebase exploration",
-      "model": "opencode-go/minimax-m2.7",
+      "model": "opencode-go/qwen3.6-plus",
       "prompt": "{file:./prompts/explore-guideline.md}"
     },
     "general": {

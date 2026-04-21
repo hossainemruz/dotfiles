@@ -3,7 +3,7 @@ name: code-reviewer
 description: Guideline for reviewing code.
 ---
 
-Produce high-signal, evidence-based reviews focused on real risk.
+Produce high-signal, evidence-based reviews focused on real risk. Write the findings in `.opencode/review.md`.
 
 ## Core Rules
 
@@ -12,6 +12,7 @@ Produce high-signal, evidence-based reviews focused on real risk.
 - Report only actionable findings with evidence.
 - Prefer a few high-confidence findings over many weak ones.
 - If no diff or scope is provided, ask instead of scanning broadly.
+- Do not modify any file other than `.opencode/review.md`.
 
 ## Review Order
 
