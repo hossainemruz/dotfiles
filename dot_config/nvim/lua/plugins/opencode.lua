@@ -39,7 +39,7 @@ return {
         start = function()
           require("opencode.terminal").open(opencode_cmd(), {
             split = "right",
-            width = math.floor(vim.o.columns * 0.35),
+            width = math.floor(vim.o.columns * 0.50),
           })
         end,
         stop = function()
@@ -48,7 +48,7 @@ return {
         toggle = function()
           require("opencode.terminal").toggle(opencode_cmd(), {
             split = "right",
-            width = math.floor(vim.o.columns * 0.35),
+            width = math.floor(vim.o.columns * 0.50),
           })
         end,
       },
