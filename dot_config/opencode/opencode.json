@@ -31,29 +31,30 @@
       "rm *.env*": "deny"
     }
   },
-  "model": "opencode-go/qwen3.6-plus",
+  "model": "opencode-go/mimo-v2.5-pro",
   "default_agent": "general",
   "agent": {
     "build": {
       "description": "Primary coding agent",
-      "hidden": false,
-      "model": "opencode-go/qwen3.6-plus",
+      "hidden": true,
+      "model": "opencode-go/kimi-k2.6",
       "prompt": "{file:./prompts/coding-guideline.md}"
     },
     "plan": {
       "description": "Structured implementation planning",
+      "hidden": true,
       "model": "github-copilot/gpt-5.4",
       "prompt": "{file:./prompts/plan-guideline.md}"
     },
     "explore": {
       "description": "Fast codebase exploration",
-      "model": "opencode-go/qwen3.6-plus",
+      "model": "opencode-go/mimo-v2.5-pro",
       "prompt": "{file:./prompts/explore-guideline.md}"
     },
     "general": {
       "description": "General-purpose default agent",
       "mode": "primary",
-      "model": "opencode-go/qwen3.6-plus",
+      "model": "opencode-go/mimo-v2.5-pro",
       "prompt": "{file:./prompts/general-guideline.md}"
     },
     "kimi": {
@@ -73,9 +74,23 @@
       "model": "github-copilot/gpt-5.4",
       "mode": "primary",
       "prompt": "{file:./prompts/coding-guideline.md}"
-    }
+    },
+  },
+  "provider": {
+    "local": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Local",
+      "options": {
+        "baseURL": "http://127.0.0.1:1234/v1"
+      },
+      "models": {
+        "qwopus-glm-18b-merged": {
+          "name": "Qwopus"
+        }
+      }
+    },
   },
   "plugin": [
-    "@plannotator/opencode@v0.18.0"
+    "@plannotator/opencode@v0.19.1"
   ]
 }

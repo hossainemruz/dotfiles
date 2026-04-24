@@ -73,3 +73,8 @@ timetable() {
         printf "%-8s %-10s %-10s\n" "$utc_time" "$berlin_time" "$dhaka_time"
     done
 }
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/home/emruz/.lmstudio/bin"
+# End of LM Studio CLI section
+
