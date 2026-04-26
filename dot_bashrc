@@ -41,6 +41,10 @@ alias kw='watch -n 1'
 alias ky='kubectl get -oyaml'
 alias kpf='kubectl port-forward'
 
+# Plannotator commands
+alias pr='plannotator review'
+alias pa='plannotator annotate'
+
 # Set KUBECONFIG based on active Zellij tab
 if [[ -n "$ZELLIJ" ]]; then
   _tab_name=$(zellij action current-tab-info -j 2>/dev/null | jq -r '.name')
