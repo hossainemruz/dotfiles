@@ -63,9 +63,9 @@
       "mode": "primary",
       "prompt": "{file:./prompts/coding-guideline.md}"
     },
-    "GLM": {
-      "description": "Building with GLM",
-      "model": "opencode-go/glm-5.1",
+    "DeepSeek": {
+      "description": "Building DeepSeek",
+      "model": "opencode-go/deepseek-v4-pro",
       "mode": "primary",
       "prompt": "{file:./prompts/coding-guideline.md}"
     },
