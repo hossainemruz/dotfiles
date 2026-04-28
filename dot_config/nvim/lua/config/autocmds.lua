@@ -35,3 +35,15 @@ vim.api.nvim_create_autocmd("SwapExists", {
     vim.v.swapchoice = "e" -- "e" = edit anyway; use "o" for read-only
   end,
 })
+
+--- Open markdown in Typora
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "markdown",
+  callback = function()
+    vim.keymap.set("n", "<leader>fp", function()
+      local filepath = vim.fn.expand("%:p")
+      -- Detach = true ensures Typora stays open even if you close Neovim
+      vim.fn.jobstart({ "typora", filepath }, { detach = true })
+    end, { buffer = true, desc = "Open in Typora" })
+  end,
+})
