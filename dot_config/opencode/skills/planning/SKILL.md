@@ -26,7 +26,8 @@ Create a practical execution plan in `.opencode/plan.md`, not implementation cod
 4. Break the work into ordered sub-tasks with clear outcomes.
 5. For each sub-task, list the related requirements so downstream agents can trace the work back to the approved task.
 6. Include validation/testing guidance and important risks for each sub-task.
-7. Write a self-contained plan that can be executed without the conversation.
+7. Explain core concepts with appropriate code example when necessary.
+8. Write a self-contained plan that can be executed without the conversation.
 
 ## Required Output Template
 
@@ -52,6 +53,10 @@ Create a practical execution plan in `.opencode/plan.md`, not implementation cod
 ## Risks and Areas Requiring Care
 
 - [Key risks, compatibility concerns, or failure modes]
+
+## Core concepts
+
+Explain core concepts with code level example if necessary.
 
 ## Sub-Tasks
 

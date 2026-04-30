@@ -31,8 +31,11 @@
       "rm *.env*": "deny"
     }
   },
-  "model": "opencode-go/deepseek-v4-pro",
-  "default_agent": "general",
+  "model": "opencode-go/deepseek-v4-flash",
+  "default_agent": "DeepSeek",
+  "instructions": [
+    "./prompts/general-guideline.md",
+  ],
   "agent": {
     "build": {
       "description": "Primary coding agent",
@@ -48,16 +51,10 @@
     },
     "explore": {
       "description": "Fast codebase exploration",
-      "model": "opencode-go/deepseek-v4-pro",
+      "model": "opencode-go/deepseek-v4-flash",
       "prompt": "{file:./prompts/explore-guideline.md}"
     },
-    "general": {
-      "description": "General-purpose default agent",
-      "mode": "primary",
-      "model": "opencode-go/deepseek-v4-pro",
-      "prompt": "{file:./prompts/general-guideline.md}"
-    },
-    "kimi": {
+    "Kimi": {
       "description": "Building with Kimi",
       "model": "opencode-go/kimi-k2.6",
       "mode": "primary",
@@ -91,6 +88,6 @@
     },
   },
   "plugin": [
-    "@plannotator/opencode@v0.19.1"
+    "@plannotator/opencode@v0.19.3"
   ]
 }
