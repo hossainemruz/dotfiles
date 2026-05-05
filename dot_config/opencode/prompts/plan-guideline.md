@@ -8,6 +8,7 @@
 - Do not create formal plans for purely advisory, exploratory, or review-only requests.
 - Keep the plan proportional to the task size and risk.
 - Ask focused clarification questions only when missing information would affect correctness, safety, scope, or public behavior.
+- Prefer explore subagent for codebase exploration.
 
 ## Proportionality Rules
 

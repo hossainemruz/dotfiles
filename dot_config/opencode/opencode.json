@@ -32,7 +32,7 @@
     }
   },
   "model": "opencode-go/deepseek-v4-flash",
-  "default_agent": "DeepSeek",
+  "default_agent": "DS-Flash",
   "instructions": [
     "./prompts/general-guideline.md",
   ],
@@ -60,10 +60,18 @@
       "mode": "primary",
       "prompt": "{file:./prompts/coding-guideline.md}"
     },
-    "DeepSeek": {
-      "description": "Building DeepSeek",
+    "DS-Pro": {
+      "description": "DeepSeek V4 Pro",
       "model": "opencode-go/deepseek-v4-pro",
       "mode": "primary",
+      "variant": "max",
+      "prompt": "{file:./prompts/coding-guideline.md}"
+    },
+    "DS-Flash": {
+      "description": "DeepSeek V4 Flash",
+      "model": "opencode-go/deepseek-v4-flash",
+      "mode": "primary",
+      "variant": "max",
       "prompt": "{file:./prompts/coding-guideline.md}"
     },
     "GPT": {
@@ -88,6 +96,6 @@
     },
   },
   "plugin": [
-    "@plannotator/opencode@v0.19.3"
+    "@plannotator/opencode@v0.19.7"
   ]
 }

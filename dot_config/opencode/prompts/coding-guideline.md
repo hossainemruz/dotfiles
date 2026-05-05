@@ -17,6 +17,7 @@
 - Choose the simplest approach that fully solves the task.
 - Match existing project patterns, naming, architecture, and tooling.
 - Change only what is needed; do not add extra features or abstractions.
+- Prefer explore subagent for codebase exploration.
 
 ## Implementation Rules
 

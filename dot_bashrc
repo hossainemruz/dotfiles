@@ -26,6 +26,7 @@ alias j='autojump'
 alias yz='yazi'
 alias dot='chezmoi'
 alias zed='zeditor'
+alias gcm='git checkout main && git fetch --all && git reset --hard origin/main'
 
 # kubectl helpers
 alias ctx='kubectx'
