@@ -53,11 +53,13 @@
     "explore": {
       "description": "Fast codebase exploration",
       "model": "opencode-go/deepseek-v4-flash",
+      "variant": "max",
       "prompt": "{file:./prompts/explore-guideline.md}"
     },
     "reviewer": {
       "description": "Automated review agent",
       "model": "opencode-go/deepseek-v4-pro",
+      "variant": "max",
       "mode": "all",
       "prompt": "Use code-review skill"
     },
