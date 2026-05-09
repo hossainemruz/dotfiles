@@ -47,7 +47,6 @@ alias pa='plannotator annotate'
 alias review='plannotator review'
 alias review-plan='plannotator annotate .opencode/plan.md'
 alias review-task='plannotator annotate .opencode/task.md'
-alias review-subtask='plannotator annotate .opencode/subtask.md'
 alias review-feedback='plannotator annotate .opencode/review.md'
 
 
@@ -87,4 +86,3 @@ timetable() {
 # Added by LM Studio CLI (lms)
 export PATH="$PATH:/home/emruz/.lmstudio/bin"
 # End of LM Studio CLI section
-

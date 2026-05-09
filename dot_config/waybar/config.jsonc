@@ -77,7 +77,7 @@
     "format-icons": {
       "default": "",
     },
-    "exec": "waybar-next-events list",
+    "exec": "waybar-next-events list --days=4 --limit=10",
     "return-type": "json"
   },
   "custom/profile": {

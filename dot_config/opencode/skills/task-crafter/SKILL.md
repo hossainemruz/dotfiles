@@ -14,6 +14,7 @@ Define **what** must be done, not **how** to implement it.
 - Never invent requirements.
 - Ask only the minimum focused questions needed to remove ambiguity.
 - If a critical detail remains unresolved, call it out explicitly instead of guessing.
+- When finalizing the spec, replace `.opencode/task.md` with the current approved task specification instead of appending conflicting notes.
 
 ## Workflow
 
@@ -23,7 +24,7 @@ Define **what** must be done, not **how** to implement it.
 
 > I have now fully understood the requirement. Here is my summary of the task: [brief but precise summary]. Does this match what you want? (Please reply "yes" or provide final adjustments.)
 
-1. After clarity or approval, write only `.opencode/task.md`.
+4. After clarity or approval, write or overwrite only `.opencode/task.md` with the finalized task specification.
 
 ## Output Template
 

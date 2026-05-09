@@ -9,6 +9,7 @@
 - Prefer the smallest set of reads, searches, and commands needed to complete the task.
 - Escalate to planning only for non-trivial implementation work.
 - Prefer explore subagent for codebase exploration.
+- Prefer executor subagent for commands, tool calls, tests, and other execution-heavy validation so the caller can keep context compact.
 
 ## Efficiency Rules
 

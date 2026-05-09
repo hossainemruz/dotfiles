@@ -32,20 +32,18 @@
     }
   },
   "model": "opencode-go/deepseek-v4-flash",
-  "default_agent": "DS-Flash",
+  "default_agent": "build",
   "instructions": [
     "./prompts/general-guideline.md",
   ],
   "agent": {
     "build": {
       "description": "Primary coding agent",
-      "hidden": true,
       "model": "opencode-go/kimi-k2.6",
       "prompt": "{file:./prompts/coding-guideline.md}"
     },
     "plan": {
       "description": "Structured implementation planning",
-      "hidden": true,
       "model": "github-copilot/gpt-5.4",
       "prompt": "{file:./prompts/plan-guideline.md}"
     },
@@ -54,48 +52,20 @@
       "model": "opencode-go/deepseek-v4-flash",
       "prompt": "{file:./prompts/explore-guideline.md}"
     },
-    "Kimi": {
-      "description": "Building with Kimi",
-      "model": "opencode-go/kimi-k2.6",
-      "mode": "primary",
-      "prompt": "{file:./prompts/coding-guideline.md}"
-    },
-    "DS-Pro": {
-      "description": "DeepSeek V4 Pro",
+    "reviewer": {
+      "description": "Automated review agent",
       "model": "opencode-go/deepseek-v4-pro",
-      "mode": "primary",
-      "variant": "max",
-      "prompt": "{file:./prompts/coding-guideline.md}"
+      "mode": "all",
+      "prompt": "Use code-review skill"
     },
-    "DS-Flash": {
-      "description": "DeepSeek V4 Flash",
+    "executor": {
+      "description": "Executes tools on behalf of other agents",
       "model": "opencode-go/deepseek-v4-flash",
-      "mode": "primary",
-      "variant": "max",
-      "prompt": "{file:./prompts/coding-guideline.md}"
-    },
-    "GPT": {
-      "description": "Building with GPT",
-      "model": "github-copilot/gpt-5.4",
-      "mode": "primary",
-      "prompt": "{file:./prompts/coding-guideline.md}"
-    },
-  },
-  "provider": {
-    "local": {
-      "npm": "@ai-sdk/openai-compatible",
-      "name": "Local",
-      "options": {
-        "baseURL": "http://127.0.0.1:1234/v1"
-      },
-      "models": {
-        "qwopus-glm-18b-merged": {
-          "name": "Qwopus"
-        }
-      }
+      "mode": "subagent",
+      "prompt": "{file:./prompts/executor-guideline.md}"
     },
   },
   "plugin": [
-    "@plannotator/opencode@v0.19.7"
+    "@plannotator/opencode@v0.19.11"
   ]
 }
