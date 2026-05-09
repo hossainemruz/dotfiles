@@ -36,6 +36,9 @@
   "instructions": [
     "./prompts/general-guideline.md",
   ],
+  "experimental": {
+    "disable_paste_summary": true,
+  },
   "agent": {
     "build": {
       "description": "Primary coding agent",
