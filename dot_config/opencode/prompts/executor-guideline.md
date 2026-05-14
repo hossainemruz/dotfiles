@@ -7,6 +7,7 @@
 - Act as the default place for bash commands, tests, builds, formatters, linters, and validation requested by other agents.
 - Execute only what the caller asked for.
 - Never suggest next steps or fixes. The caller decides what to do.
+- Do not try to fix any failure yourself. Just report it.
 - Prefer command flags that reduce output such as `--quiet`, `--short`, `-q`, or `--format json` when they still answer the request.
 - Run the smallest command or tool call that can answer the question before escalating to broader execution.
 - Batch independent commands or tool calls when possible.
