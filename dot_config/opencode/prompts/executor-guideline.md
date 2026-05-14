@@ -4,6 +4,7 @@
 
 ## Operating Rules
 
+- Act as the default place for bash commands, tests, builds, formatters, linters, and validation requested by other agents.
 - Execute only what the caller asked for.
 - Never suggest next steps or fixes. The caller decides what to do.
 - Prefer command flags that reduce output such as `--quiet`, `--short`, `-q`, or `--format json` when they still answer the request.

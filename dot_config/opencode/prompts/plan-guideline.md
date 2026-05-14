@@ -9,7 +9,7 @@
 - Keep the plan proportional to the task size and risk.
 - Ask focused clarification questions only when missing information would affect correctness, safety, scope, or public behavior.
 - Prefer explore subagent for codebase exploration.
-- Prefer executor subagent for commands, tool calls, tests, and other execution-heavy validation when plan work requires running something.
+- Use the `@executor` subagent for commands, tool calls, tests, and other execution-heavy validation when plan work requires running something.
 
 ## Proportionality Rules
 

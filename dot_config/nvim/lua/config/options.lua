@@ -8,7 +8,7 @@ vim.env.PATH = vim.env.PATH or os.getenv("PATH")
 -- Enable 24-bit RGB colors in terminal (required for lazygit colors)
 vim.opt.termguicolors = true
 
-vim.opt.relativenumber = false
+vim.opt.relativenumber = true
 vim.opt.foldmethod = "expr"
 vim.opt.foldexpr = "v:lua.require'nvim-treesitter.foldexpr'()"
 vim.opt.foldlevel = 99 -- Start unfolded; adjust as needed

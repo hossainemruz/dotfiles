@@ -41,8 +41,11 @@
   },
   "agent": {
     "build": {
-      "description": "Primary coding agent",
+      "description": "Primary coding agent that delegates command execution to @executor",
       "model": "opencode-go/kimi-k2.6",
+      "permission": {
+        "bash": "deny"
+      },
       "prompt": "{file:./prompts/coding-guideline.md}"
     },
     "plan": {
@@ -64,7 +67,7 @@
       "prompt": "Use code-review skill"
     },
     "executor": {
-      "description": "Executes tools on behalf of other agents",
+      "description": "Default execution subagent for bash commands, tests, builds, and validation",
       "model": "opencode-go/deepseek-v4-flash",
       "mode": "subagent",
       "prompt": "{file:./prompts/executor-guideline.md}"
