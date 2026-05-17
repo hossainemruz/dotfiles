@@ -73,7 +73,5 @@
       "prompt": "{file:./prompts/executor-guideline.md}"
     },
   },
-  "plugin": [
-    "@plannotator/opencode@v0.19.11"
-  ]
+  "plugin": []
 }
