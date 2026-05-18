@@ -64,22 +64,25 @@ fi
 # Function to print time table of selected zone
 timetable() {
     # Print header
-    printf "%-8s %-10s %-10s\n" "UTC" "Berlin" "Dhaka"
-    printf "%-8s %-10s %-10s\n" "-------" "---------" "---------"
+    printf "%-10s %-10s %-10s\n" "UTC" "Berlin" "Dhaka"
+    printf "%-10s %-10s %-10s\n" "----------" "----------" "----------"
 
     # Loop through each UTC hour (00:00 to 23:00)
     for h in {0..23}; do
-        # UTC time in 24h format
-        utc_time=$(printf "%02d:00" "$h")
+        # UTC reference time in 24h format (for date calculations)
+        utc_ref=$(printf "%02d:00" "$h")
+
+        # UTC time in 12h format
+        utc_time=$(TZ=UTC date --date="UTC ${utc_ref}" +"%I:%M %p")
 
         # Berlin time (Europe/Berlin automatically handles CET/CEST DST)
-        berlin_time=$(TZ=Europe/Berlin date --date="UTC ${utc_time}" +"%H:%M")
+        berlin_time=$(TZ=Europe/Berlin date --date="UTC ${utc_ref}" +"%I:%M %p")
 
         # Dhaka time (Asia/Dhaka = UTC+6, no DST)
-        dhaka_time=$(TZ=Asia/Dhaka date --date="UTC ${utc_time}" +"%H:%M")
+        dhaka_time=$(TZ=Asia/Dhaka date --date="UTC ${utc_ref}" +"%I:%M %p")
 
         # Print the row
-        printf "%-8s %-10s %-10s\n" "$utc_time" "$berlin_time" "$dhaka_time"
+        printf "%-10s %-10s %-10s\n" "$utc_time" "$berlin_time" "$dhaka_time"
     done
 }
 
