@@ -59,6 +59,12 @@
       "variant": "max",
       "prompt": "{file:./prompts/explore-guideline.md}"
     },
+    "executor": {
+      "description": "Default execution subagent for bash commands, tests, builds, and validation",
+      "model": "opencode-go/deepseek-v4-flash",
+      "mode": "subagent",
+      "prompt": "{file:./prompts/executor-guideline.md}"
+    },
     "reviewer": {
       "description": "Automated review agent",
       "model": "opencode-go/deepseek-v4-pro",
@@ -66,11 +72,12 @@
       "mode": "all",
       "prompt": "Use code-review skill"
     },
-    "executor": {
-      "description": "Default execution subagent for bash commands, tests, builds, and validation",
-      "model": "opencode-go/deepseek-v4-flash",
+    "expert-reviewer": {
+      "description": "In-depth review with more cabable models",
+      "model": "github-copilot/gpt-5.4",
+      "variant": "high",
       "mode": "subagent",
-      "prompt": "{file:./prompts/executor-guideline.md}"
+      "prompt": "You are a highly experienced expert software engineer. Perform an in-depth review using code-review skill"
     },
   },
   "plugin": []
