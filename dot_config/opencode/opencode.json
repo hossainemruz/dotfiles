@@ -32,14 +32,18 @@
     }
   },
   "model": "opencode-go/deepseek-v4-flash",
-  "default_agent": "build",
-  "instructions": [
-    "./prompts/general-guideline.md",
-  ],
+  "default_agent": "general",
   "experimental": {
     "disable_paste_summary": true,
   },
   "agent": {
+    "general": {
+      "description": "Agent for general purpose use",
+      "model": "opencode-go/deepseek-v4-flash",
+      "mode": "primary",
+      "variant": "max",
+      "prompt": "{file:./prompts/general-guideline.md}"
+    },
     "build": {
       "description": "Primary coding agent that delegates command execution to @executor",
       "model": "opencode-go/kimi-k2.6",
@@ -69,7 +73,7 @@
       "description": "Automated review agent",
       "model": "opencode-go/deepseek-v4-pro",
       "variant": "max",
-      "mode": "all",
+      "mode": "subagent",
       "prompt": "Use code-review skill"
     },
     "expert-reviewer": {

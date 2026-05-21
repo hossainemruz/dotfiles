@@ -12,7 +12,7 @@
     "hyprland/workspaces",
   ],
   "modules-center": [
-    "clock",
+    "custom/clock",
     "custom/next-events",
     "custom/update",
     "custom/screenrecording-indicator",
@@ -100,16 +100,10 @@
     "format": "󰍛",
     "on-click": "omarchy-launch-or-focus-tui btop",
   },
-  "clock": {
-    "format": "{:L%d %B, %A %H:%M (%Z)}",
-    "format-alt": "{:L%d %B W%V %Y}",
-    "tooltip-format": "{tz_list}",
-    "timezones": [
-      "Asia/Dhaka",
-      "Europe/Berlin",
-      "Atlantic/South_Georgia",
-      "America/Buenos_Aires",
-    ],
+  "custom/clock": {
+    "exec": "~/.config/waybar/scripts/clock.sh",
+    "interval": 30,
+    "return-type": "json",
     "on-click-right": "omarchy-launch-floating-terminal-with-presentation omarchy-tz-select",
   },
   "custom/weather": {
