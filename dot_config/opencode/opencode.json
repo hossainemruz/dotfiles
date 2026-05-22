@@ -1,6 +1,7 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "autoupdate": true,
+  "small_model": "opencode-go/deepseek-v4-flash",
   "permission": {
     "read": {
       "~/.ssh/**": "deny",
@@ -34,39 +35,65 @@
   "model": "opencode-go/deepseek-v4-flash",
   "default_agent": "general",
   "experimental": {
-    "disable_paste_summary": true,
+    "disable_paste_summary": true
+  },
+  "tool_output": {
+    "max_lines": 120,
+    "max_bytes": 12000
+  },
+  "compaction": {
+    "auto": true,
+    "tail_turns": 12
   },
   "agent": {
     "general": {
-      "description": "Agent for general purpose use",
+      "description": "Cheap primary orchestrator for normal use, planning handoff, and final review handoff",
       "model": "opencode-go/deepseek-v4-flash",
       "mode": "primary",
-      "variant": "max",
+      "permission": {
+        "task": "allow"
+      },
       "prompt": "{file:./prompts/general-guideline.md}"
     },
     "build": {
-      "description": "Primary coding agent that delegates command execution to @executor",
+      "description": "Primary coding agent that delegates execution and review",
       "model": "opencode-go/kimi-k2.6",
+      "mode": "all",
       "permission": {
-        "bash": "deny"
+        "bash": "deny",
+        "task": "allow"
       },
       "prompt": "{file:./prompts/coding-guideline.md}"
     },
     "plan": {
       "description": "Structured implementation planning",
       "model": "github-copilot/gpt-5.4",
+      "variant": "high",
+      "mode": "subagent",
+      "hidden": true,
+      "permission": {
+        "task": "deny"
+      },
       "prompt": "{file:./prompts/plan-guideline.md}"
     },
     "explore": {
       "description": "Fast codebase exploration",
       "model": "opencode-go/deepseek-v4-flash",
-      "variant": "max",
+      "mode": "subagent",
+      "hidden": true,
+      "permission": {
+        "task": "deny"
+      },
       "prompt": "{file:./prompts/explore-guideline.md}"
     },
     "executor": {
       "description": "Default execution subagent for bash commands, tests, builds, and validation",
       "model": "opencode-go/deepseek-v4-flash",
       "mode": "subagent",
+      "hidden": true,
+      "permission": {
+        "task": "deny"
+      },
       "prompt": "{file:./prompts/executor-guideline.md}"
     },
     "reviewer": {
@@ -74,15 +101,23 @@
       "model": "opencode-go/deepseek-v4-pro",
       "variant": "max",
       "mode": "subagent",
-      "prompt": "Use code-review skill"
+      "hidden": true,
+      "permission": {
+        "task": "deny"
+      },
+      "prompt": "Use code-review skill. Review only the changed scope and write findings to .opencode/review.md."
     },
     "expert-reviewer": {
-      "description": "In-depth review with more cabable models",
+      "description": "In-depth review with premium model",
       "model": "github-copilot/gpt-5.4",
       "variant": "high",
       "mode": "subagent",
-      "prompt": "You are a highly experienced expert software engineer. Perform an in-depth review using code-review skill"
-    },
+      "hidden": true,
+      "permission": {
+        "task": "deny"
+      },
+      "prompt": "Use code-review skill. Perform a final in-depth review of the full diff against the task and plan, and write findings to .opencode/review.md."
+    }
   },
   "plugin": []
 }

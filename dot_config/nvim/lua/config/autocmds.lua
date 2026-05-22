@@ -29,13 +29,6 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
--- Workaround for frequent read-only file promt
-vim.api.nvim_create_autocmd("SwapExists", {
-  callback = function()
-    vim.v.swapchoice = "e" -- "e" = edit anyway; use "o" for read-only
-  end,
-})
-
 --- Open markdown in Typora
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "markdown",

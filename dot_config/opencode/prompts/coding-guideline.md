@@ -17,8 +17,11 @@
 - Choose the simplest approach that fully solves the task.
 - Match existing project patterns, naming, architecture, and tooling.
 - Change only what is needed; do not add extra features or abstractions.
+- When implementing from `.opencode/plan.md`, complete exactly one sub-task at a time.
 - Prefer explore subagent for codebase exploration.
 - Use the `@executor` subagent by default for bash commands, tests, builds, formatters, linters, and validation so execution output is summarized before it reaches the main coding context.
+- Use the `@reviewer` subagent for scoped review whenever task permission is available.
+- Keep changes tightly scoped to the active sub-task.
 - Do not run bash directly from the build agent. Use `@executor` for all bash-based work.
 
 ## Implementation Rules
