@@ -64,8 +64,13 @@ tooltip {
   font-size: 10px;
 }
 
-#custom-clock {
+#clock {
   margin-left: 5px;
+}
+
+#custom-timetable {
+  margin-left: 7.5px;
+  margin-right: 7.5px;
 }
 
 .hidden {

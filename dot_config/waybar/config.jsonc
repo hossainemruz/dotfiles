@@ -12,12 +12,13 @@
     "hyprland/workspaces",
   ],
   "modules-center": [
-    "custom/clock",
+    "clock",
     "custom/next-events",
     "custom/update",
     "custom/screenrecording-indicator",
   ],
   "modules-right": [
+    "custom/timetable",
     "custom/idle-indicator",
     "custom/rsync",
     "tray",
@@ -100,11 +101,17 @@
     "format": "󰍛",
     "on-click": "omarchy-launch-or-focus-tui btop",
   },
-  "custom/clock": {
-    "exec": "~/.config/waybar/scripts/clock.sh",
-    "interval": 30,
-    "return-type": "json",
+  "clock": {
+    "format": "{:L%d %B, %A %I:%M %p}",
+    "format-alt": "{:L%A %I:%M %p}",
+    "tooltip": false,
     "on-click-right": "omarchy-launch-floating-terminal-with-presentation omarchy-tz-select",
+  },
+  "custom/timetable": {
+    "exec": "~/.config/waybar/scripts/timetable.sh",
+    "interval": 60,
+    "return-type": "json",
+    "tooltip": true,
   },
   "custom/weather": {
     "exec": "$OMARCHY_PATH/default/waybar/weather.sh",
