@@ -12,11 +12,17 @@
       "~/.docker/**": "deny",
       "~/.config/gcloud/**": "deny",
       ".env*": "deny",
+      "**/.env*": "deny",
       "*.pem": "deny",
+      "**/*.pem": "deny",
       "*.key": "deny",
+      "**/*.key": "deny",
       "*.p12": "deny",
+      "**/*.p12": "deny",
       "*.jks": "deny",
-      "*credentials*": "deny"
+      "**/*.jks": "deny",
+      "*credentials*": "deny",
+      "**/*credentials*": "deny"
     },
     "edit": {
       "~/.aws/**": "deny",
@@ -25,11 +31,34 @@
       "~/.gnupg/**": "deny",
       "~/.kube/**": "deny",
       "~/.docker/**": "deny",
-      "~/.config/gcloud/**": "deny"
+      "~/.config/gcloud/**": "deny",
+      ".env*": "deny",
+      "**/.env*": "deny",
+      "*.pem": "deny",
+      "**/*.pem": "deny",
+      "*.key": "deny",
+      "**/*.key": "deny",
+      "*.p12": "deny",
+      "**/*.p12": "deny",
+      "*.jks": "deny",
+      "**/*.jks": "deny",
+      "*credentials*": "deny",
+      "**/*credentials*": "deny"
     },
     "bash": {
-      "rm *credentials*": "deny",
-      "rm *.env*": "deny"
+      "*": "ask",
+      "*.env*": "deny",
+      "*.pem*": "deny",
+      "*.key*": "deny",
+      "*.p12*": "deny",
+      "*.jks*": "deny",
+      "*/.ssh/*": "deny",
+      "*/.gnupg/*": "deny",
+      "*/.aws/*": "deny",
+      "*/.azure/*": "deny",
+      "*/.kube/*": "deny",
+      "*/.docker/*": "deny",
+      "*/.config/gcloud/*": "deny"
     }
   },
   "model": "opencode-go/deepseek-v4-flash",
@@ -51,6 +80,7 @@
       "model": "opencode-go/deepseek-v4-flash",
       "mode": "primary",
       "permission": {
+        "bash": "deny",
         "task": "allow"
       },
       "prompt": "{file:./prompts/general-guideline.md}"
@@ -60,7 +90,10 @@
       "model": "opencode-go/kimi-k2.6",
       "mode": "all",
       "permission": {
-        "bash": "deny",
+        "external_directory": {
+          "/tmp": "allow",
+          "/tmp/**": "allow"
+        },
         "task": "allow"
       },
       "prompt": "{file:./prompts/coding-guideline.md}"
@@ -72,7 +105,12 @@
       "mode": "subagent",
       "hidden": true,
       "permission": {
-        "task": "deny"
+        "bash": "deny",
+        "edit": {
+          "*": "deny",
+          ".opencode/*": "allow",
+        },
+        "task": "allow"
       },
       "prompt": "{file:./prompts/plan-guideline.md}"
     },
@@ -82,6 +120,8 @@
       "mode": "subagent",
       "hidden": true,
       "permission": {
+        "bash": "deny",
+        "edit": "deny",
         "task": "deny"
       },
       "prompt": "{file:./prompts/explore-guideline.md}"
@@ -92,6 +132,10 @@
       "mode": "subagent",
       "hidden": true,
       "permission": {
+        "external_directory": {
+          "/tmp": "allow",
+          "/tmp/**": "allow"
+        },
         "task": "deny"
       },
       "prompt": "{file:./prompts/executor-guideline.md}"
@@ -103,6 +147,10 @@
       "mode": "subagent",
       "hidden": true,
       "permission": {
+        "edit": {
+          "*": "deny",
+          ".opencode/*": "allow",
+        },
         "task": "deny"
       },
       "prompt": "Use code-review skill. Review only the changed scope and write findings to .opencode/review.md."
@@ -114,10 +162,13 @@
       "mode": "subagent",
       "hidden": true,
       "permission": {
+        "edit": {
+          "*": "deny",
+          ".opencode/*": "allow",
+        },
         "task": "deny"
       },
       "prompt": "Use code-review skill. Perform a final in-depth review of the full diff against the task and plan, and write findings to .opencode/review.md."
     }
-  },
-  "plugin": []
+  }
 }

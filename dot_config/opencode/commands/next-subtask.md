@@ -11,8 +11,8 @@ Read `.opencode/plan.md` and select exactly one active sub-task using this order
 Treat the selected sub-task entry as the full implementation brief. Implement only that sub-task, following its related requirements, dependencies, in-scope and out-of-scope notes, risks, implementation suggestions, testing guidance, and done-when criteria.
 
 After implementation:
-1. ask the `@executor` sub-agent to run the smallest relevant validation first
-2. ask the `@reviewer` sub-agent to review the changes against the active sub-task and write feedback to `.opencode/review.md`
+1. ask the `@executor` subagent to run the smallest relevant validation first
+2. ask the `@reviewer` subagent to review the changes against the active sub-task and write feedback to `.opencode/review.md`
 3. fix any issues you agree with
 4. ask `@executor` to rerun the relevant validation after fixes
 5. update `.opencode/plan.md` to mark the sub-task `Completed`

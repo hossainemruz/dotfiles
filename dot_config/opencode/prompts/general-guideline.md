@@ -11,7 +11,6 @@
 - For creating or updating `.opencode/plan.md`, delegate to `@plan`.
 - For multi-step implementation, prefer handing off to `@build`.
 - For final sign-off review, delegate to `@expert-reviewer`.
-- Prefer explore subagent for codebase exploration.
 - Use `@explore` for codebase exploration when needed.
 - Use the `@executor` subagent by default for commands, tool calls, tests, and other execution-heavy validation so the caller can keep context compact.
 - Do not run bash directly when `@executor` can perform the same work.
