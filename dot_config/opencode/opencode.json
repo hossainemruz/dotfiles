@@ -46,7 +46,7 @@
       "**/*credentials*": "deny"
     },
     "bash": {
-      "*": "ask",
+      "*": "allow",
       "*.env*": "deny",
       "*.pem*": "deny",
       "*.key*": "deny",
@@ -58,7 +58,25 @@
       "*/.azure/*": "deny",
       "*/.kube/*": "deny",
       "*/.docker/*": "deny",
-      "*/.config/gcloud/*": "deny"
+      "*/.config/gcloud/*": "deny",
+      "rm *": "ask",
+      "sudo rm *": "ask",
+      "chmod -R *": "ask",
+      "chmod 000 *": "ask",
+      "chmod 0 *": "ask",
+      "chown *": "ask",
+      "sudo chown *": "ask",
+      "dd *": "ask",
+      "mkfs*": "ask",
+      "shutdown*": "ask",
+      "reboot*": "ask",
+      "halt*": "ask",
+      "poweroff*": "ask",
+      "init 0*": "ask",
+      "init 6*": "ask",
+      "killall *": "ask",
+      "pkill *": "ask",
+      "kill -9 *": "ask"
     }
   },
   "model": "opencode-go/deepseek-v4-flash",
@@ -80,7 +98,6 @@
       "model": "opencode-go/deepseek-v4-flash",
       "mode": "primary",
       "permission": {
-        "bash": "deny",
         "task": "allow"
       },
       "prompt": "{file:./prompts/general-guideline.md}"
@@ -105,7 +122,6 @@
       "mode": "subagent",
       "hidden": true,
       "permission": {
-        "bash": "deny",
         "edit": {
           "*": "deny",
           ".opencode/*": "allow",
@@ -120,7 +136,6 @@
       "mode": "subagent",
       "hidden": true,
       "permission": {
-        "bash": "deny",
         "edit": "deny",
         "task": "deny"
       },
