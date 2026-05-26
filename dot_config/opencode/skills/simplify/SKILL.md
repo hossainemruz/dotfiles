@@ -13,9 +13,9 @@ Run `git diff` (or `git diff HEAD` if there are staged changes) to see what chan
 
 ## Phase 2: Launch Three Review Agents in Parallel
 
-Use the Agent tool to launch all three agents concurrently in a single message. Pass each agent the full diff so it has the complete context.
+Use the Agent tool to launch all three agents concurrently in a single message using `@explore` for each. Pass each agent the full diff so it has the complete context.
 
-### Agent 1: Code Reuse Review
+### Agent 1: Code Reuse Review (`@explore`)
 
 For each change:
 
@@ -23,7 +23,7 @@ For each change:
 2. **Flag any new function that duplicates existing functionality.** Suggest the existing function to use instead.
 3. **Flag any inline logic that could use an existing utility** — hand-rolled string manipulation, manual path handling, custom environment checks, ad-hoc type guards, and similar patterns are common candidates.
 
-### Agent 2: Code Quality Review
+### Agent 2: Code Quality Review (`@explore`)
 
 Review the same changes for hacky patterns:
 
@@ -35,7 +35,7 @@ Review the same changes for hacky patterns:
 6. **Unnecessary JSX nesting**: wrapper Boxes/elements that add no layout value — check if inner component props (flexShrink, alignItems, etc.) already provide the needed behavior
 7. **Unnecessary comments**: comments explaining WHAT the code does (well-named identifiers already do that), narrating the change, or referencing the task/caller — delete; keep only non-obvious WHY (hidden constraints, subtle invariants, workarounds)
 
-### Agent 3: Efficiency Review
+### Agent 3: Efficiency Review (`@explore`)
 
 Review the same changes for efficiency:
 

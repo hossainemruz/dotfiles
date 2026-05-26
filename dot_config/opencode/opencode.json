@@ -76,7 +76,13 @@
       "init 6*": "ask",
       "killall *": "ask",
       "pkill *": "ask",
-      "kill -9 *": "ask"
+      "kill -9 *": "ask",
+      "git push --force*": "ask",
+      "git push -f*": "ask",
+      "git reset --hard*": "ask",
+      "git clean -f*": "ask",
+      "git checkout -- *": "ask",
+      "git restore *": "ask"
     }
   },
   "model": "opencode-go/deepseek-v4-flash",
@@ -90,12 +96,12 @@
   },
   "compaction": {
     "auto": true,
-    "tail_turns": 12
+    "tail_turns": 18
   },
   "agent": {
     "general": {
-      "description": "Cheap primary orchestrator for normal use, planning handoff, and final review handoff",
-      "model": "opencode-go/deepseek-v4-flash",
+      "description": "Primary orchestrator for normal use, planning handoff, and final review handoff",
+      "model": "opencode-go/deepseek-v4-pro",
       "mode": "primary",
       "permission": {
         "task": "allow"
@@ -128,11 +134,11 @@
         },
         "task": "allow"
       },
-      "prompt": "{file:./prompts/plan-guideline.md}"
+      "prompt": "{file:./prompts/plan-guideline.md}\n\n{skill:planning}"
     },
     "explore": {
-      "description": "Fast codebase exploration",
-      "model": "opencode-go/deepseek-v4-flash",
+      "description": "Semantic codebase exploration",
+      "model": "opencode-go/deepseek-v4-pro",
       "mode": "subagent",
       "hidden": true,
       "permission": {
@@ -155,10 +161,19 @@
       },
       "prompt": "{file:./prompts/executor-guideline.md}"
     },
+    "simplifier": {
+      "description": "Review changed code for reuse, quality, and efficiency, then fix worthwhile issues",
+      "model": "opencode-go/kimi-k2.6",
+      "mode": "subagent",
+      "hidden": true,
+      "permission": {
+        "task": "allow"
+      },
+      "prompt": "{skill:simplify}\n\nKeep changes tightly scoped to the current diff unless a very small adjacent refactor materially improves the result. Use `@executor` for validation when your fixes affect behavior."
+    },
     "reviewer": {
-      "description": "Automated review agent",
+      "description": "Automated parallel review agent",
       "model": "opencode-go/deepseek-v4-pro",
-      "variant": "max",
       "mode": "subagent",
       "hidden": true,
       "permission": {
@@ -166,12 +181,12 @@
           "*": "deny",
           ".agents/tasks/*": "allow"
         },
-        "task": "deny"
+        "task": "allow"
       },
-      "prompt": "Use code-review skill. Review only the changed scope and write findings to .agents/tasks/review.md."
+      "prompt": "{file:./prompts/reviewer-guideline.md}\n\n{skill:parallel-review}"
     },
     "expert-reviewer": {
-      "description": "In-depth review with premium model",
+      "description": "In-depth parallel review with premium model",
       "model": "github-copilot/gpt-5.4",
       "variant": "high",
       "mode": "subagent",
@@ -181,9 +196,9 @@
           "*": "deny",
           ".agents/tasks/*": "allow"
         },
-        "task": "deny"
+        "task": "allow"
       },
-      "prompt": "Use code-review skill. Perform a final in-depth review of the full diff against the task and plan, and write findings to .agents/tasks/review.md."
+      "prompt": "{skill:parallel-review}\n\nThis is the final review. Scope is the full diff against the base branch measured against the complete task and plan, not just the active sub-task."
     }
   }
 }
