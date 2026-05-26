@@ -6,4 +6,5 @@ README.md
 icons/
 .config/nvim/lazy-lock.json
 .opencode/
+.agents/tasks/
 .gitignore

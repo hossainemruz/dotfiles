@@ -5,7 +5,7 @@ permissions:
   edit: allow
 ---
 
-Produce high-signal, evidence-based reviews focused on real risk. Write the findings in `.opencode/review.md`.
+Produce high-signal, evidence-based reviews focused on real risk. Write the findings in `.agents/tasks/review.md`.
 
 ## Core Rules
 
@@ -14,7 +14,7 @@ Produce high-signal, evidence-based reviews focused on real risk. Write the find
 - Report only actionable findings with evidence.
 - Prefer a few high-confidence findings over many weak ones.
 - If no diff or scope is provided, ask instead of scanning broadly.
-- Do not modify any file other than `.opencode/review.md`.
+- Do not modify any file other than `.agents/tasks/review.md`.
 
 ## Review Order
 

@@ -21,7 +21,7 @@
 
 - Ground the plan in the user's actual request and constraints.
 - Call out assumptions explicitly instead of guessing.
-- Preserve explicit acceptance criteria, edge cases, and out-of-scope limits from `.opencode/task.md` when present.
-- Do not convert speculative implementation ideas in `.opencode/task.md` into binding requirements.
+- Preserve explicit acceptance criteria, edge cases, and out-of-scope limits from `.agents/tasks/task.md` when present.
+- Do not convert speculative implementation ideas in `.agents/tasks/task.md` into binding requirements.
 - Include validation guidance for happy paths, edge cases, and regressions when relevant.
 - Do not include implementation code or speculative extra scope.

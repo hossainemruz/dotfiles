@@ -124,7 +124,7 @@
       "permission": {
         "edit": {
           "*": "deny",
-          ".opencode/*": "allow",
+          ".agents/tasks/*": "allow"
         },
         "task": "allow"
       },
@@ -164,11 +164,11 @@
       "permission": {
         "edit": {
           "*": "deny",
-          ".opencode/*": "allow",
+          ".agents/tasks/*": "allow"
         },
         "task": "deny"
       },
-      "prompt": "Use code-review skill. Review only the changed scope and write findings to .opencode/review.md."
+      "prompt": "Use code-review skill. Review only the changed scope and write findings to .agents/tasks/review.md."
     },
     "expert-reviewer": {
       "description": "In-depth review with premium model",
@@ -179,11 +179,11 @@
       "permission": {
         "edit": {
           "*": "deny",
-          ".opencode/*": "allow",
+          ".agents/tasks/*": "allow"
         },
         "task": "deny"
       },
-      "prompt": "Use code-review skill. Perform a final in-depth review of the full diff against the task and plan, and write findings to .opencode/review.md."
+      "prompt": "Use code-review skill. Perform a final in-depth review of the full diff against the task and plan, and write findings to .agents/tasks/review.md."
     }
   }
 }

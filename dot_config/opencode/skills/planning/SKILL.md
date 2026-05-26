@@ -1,23 +1,23 @@
 ---
 name: planning
-description: Writes clear, detailed, step-by-step implementation plans to .opencode/plan.md so any human or agent can execute the task.
+description: Writes clear, detailed, step-by-step implementation plans to .agents/tasks/plan.md so any human or agent can execute the task.
 permissions:
   edit: allow
 ---
 
-Create a practical execution plan in `.opencode/plan.md`, not implementation code.
+Create a practical execution plan in `.agents/tasks/plan.md`, not implementation code.
 
 ## Core Rules
 
 - Plan only when the request needs implementation work or a formal plan.
-- Do not modify any file other than `.opencode/plan.md`.
+- Do not modify any file other than `.agents/tasks/plan.md`.
 - Do not invent scope, requirements, or constraints.
-- Treat `.opencode/task.md` as the implementation-agnostic requirements contract when it exists.
-- Preserve explicit problem statements, in-scope items, acceptance criteria, edge cases, out-of-scope items, constraints, and open questions from `.opencode/task.md` when present.
-- If `.opencode/task.md` includes implementation ideas, separate them from binding requirements instead of promoting speculative details into scope.
+- Treat `.agents/tasks/task.md` as the implementation-agnostic requirements contract when it exists.
+- Preserve explicit problem statements, in-scope items, acceptance criteria, edge cases, out-of-scope items, constraints, and open questions from `.agents/tasks/task.md` when present.
+- If `.agents/tasks/task.md` includes implementation ideas, separate them from binding requirements instead of promoting speculative details into scope.
 - Ask only the minimum clarification questions needed for correctness or scope.
 - Keep the plan proportional: concise for simple work, detailed for complex work.
-- Treat `.opencode/task.md` as the source of truth for requirements when it exists.
+- Treat `.agents/tasks/task.md` as the source of truth for requirements when it exists.
 - Include a concise requirements snapshot in the plan so each sub-task preserves the original intent.
 - Map each sub-task to the specific requirements, constraints, or acceptance criteria it addresses.
 - Use stable requirement IDs such as `R1`, `R2`, and `R3` in the Requirements Snapshot so sub-tasks can refer to them unambiguously.
@@ -30,7 +30,7 @@ Create a practical execution plan in `.opencode/plan.md`, not implementation cod
 
 1. Identify the goal, requirements, constraints, risks, dependencies, and out-of-scope items.
 2. If critical information is missing, ask focused numbered questions.
-3. If `.opencode/task.md` exists, extract a short requirements snapshot from it, including acceptance criteria, edge cases, out-of-scope boundaries, and constraints relevant to implementation, and assign stable IDs such as `R1`, `R2`, and `R3`.
+3. If `.agents/tasks/task.md` exists, extract a short requirements snapshot from it, including acceptance criteria, edge cases, out-of-scope boundaries, and constraints relevant to implementation, and assign stable IDs such as `R1`, `R2`, and `R3`.
 4. Break the work into ordered sub-tasks with clear outcomes.
 5. For each sub-task, list the related requirements so downstream agents can trace the work back to the approved task.
 6. For each sub-task, include its objective, dependencies, in-scope work, explicit non-goals, key risks, implementation suggestions, and validation guidance.
@@ -99,7 +99,7 @@ Explain core concepts with code level example if necessary.
 
 - The plan is complete, ordered, and actionable.
 - The requirements snapshot preserves the approved task context and uses stable IDs.
-- Explicit scope limits, acceptance criteria, and important edge cases from `.opencode/task.md` are preserved without inventing missing details.
+- Explicit scope limits, acceptance criteria, and important edge cases from `.agents/tasks/task.md` are preserved without inventing missing details.
 - Each sub-task is explicitly mapped to the relevant requirements.
 - Each newly created sub-task starts as `Pending`.
 - Each sub-task is self-contained and includes scope, dependencies, completion, caution, implementation, and testing guidance.

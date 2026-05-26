@@ -45,9 +45,9 @@ alias kpf='kubectl port-forward'
 # Plannotator commands
 alias pa='plannotator annotate'
 alias review='plannotator review'
-alias review-plan='plannotator annotate .opencode/plan.md'
-alias review-task='plannotator annotate .opencode/task.md'
-alias review-feedback='plannotator annotate .opencode/review.md'
+alias review-plan='plannotator annotate .agents/tasks/plan.md'
+alias review-task='plannotator annotate .agents/tasks/task.md'
+alias review-feedback='plannotator annotate .agents/tasks/review.md'
 
 
 # Set KUBECONFIG based on active Zellij tab
