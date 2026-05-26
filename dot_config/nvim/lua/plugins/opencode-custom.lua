@@ -1,22 +1,36 @@
 return {
   "folke/snacks.nvim",
   keys = function()
-    local agents = {
-      general = 1,
-      build = 2,
+    local terminals = {
+      general = {
+        count = 1,
+        cmd = { "opencode", "--agent", "general" },
+      },
+      build = {
+        count = 2,
+        cmd = { "opencode", "--agent", "build" },
+      },
+      claude = {
+        count = 3,
+        cmd = { "claude" },
+      },
+      codex = {
+        count = 4,
+        cmd = { "codex" },
+      },
     }
 
     local function project_cwd()
       return vim.uv.cwd() or vim.fn.getcwd()
     end
 
-    local function terminal_cmd(agent)
-      return { "opencode", "--agent", agent }
+    local function terminal_cmd(name)
+      return terminals[name].cmd
     end
 
-    local function terminal_opts(agent, cwd)
+    local function terminal_opts(name, cwd)
       return {
-        count = agents[agent],
+        count = terminals[name].count,
         cwd = cwd,
         win = {
           position = "right",
@@ -25,16 +39,16 @@ return {
       }
     end
 
-    local function get_terminal(agent, cwd, create)
+    local function get_terminal(name, cwd, create)
       return Snacks.terminal.get(
-        terminal_cmd(agent),
-        vim.tbl_extend("force", terminal_opts(agent, cwd), {
+        terminal_cmd(name),
+        vim.tbl_extend("force", terminal_opts(name, cwd), {
           create = create,
         })
       )
     end
 
-    local function is_managed_opencode_terminal(terminal)
+    local function is_managed_terminal(terminal)
       if not terminal or not terminal:buf_valid() then
         return false
       end
@@ -44,27 +58,37 @@ return {
       end)
       local cmd = ok and data and data.cmd or terminal.cmd
 
-      return type(cmd) == "table" and cmd[1] == "opencode" and cmd[2] == "--agent" and agents[cmd[3]] ~= nil
+      if type(cmd) ~= "table" then
+        return false
+      end
+
+      for _, terminal_config in pairs(terminals) do
+        if vim.deep_equal(cmd, terminal_config.cmd) then
+          return true
+        end
+      end
+
+      return false
     end
 
-    local function hide_other_opencode_terminals(target)
+    local function hide_other_managed_terminals(target)
       for _, terminal in ipairs(Snacks.terminal.list()) do
-        if terminal ~= target and is_managed_opencode_terminal(terminal) and terminal:valid() then
+        if terminal ~= target and is_managed_terminal(terminal) and terminal:valid() then
           terminal:hide()
         end
       end
     end
 
-    local function toggle_agent(agent)
+    local function toggle_terminal(name)
       local cwd = project_cwd()
-      local terminal = get_terminal(agent, cwd, false)
+      local terminal = get_terminal(name, cwd, false)
 
       if terminal and terminal:valid() then
         terminal:hide()
         return
       end
 
-      hide_other_opencode_terminals(terminal)
+      hide_other_managed_terminals(terminal)
 
       if terminal then
         terminal:show()
@@ -72,23 +96,37 @@ return {
         return
       end
 
-      get_terminal(agent, cwd, true)
+      get_terminal(name, cwd, true)
     end
 
     return {
       {
         "<leader>og",
         function()
-          toggle_agent("general")
+          toggle_terminal("general")
         end,
         desc = "Toggle opencode general",
       },
       {
         "<leader>ob",
         function()
-          toggle_agent("build")
+          toggle_terminal("build")
         end,
         desc = "Toggle opencode build",
+      },
+      {
+        "<leader>oc",
+        function()
+          toggle_terminal("claude")
+        end,
+        desc = "Toggle claude",
+      },
+      {
+        "<leader>ox",
+        function()
+          toggle_terminal("codex")
+        end,
+        desc = "Toggle codex",
       },
     }
   end,
