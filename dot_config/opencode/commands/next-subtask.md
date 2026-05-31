@@ -11,7 +11,7 @@ Read `.agents/tasks/plan.md` and select exactly one active sub-task using this o
 Treat the selected sub-task entry as the full implementation brief. Implement only that sub-task, following its related requirements, dependencies, in-scope and out-of-scope notes, risks, implementation suggestions, testing guidance, and done-when criteria.
 
 After implementation:
-1. ask the `@simplifier` subagent to review the current diff for reuse, quality, and efficiency, and apply any worthwhile simplifications without widening scope unnecessarily
+1. ask the `@simplifier` subagent to review the full current branch state against `main` for reuse, quality, and efficiency, including committed and uncommitted changes, and apply any worthwhile simplifications without widening scope unnecessarily
 2. ask the `@executor` subagent to run the smallest relevant validation first
 3. ask the `@reviewer` subagent to review the changes against the active sub-task and write feedback to `.agents/tasks/review.md`
 4. fix any issues you agree with

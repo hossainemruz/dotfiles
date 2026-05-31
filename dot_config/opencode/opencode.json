@@ -169,11 +169,11 @@
       "permission": {
         "task": "allow"
       },
-      "prompt": "{skill:simplify}\n\nKeep changes tightly scoped to the current diff unless a very small adjacent refactor materially improves the result. Use `@executor` for validation when your fixes affect behavior."
+      "prompt": "{skill:simplify}"
     },
     "reviewer": {
-      "description": "Automated parallel review agent",
-      "model": "opencode-go/deepseek-v4-pro",
+      "description": "Automated code review agent with direct review for small diffs and parallel review for larger ones",
+      "model": "opencode-go/deepseek-v4-flash",
       "mode": "subagent",
       "hidden": true,
       "permission": {
@@ -186,7 +186,7 @@
       "prompt": "{file:./prompts/reviewer-guideline.md}\n\n{skill:parallel-review}"
     },
     "expert-reviewer": {
-      "description": "In-depth parallel review with premium model",
+      "description": "In-depth final review with premium model",
       "model": "github-copilot/gpt-5.4",
       "variant": "high",
       "mode": "subagent",
@@ -198,7 +198,7 @@
         },
         "task": "allow"
       },
-      "prompt": "{skill:parallel-review}\n\nThis is the final review. Scope is the full diff against the base branch measured against the complete task and plan, not just the active sub-task."
+      "prompt": "{file:./prompts/expert-reviewer-guideline.md}"
     }
   }
 }

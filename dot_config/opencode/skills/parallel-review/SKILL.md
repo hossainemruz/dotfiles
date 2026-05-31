@@ -1,20 +1,28 @@
 ---
 name: parallel-review
-description: Concurrent three-agent code review across correctness/security, robustness/performance, and maintainability/tests. Faster than sequential review for any non-trivial diff.
+description: Concurrent three-agent code review for non-trivial diffs, with direct review for small/simple changes.
 permissions:
   edit: allow
 ---
 
 # Parallel Review
 
-Run three focused `@explore` review agents concurrently, then aggregate their findings into `.agents/tasks/review.md`.
+For non-trivial diffs, run three focused `@explore` review agents concurrently, then aggregate their findings into `.agents/tasks/review.md`. For small, simple diffs, review directly instead.
 
 ## Phase 1: Gather Context
 
 1. Run `git diff $(git merge-base HEAD origin/main 2>/dev/null || git merge-base HEAD main 2>/dev/null || echo HEAD~1)` to get the full diff. Fall back to `git diff HEAD~1` if the base branch is unknown.
 2. If `.agents/tasks/plan.md` exists, read the sub-task marked `In Progress` to scope the review. If none is marked, read the task intent from `.agents/tasks/task.md` if present.
 
-## Phase 2: Launch Three Review Agents in Parallel
+## Phase 2: Choose Review Depth
+
+Assess the scoped diff before launching any subagents.
+
+If the diff is small and simple (for example, 1-2 files with limited, localized edits and no cross-cutting concerns), review it yourself across all three focus areas below, write the final result to `.agents/tasks/review.md`, and stop.
+
+Use parallel review only when the diff is large enough, risky enough, or varied enough that separate focused passes are likely to find materially different issues.
+
+## Phase 3: Launch Three Review Agents in Parallel When Needed
 
 Spawn all three `@explore` agents in a **single message**. Pass each agent:
 - The full diff text
@@ -22,21 +30,21 @@ Spawn all three `@explore` agents in a **single message**. Pass each agent:
 - Their specific focus area (below)
 - This instruction: "Return a list of findings only. For each finding include: severity (P0–P3), title, file:line, why it matters, evidence (the failure path), and a specific fix. Do not write to any file."
 
-### Agent 1 — Correctness & Security (`@explore`)
+### Subagent 1 — Correctness & Security
 
 1. **Logic errors**: wrong conditions, off-by-one, incorrect operator precedence, missing nil/zero checks, incorrect loop bounds
 2. **Error handling**: swallowed errors, missing early returns, wrong error types propagated up the call stack
 3. **Data integrity**: incorrect mutation of shared state, wrong assumptions about input shape or ordering
 4. **Security**: injection vectors (SQL, shell, template), auth/authz gaps, sensitive data in logs or errors, insecure defaults, path traversal, missing input sanitization at system boundaries
 
-### Agent 2 — Robustness & Performance (`@explore`)
+### Subagent 2 — Robustness & Performance
 
 1. **Edge cases**: missing input validation at boundaries, unhandled nil/empty/overflow, fragile assumptions about external system behavior
 2. **Resource leaks**: unclosed handles, missing defer/cleanup, goroutine or thread leaks
 3. **Performance**: N+1 patterns, redundant computation in hot paths, blocking calls on the critical path, unbounded data structures
 4. **Concurrency**: missing locks, incorrect atomics, deadlock potential, TOCTOU races
 
-### Agent 3 — Maintainability & Tests (`@explore`)
+### Subagent 3 — Maintainability & Tests
 
 1. **Test coverage**: missing tests for new behavior, untested edge cases, non-deterministic tests
 2. **Scope creep**: changes outside the active sub-task's stated scope or done-when criteria
@@ -44,9 +52,9 @@ Spawn all three `@explore` agents in a **single message**. Pass each agent:
 4. **Abstraction quality**: leaky abstractions, broken encapsulation, parameter sprawl, misleading names
 5. **Unnecessary complexity**: over-engineered solutions, dead code, magic values without constants
 
-## Phase 3: Aggregate and Write
+## Phase 4: Aggregate and Write
 
-Wait for all three agents to complete. Then:
+If review agents were launched, wait for all three agents to complete. Then:
 
 1. **Deduplicate**: if two agents flagged the same root cause, keep the more specific finding and drop the duplicate.
 2. **Sort by severity**: P0 → P1 → P2 → P3. Within a severity, correctness and security findings come first.
