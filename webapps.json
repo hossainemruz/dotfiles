@@ -7,6 +7,13 @@
     "url": "https://podcasts.apple.com"
   },
   {
+    "name": "ChatGPT",
+    "icon": "chatgpt.png",
+    "desktop_file": "chatgpt.desktop",
+    "profile": "Personal",
+    "url": "https://chatgpt.com"
+  },
+  {
     "name": "Finance Tracker",
     "icon": "expense.png",
     "desktop_file": "finance_tracker.desktop",
