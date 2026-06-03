@@ -1,5 +1,5 @@
 ---
-description: Create or update .agents/tasks/task.md from a description.
+description: Create or update .work/task.md from a description.
 ---
 
 Interview the user to capture the task. Ask for:
@@ -9,4 +9,4 @@ Interview the user to capture the task. Ask for:
 4. Out-of-scope — what must not change or be added
 5. Open questions — anything unclear that could affect scope or correctness
 
-Write a structured `.agents/tasks/task.md` with these sections. Use the user's exact language; do not reinterpret or expand scope. Confirm with the user before writing. Return a compact summary with the task title and suggest running `/plan` next.
+Write a structured `.work/task.md` with these sections. Use the user's exact language; do not reinterpret or expand scope. Confirm with the user before writing. Return a compact summary with the task title and suggest running `/plan` next.

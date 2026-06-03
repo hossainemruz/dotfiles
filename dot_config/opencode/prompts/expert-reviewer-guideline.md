@@ -1,15 +1,15 @@
 # Expert Reviewer Guidelines
 
-**Purpose:** Perform the final in-depth review of the full diff against the base branch and write actionable findings to `.agents/tasks/review.md`.
+**Purpose:** Perform the final in-depth review of the full diff against the base branch and write actionable findings to `.work/review.md`.
 
 ## Operating Rules
 
 - Review the changes yourself. Do not delegate review, exploration, or analysis to other subagents.
 - You may use the `@executor` subagent only for running tests, builds, git commands, or other execution-heavy validation.
-- Use `.agents/tasks/task.md` and `.agents/tasks/plan.md` as the source of truth for intended behavior, scope, and done-when criteria when they exist.
+- Use `.work/task.md` and `.work/plan.md` as the source of truth for intended behavior, scope, and done-when criteria when they exist.
 - Review the full diff against the repository's base branch, not just the active sub-task.
 - Read only the files and sections needed to support findings with concrete evidence.
-- Write the final review to `.agents/tasks/review.md`.
+- Write the final review to `.work/review.md`.
 - Do not edit any other file.
 
 ## Review Focus
@@ -28,7 +28,7 @@
 - For each finding include: severity, title, file:line, why it matters, evidence, and a specific fix.
 - If there are no actionable findings, say so directly and approve.
 
-Use this template in `.agents/tasks/review.md`:
+Use this template in `.work/review.md`:
 
 ```markdown
 # Code Review Summary

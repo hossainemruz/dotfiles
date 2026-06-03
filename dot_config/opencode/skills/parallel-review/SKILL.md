@@ -1,26 +1,26 @@
 ---
 name: parallel-review
-description: Concurrent three-agent code review for non-trivial diffs, with direct review for small/simple changes.
+description: Concurrent three-agent code review for non-trivial diffs, with a single delegated review pass for small/simple changes.
 permissions:
   edit: allow
 ---
 
 # Parallel Review
 
-For non-trivial diffs, run three focused `@explore` review agents concurrently, then aggregate their findings into `.agents/tasks/review.md`. For small, simple diffs, review directly instead.
+For non-trivial diffs, run three focused `@explore` review agents concurrently, then aggregate their findings into `.work/review.md`. For small, simple diffs, delegate to a single `@explore` review pass instead. Do not review code inline yourself — always delegate the actual review reasoning to `@explore` and reserve this agent for scoping and aggregation.
 
 ## Phase 1: Gather Context
 
 1. Run `git diff $(git merge-base HEAD origin/main 2>/dev/null || git merge-base HEAD main 2>/dev/null || echo HEAD~1)` to get the full diff. Fall back to `git diff HEAD~1` if the base branch is unknown.
-2. If `.agents/tasks/plan.md` exists, read the sub-task marked `In Progress` to scope the review. If none is marked, read the task intent from `.agents/tasks/task.md` if present.
+2. If `.work/plan.md` exists, read the sub-task marked `In Progress` to scope the review. If none is marked, read the task intent from `.work/task.md` if present.
 
 ## Phase 2: Choose Review Depth
 
-Assess the scoped diff before launching any subagents.
+Assess the scoped diff before launching any subagents, then choose how many `@explore` passes to spawn. Do not review the code yourself in either case.
 
-If the diff is small and simple (for example, 1-2 files with limited, localized edits and no cross-cutting concerns), review it yourself across all three focus areas below, write the final result to `.agents/tasks/review.md`, and stop.
+If the diff is small and simple (for example, 1-2 files with limited, localized edits and no cross-cutting concerns), spawn a **single** `@explore` agent covering all three focus areas below, then aggregate its findings into `.work/review.md` and stop.
 
-Use parallel review only when the diff is large enough, risky enough, or varied enough that separate focused passes are likely to find materially different issues.
+Use the three-agent parallel fan-out only when the diff is large enough, risky enough, or varied enough that separate focused passes are likely to find materially different issues.
 
 ## Phase 3: Launch Three Review Agents in Parallel When Needed
 
@@ -54,11 +54,11 @@ Spawn all three `@explore` agents in a **single message**. Pass each agent:
 
 ## Phase 4: Aggregate and Write
 
-If review agents were launched, wait for all three agents to complete. Then:
+Wait for the spawned `@explore` agent(s) to complete — one for a small diff, all three for a parallel fan-out. Then:
 
 1. **Deduplicate**: if two agents flagged the same root cause, keep the more specific finding and drop the duplicate.
 2. **Sort by severity**: P0 → P1 → P2 → P3. Within a severity, correctness and security findings come first.
-3. Write the aggregated findings to `.agents/tasks/review.md` using the template below.
+3. Write the aggregated findings to `.work/review.md` using the template below.
 
 ```markdown
 # Code Review Summary

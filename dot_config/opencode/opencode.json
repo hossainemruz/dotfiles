@@ -130,7 +130,7 @@
       "permission": {
         "edit": {
           "*": "deny",
-          ".agents/tasks/*": "allow"
+          ".work/*": "allow"
         },
         "task": "allow"
       },
@@ -179,7 +179,7 @@
       "permission": {
         "edit": {
           "*": "deny",
-          ".agents/tasks/*": "allow"
+          ".work/*": "allow"
         },
         "task": "allow"
       },
@@ -194,7 +194,7 @@
       "permission": {
         "edit": {
           "*": "deny",
-          ".agents/tasks/*": "allow"
+          ".work/*": "allow"
         },
         "task": "allow"
       },
