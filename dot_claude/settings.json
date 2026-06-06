@@ -54,7 +54,9 @@
       "Bash(pytest:*)",
       "Bash(ruff:*)",
       "Bash(mypy:*)",
-      "Bash(chezmoi:*)"
+      "Bash(chezmoi:*)",
+      "Edit(//tmp/**)",
+      "Write(//tmp/**)"
     ],
     "deny": [
       "Read(.env)",

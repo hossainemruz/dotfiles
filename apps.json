@@ -4,6 +4,10 @@
     "package_name": "7zip"
   },
   {
+    "name": "ai-usagebar",
+    "package_name": "ai-usagebar-bin"
+  },
+  {
     "name": "bluetui",
     "package_name": "bluetui"
   },
