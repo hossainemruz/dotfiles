@@ -161,7 +161,7 @@
         },
         "task": "allow"
       },
-      "prompt": "{file:./prompts/research-guideline.md}\n\n{file:./prompts/plan-guideline.md}\n\n{skill:planning}"
+      "prompt": "{skill:planning}"
     },
     "explore": {
       "description": "Semantic codebase exploration",
@@ -209,8 +209,8 @@
       "prompt": "{skill:simplify}"
     },
     "reviewer": {
-      "description": "Automated code review agent with direct review for small diffs and parallel review for larger ones",
-      "model": "deepseek/deepseek-v4-flash",
+      "description": "Automated risk-adaptive multi-pass code review agent",
+      "model": "deepseek/deepseek-v4-pro",
       "mode": "subagent",
       "hidden": true,
       "permission": {
@@ -224,9 +224,9 @@
           "/home/emruz/agent-vault": "allow",
           "/home/emruz/agent-vault/**": "allow"
         },
-        "task": "allow"
+        "task": "deny"
       },
-      "prompt": "{file:./prompts/reviewer-guideline.md}\n\n{skill:parallel-review}"
+      "prompt": "{skill:code-review}"
     },
     "expert-reviewer": {
       "description": "In-depth final review with premium model",

@@ -29,26 +29,11 @@ Review the current branch state against the repository's default branch for reus
 8. For untracked files, inspect only the files in scope that are relevant to the simplification pass.
 9. If there are no changed or untracked files in scope, report that there are no current branch changes to simplify and stop.
 
-## Phase 2: Choose Review Depth
+## Phase 2: Single-Pass Review
 
-If the scoped change is small and simple (for example, 1-2 files with limited, localized edits), do the review yourself and skip subagents.
+Review the scoped changes yourself in this single agent instance. Cover all three lenses below before moving to Phase 3.
 
-Use parallel subagents only when the diff is large enough or varied enough that separate reuse, quality, and efficiency passes are likely to find materially different issues.
-
-If you review the diff yourself, still cover all three lenses below before moving to Phase 3.
-
-## Phase 3: Launch Three Review Subagents in Parallel When Needed
-
-When Phase 2 indicates parallel review is worthwhile, launch three `@explore` subagents concurrently in a single message. Pass each agent:
-
-- the branch base reference
-- the changed file list
-- a concise summary of the changed areas, and only the relevant diff hunks when needed
-- this instruction: "Inspect only files touched by the branch diff plus minimal adjacent context. Return at most 3-5 actionable, high-confidence findings with title, file:line, why it matters, evidence, and exact fix. Ignore style-only nits and speculative refactors. Skip generated/vendor/minified/lock files unless directly relevant. Do not write to any file."
-
-Do not blindly paste the full diff to all three agents when the changed file list and targeted hunks are enough.
-
-### Subagent 1: Code Reuse Review
+### Lens 1: Code Reuse Review
 
 For each change:
 
@@ -56,7 +41,7 @@ For each change:
 2. **Flag any new function that duplicates existing functionality.** Suggest the existing function to use instead.
 3. **Flag any inline logic that could use an existing utility** — hand-rolled string manipulation, manual path handling, custom environment checks, ad-hoc type guards, and similar patterns are common candidates.
 
-### Subagent 2: Code Quality Review
+### Lens 2: Code Quality Review
 
 Review the same changes for hacky patterns:
 
@@ -67,7 +52,7 @@ Review the same changes for hacky patterns:
 5. **Stringly-typed code**: using raw strings where constants, enums (string unions), or branded types already exist in the codebase
 6. **Unnecessary comments**: comments explaining WHAT the code does (well-named identifiers already do that), narrating the change, or referencing the task/caller — delete; keep only non-obvious WHY (hidden constraints, subtle invariants, workarounds)
 
-### Subagent 3: Efficiency Review
+### Lens 3: Efficiency Review
 
 Review the same changes for efficiency:
 
@@ -79,17 +64,17 @@ Review the same changes for efficiency:
 6. **Memory**: unbounded data structures, missing cleanup, event listener leaks
 7. **Overly broad operations**: reading entire files when only a portion is needed, loading all items when filtering for one
 
-## Phase 4: Deduplicate and Prioritize Findings
+## Phase 3: Deduplicate and Prioritize Findings
 
-If subagents were launched, wait for all three to complete. Deduplicate overlapping findings that point to the same root cause. If you reviewed the diff yourself, consolidate the findings from your three lenses. Prioritize fixes that materially improve reuse, quality, or efficiency without widening scope.
+Consolidate findings from the three review lenses. Deduplicate overlapping findings that point to the same root cause. Prioritize fixes that materially improve reuse, quality, or efficiency without widening scope.
 
-## Phase 5: Apply Worthwhile Fixes
+## Phase 4: Apply Worthwhile Fixes
 
 Fix each worthwhile issue directly. Skip false positives, risky changes, and low-value churn.
 
 If your fixes may have changed behavior, ask `@executor` to run the smallest relevant validation.
 
-## Phase 6: Summarize
+## Phase 5: Summarize
 
 Briefly summarize:
 
