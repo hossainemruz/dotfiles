@@ -10,8 +10,7 @@ read `plan.md`. Select exactly one subtask using this order:
 3. if multiple subtasks are `In Progress`, stop and ask which to continue
 4. if none remain, report that there is no remaining implementation work
 
-Implement only that subtask. Keep changes scoped. Run the smallest relevant
-validation. Review your own diff against the subtask, fix issues you agree with,
-rerun validation if needed, update `review.md` with findings/verdict, update
-`plan.md` status/checkpoint, then summarize files changed, validation, review
-verdict, and next pending subtask.
+Implement only that subtask. Run the smallest relevant validation. Review your
+diff, fix agreed issues, rerun validation if needed, update `review.md` and only
+the relevant `plan.md` status/progress, then summarize files changed,
+validation, review verdict, and next pending subtask.

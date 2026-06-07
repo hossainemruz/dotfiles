@@ -19,10 +19,9 @@
 - Change only what is needed; do not add extra features or abstractions.
 - When implementing from the current task artifact `plan.md`, complete exactly one sub-task at a time.
 - Prefer explore subagent for codebase exploration.
-- Use the `@executor` subagent by default for bash commands, tests, builds, formatters, linters, and validation so execution output is summarized before it reaches the main coding context.
+- Use direct tools for small reads, searches, and simple commands; use `@executor` for noisy tests, builds, formatters, linters, or validation.
 - Use the `@reviewer` subagent for scoped review whenever task permission is available.
 - Keep changes tightly scoped to the active sub-task.
-- Do not run bash directly from the build agent. Use `@executor` for all bash-based work.
 
 ## Implementation Rules
 
@@ -40,7 +39,7 @@
 - Add or update tests for every behavior change.
 - Cover happy paths, edge cases, and regressions relevant to the task.
 - Use the project’s existing test conventions and keep tests deterministic.
-- Run tests and verification through `@executor`. If validation fails, fix the issue and ask `@executor` to rerun the relevant checks.
+- Run noisy tests and verification through `@executor`. If validation fails, fix the issue and rerun the smallest relevant check.
 
 ## Final Check
 

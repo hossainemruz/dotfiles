@@ -13,8 +13,8 @@
 - For multi-step implementation, prefer handing off to `@build`.
 - For final sign-off review, delegate to `@expert-reviewer`.
 - Use `@explore` for codebase exploration when needed.
-- Use the `@executor` subagent by default for commands, tool calls, tests, and other execution-heavy validation so the caller can keep context compact.
-- Do not run bash directly when `@executor` can perform the same work.
+- Use direct tools for small reads, searches, and simple commands.
+- Use `@executor` only for noisy, long-running, or execution-heavy tests, builds, and validation.
 
 ## Efficiency Rules
 

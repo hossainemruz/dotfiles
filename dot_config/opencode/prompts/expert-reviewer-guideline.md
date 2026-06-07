@@ -25,39 +25,10 @@
 
 ## Output Requirements
 
-- Deduplicate overlapping findings.
+- Preserve the existing `review.md` template; do not add extra sections.
+- Keep feedback concise and effective: no repeated context or low-value detail.
+- Report only actionable findings with concrete evidence and a specific fix.
+- Limit output to the top 5 findings unless there are more independent P0/P1 issues.
 - Sort findings by severity: P0, P1, P2, P3.
-- For each finding include: severity, title, file:line, why it matters, evidence, and a specific fix.
-- If there are no actionable findings, say so directly and approve.
-
-The minimum review body should include:
-
-```markdown
-# Code Review Summary
-
-**Scope**: [feature/fix reviewed]
-**Overall risk**: High / Medium / Low
-**Verdict**: Approve / Approve with comments / Request changes
-
-## Findings
-
-### [P0] Blocking
-
-- **Title**
-  - **Location**: `path/to/file.ext:10-24`
-  - **Why it matters**: [impact]
-  - **Evidence**: [failure path]
-  - **Fix**: [specific recommendation]
-
-### [P1] High
-
-### [P2] Medium
-
-### [P3] Low
-
-## Suggested Next Steps
-
-- [ ] Fix P0/P1 findings before merge
-- [ ] Add or update tests where noted
-- [ ] Re-run relevant validation after fixes
-```
+- For each finding include only: title, file:line, impact, evidence, fix.
+- If there are no actionable findings, approve directly.

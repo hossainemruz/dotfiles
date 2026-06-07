@@ -46,16 +46,13 @@ irreversible changes.
 
 ## Safe artifact updates
 
-- Prefer bounded updates: `AGENT_STATUS_START` / `AGENT_STATUS_END`,
-  `Progress`, `Latest Review`, `Review History`, or `plan.md` `Checkpoints`.
-- Treat `plan.md` `Checkpoints` and `review.md` `Review History` as append-only logs.
+- Prefer bounded updates to existing `Progress` and `Latest Review` sections.
 - Use status values consistently: `Pending`, `In Progress`, `Blocked`,
   `Review`, and `Completed`.
 - Before starting implementation, mark exactly one commit-sized subtask or PR
   group as `In Progress` when possible.
-- After implementation and validation, update the relevant status in `plan.md`
-  and add a `plan.md` checkpoint with what changed, validation, review result,
-  and next action. Keep detailed review history in `review.md`.
+- After implementation and validation, update only the relevant status/progress
+  in `plan.md`. Keep review feedback in `review.md` concise and current.
 
 ## Agent behavior
 
@@ -71,8 +68,8 @@ for a task:
    or planning depends on research context.
 6. Do not scan the whole Obsidian vault or `$HOME/agent-vault` unless the user
    explicitly asks.
-7. If updating task progress, update the relevant progress/status section in
-   `plan.md` and add a `plan.md` checkpoint. Use `review.md` only for review
-   findings, validation review, and review history.
+7. If updating task progress, update only the relevant progress/status section
+   in `plan.md`. Use `review.md` only for current review findings and validation
+   review.
 8. Keep repository changes separate from artifact updates and mention both in
    summaries when applicable.

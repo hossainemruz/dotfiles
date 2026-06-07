@@ -19,6 +19,7 @@ the task artifact workflow.
 - Report only actionable findings with evidence.
 - Prefer a few high-confidence findings over many weak ones.
 - Limit output to the most important 5 findings unless there is a blocker or multiple independent high-impact issues.
+- Keep `review.md` concise and current: no review history, repeated context, or low-value detail.
 - Flag scope creep if the diff includes changes outside the active sub-task, but do not expand the review to cover it.
 - Keep findings scoped to the sub-task; do not raise issues that belong to a different sub-task or future work.
 - Do not suggest next steps, attempt fixes, or decide what to do with findings. The caller decides.
