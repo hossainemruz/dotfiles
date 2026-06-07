@@ -3,8 +3,8 @@ description: Run final validation and premium review for the full task.
 ---
 
 Resolve the current task artifact directory from `.agent-task` as
-`$HOME/agent-vault/<contents-of-.agent-task>`. Use artifact `task.md` and
-`plan.md` as the source of truth for the intended outcome. First ask the
+`$HOME/agent-vault/<contents-of-.agent-task>`. Use artifact `task.md`, optional
+`research.md`, and `plan.md` as the source of truth for the intended outcome. First ask the
 `@executor` subagent to run the smallest final validation that covers the
 implemented scope. Then ask the `@expert-reviewer` subagent to perform a final
 in-depth review of the full diff against the base branch itself and write the

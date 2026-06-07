@@ -7,6 +7,7 @@ directory as `$HOME/agent-vault/<contents-of-.agent-task>`. Then inspect the
 expected artifact files in that directory:
 
 - `task.md`
+- optional `research.md`
 - `plan.md`
 - `review.md`
 

@@ -19,7 +19,7 @@ directory is `$HOME/agent-vault/tasks/faber/FB-001`.
 
 ## Artifacts and templates
 
-Expected files: `task.md`, `plan.md`, `review.md`.
+Expected files: `task.md`, optional `research.md`, `plan.md`, `review.md`.
 
 The user usually creates the task folder from templates in
 `$HOME/agent-vault/templates/`. Agents should preserve each artifact's existing
@@ -32,8 +32,14 @@ When artifacts and messages disagree, use this priority order:
 
 1. Latest explicit user instruction.
 2. `task.md` for scope and acceptance.
-3. `plan.md` for sequencing, active work, and progress.
-4. `review.md` for findings and validation state.
+3. `research.md` for evidence, options, tradeoffs, risks, and the recommended
+   implementation approach.
+4. `plan.md` for sequencing, active work, and progress.
+5. `review.md` for findings and validation state.
+
+`research.md` must not override the task scope, requirements, acceptance
+criteria, or non-goals in `task.md`. Treat research as implementation guidance
+for planning, not as a requirements contract.
 
 If the conflict affects correctness or scope, report it and ask before making
 irreversible changes.
@@ -53,14 +59,16 @@ irreversible changes.
 
 ## Agent behavior
 
-When asked to plan, implement, review, summarize, or report progress for a
-task:
+When asked to research, plan, implement, review, summarize, or report progress
+for a task:
 
 1. Check whether `.agent-task` exists in the current repository.
 2. If it exists, resolve the task artifact directory using the rule above.
 3. Read only the relevant artifact files from that directory.
 4. Treat those files as task context and prefer them over ad hoc assumptions.
-5. Report missing `task.md`, `plan.md`, or `review.md` clearly.
+5. Report missing required artifacts (`task.md`, `plan.md`, or `review.md`)
+   clearly. Report missing `research.md` only when a research step was requested
+   or planning depends on research context.
 6. Do not scan the whole Obsidian vault or `$HOME/agent-vault` unless the user
    explicitly asks.
 7. If updating task progress, update the relevant progress/status section in
