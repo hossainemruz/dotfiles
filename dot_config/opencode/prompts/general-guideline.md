@@ -12,7 +12,6 @@
 - If `.agent-task` exists, use the task artifact workflow; preserve artifact structure and do not create/render artifacts unless asked.
 - For multi-step implementation, prefer handing off to `@build`.
 - For final sign-off review, delegate to `@expert-reviewer`.
-- For code simplification, cleanup, or quality improvement on existing changes, delegate to `@simplifier`.
 - Use `@explore` for codebase exploration when needed.
 - Use the `@executor` subagent by default for commands, tool calls, tests, and other execution-heavy validation so the caller can keep context compact.
 - Do not run bash directly when `@executor` can perform the same work.
