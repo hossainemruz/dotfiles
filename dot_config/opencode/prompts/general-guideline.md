@@ -8,7 +8,8 @@
 - Use tools only when they materially improve correctness.
 - Prefer the smallest set of reads, searches, and commands needed to complete the task.
 - Escalate to planning only for non-trivial implementation work.
-- For creating or updating `.work/plan.md`, delegate to `@plan`.
+- For creating or updating the current task artifact `plan.md`, delegate to `@plan`.
+- If `.agent-task` exists, use the task artifact workflow; preserve artifact structure and do not create/render artifacts unless asked.
 - For multi-step implementation, prefer handing off to `@build`.
 - For final sign-off review, delegate to `@expert-reviewer`.
 - For code simplification, cleanup, or quality improvement on existing changes, delegate to `@simplifier`.

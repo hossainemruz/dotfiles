@@ -1,9 +1,18 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "autoupdate": true,
-  "small_model": "opencode-go/deepseek-v4-flash",
+  "enabled_providers": [
+    "deepseek",
+    "openai"
+  ],
+  "instructions": [
+    "/home/emruz/.config/agent-workflows/task-artifacts.md"
+  ],
+  "small_model": "deepseek/deepseek-v4-flash",
   "permission": {
     "read": {
+      "/home/emruz/agent-vault": "allow",
+      "/home/emruz/agent-vault/**": "allow",
       "~/.ssh/**": "deny",
       "~/.gnupg/**": "deny",
       "~/.aws/**": "deny",
@@ -25,6 +34,8 @@
       "**/*credentials*": "deny"
     },
     "edit": {
+      "/home/emruz/agent-vault": "allow",
+      "/home/emruz/agent-vault/**": "allow",
       "~/.aws/**": "deny",
       "~/.azure/**": "deny",
       "~/.ssh/**": "deny",
@@ -44,6 +55,14 @@
       "**/*.jks": "deny",
       "*credentials*": "deny",
       "**/*credentials*": "deny"
+    },
+    "external_directory": {
+      "/home/emruz/agent-vault": "allow",
+      "/home/emruz/agent-vault/**": "allow"
+    },
+    "skill": {
+      "omarchy": "deny",
+      "plannotator-*": "deny"
     },
     "bash": {
       "*": "allow",
@@ -85,7 +104,7 @@
       "git restore *": "ask"
     }
   },
-  "model": "opencode-go/deepseek-v4-pro",
+  "model": "deepseek/deepseek-v4-pro",
   "default_agent": "general",
   "experimental": {
     "disable_paste_summary": true
@@ -101,16 +120,20 @@
   "agent": {
     "general": {
       "description": "Primary orchestrator for normal use, planning handoff, and final review handoff",
-      "model": "opencode-go/deepseek-v4-pro",
+      "model": "deepseek/deepseek-v4-pro",
       "mode": "primary",
       "permission": {
+        "external_directory": {
+          "/home/emruz/agent-vault": "allow",
+          "/home/emruz/agent-vault/**": "allow"
+        },
         "task": "allow"
       },
       "prompt": "{file:./prompts/general-guideline.md}"
     },
     "build": {
       "description": "Primary coding agent that delegates execution and review",
-      "model": "opencode-go/deepseek-v4-pro",
+      "model": "deepseek/deepseek-v4-pro",
       "mode": "all",
       "permission": {
         "external_directory": {
@@ -130,7 +153,13 @@
       "permission": {
         "edit": {
           "*": "deny",
-          ".work/*": "allow"
+          ".work/*": "allow",
+          "/home/emruz/agent-vault": "allow",
+          "/home/emruz/agent-vault/**": "allow"
+        },
+        "external_directory": {
+          "/home/emruz/agent-vault": "allow",
+          "/home/emruz/agent-vault/**": "allow"
         },
         "task": "allow"
       },
@@ -138,10 +167,14 @@
     },
     "explore": {
       "description": "Semantic codebase exploration",
-      "model": "opencode-go/deepseek-v4-pro",
+      "model": "deepseek/deepseek-v4-pro",
       "mode": "subagent",
       "hidden": true,
       "permission": {
+        "external_directory": {
+          "/home/emruz/agent-vault": "allow",
+          "/home/emruz/agent-vault/**": "allow"
+        },
         "edit": "deny",
         "task": "deny"
       },
@@ -149,13 +182,15 @@
     },
     "executor": {
       "description": "Default execution subagent for bash commands, tests, builds, and validation",
-      "model": "opencode-go/deepseek-v4-flash",
+      "model": "deepseek/deepseek-v4-flash",
       "mode": "subagent",
       "hidden": true,
       "permission": {
         "external_directory": {
           "/tmp": "allow",
-          "/tmp/**": "allow"
+          "/tmp/**": "allow",
+          "/home/emruz/agent-vault": "allow",
+          "/home/emruz/agent-vault/**": "allow"
         },
         "task": "deny"
       },
@@ -163,23 +198,33 @@
     },
     "simplifier": {
       "description": "Review changed code for reuse, quality, and efficiency, then fix worthwhile issues",
-      "model": "opencode-go/deepseek-v4-pro",
+      "model": "deepseek/deepseek-v4-pro",
       "mode": "subagent",
       "hidden": true,
       "permission": {
+        "external_directory": {
+          "/home/emruz/agent-vault": "allow",
+          "/home/emruz/agent-vault/**": "allow"
+        },
         "task": "allow"
       },
       "prompt": "{skill:simplify}"
     },
     "reviewer": {
       "description": "Automated code review agent with direct review for small diffs and parallel review for larger ones",
-      "model": "opencode-go/deepseek-v4-flash",
+      "model": "deepseek/deepseek-v4-flash",
       "mode": "subagent",
       "hidden": true,
       "permission": {
         "edit": {
           "*": "deny",
-          ".work/*": "allow"
+          ".work/*": "allow",
+          "/home/emruz/agent-vault": "allow",
+          "/home/emruz/agent-vault/**": "allow"
+        },
+        "external_directory": {
+          "/home/emruz/agent-vault": "allow",
+          "/home/emruz/agent-vault/**": "allow"
         },
         "task": "allow"
       },
@@ -194,7 +239,13 @@
       "permission": {
         "edit": {
           "*": "deny",
-          ".work/*": "allow"
+          ".work/*": "allow",
+          "/home/emruz/agent-vault": "allow",
+          "/home/emruz/agent-vault/**": "allow"
+        },
+        "external_directory": {
+          "/home/emruz/agent-vault": "allow",
+          "/home/emruz/agent-vault/**": "allow"
         },
         "task": "allow"
       },

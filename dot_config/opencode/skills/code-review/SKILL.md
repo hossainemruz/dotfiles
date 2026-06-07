@@ -5,7 +5,9 @@ permissions:
   edit: allow
 ---
 
-Produce high-signal, evidence-based reviews focused on real risk. Write the findings in `.work/review.md`.
+Produce high-signal, evidence-based reviews focused on real risk. Write the
+findings in the current task artifact `review.md`. If `.agent-task` exists, use
+the task artifact workflow.
 
 ## Core Rules
 
@@ -14,7 +16,8 @@ Produce high-signal, evidence-based reviews focused on real risk. Write the find
 - Report only actionable findings with evidence.
 - Prefer a few high-confidence findings over many weak ones.
 - If no diff or scope is provided, ask instead of scanning broadly.
-- Do not modify any file other than `.work/review.md`.
+- Do not modify any file other than the resolved artifact `review.md`.
+- Preserve artifact `review.md` structure.
 
 ## Review Order
 
@@ -41,38 +44,6 @@ Raise a finding only if the issue is real or highly likely, causes meaningful ha
 - **[P1] High**: serious user, operational, or security impact
 - **[P2] Medium**: meaningful but non-blocking risk
 - **[P3] Low**: valid low-impact improvement
-
-## Required Output
-
-```markdown
-# Code Review Summary
-
-**Scope**: [feature/fix reviewed]
-**Overall risk**: High / Medium / Low
-**Verdict**: Approve / Approve with comments / Request changes
-
-## Findings
-
-### [P0] Blocking
-
-- **Title**
-  - **Location**: `path/to/file.ext:10-24`
-  - **Why it matters**: [impact]
-  - **Evidence**: [failure path]
-  - **Fix**: [specific recommendation]
-
-### [P1] High
-
-### [P2] Medium
-
-### [P3] Low
-
-## Suggested Next Steps
-
-- [ ] Fix P0/P1 findings before merge
-- [ ] Add or update tests where noted
-- [ ] Re-run relevant validation after fixes
-```
 
 If there are no actionable issues, say so directly and approve.
 

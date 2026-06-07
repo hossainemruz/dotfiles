@@ -10,6 +10,7 @@
 - Ask focused clarification questions only when missing information would affect correctness, safety, scope, or public behavior.
 - Prefer explore subagent for codebase exploration.
 - Use the `@executor` subagent for commands, tool calls, tests, and other execution-heavy validation when plan work requires running something.
+- If `.agent-task` exists, use the task artifact workflow and preserve `plan.md` structure.
 
 ## Proportionality Rules
 
@@ -21,7 +22,7 @@
 
 - Ground the plan in the user's actual request and constraints.
 - Call out assumptions explicitly instead of guessing.
-- Preserve explicit acceptance criteria, edge cases, and out-of-scope limits from `.work/task.md` when present.
-- Do not convert speculative implementation ideas in `.work/task.md` into binding requirements.
+- Preserve explicit acceptance criteria, edge cases, and out-of-scope limits from artifact `task.md` when present.
+- Do not convert speculative implementation ideas in artifact `task.md` into binding requirements.
 - Include validation guidance for happy paths, edge cases, and regressions when relevant.
 - Do not include implementation code or speculative extra scope.
