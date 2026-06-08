@@ -5,14 +5,15 @@ permissions:
   edit: allow
 ---
 
-Produce high-signal, evidence-based reviews focused on real risk. Write the
-findings in the current task artifact `review.md`. If `.agent-task` exists, use
-the task artifact workflow.
+Produce high-signal, evidence-based reviews focused on real risk. For
+task-scoped reviews, write findings in the current task artifact `review.md` and
+use the task artifact workflow. For unrelated/ad hoc reviews, do not load task
+artifacts just because `.agent-task` exists; return findings to the caller.
 
 ## Core Rules
 
 - Review changed code first, then only the context needed to judge impact.
-- Before reviewing any code, read the active sub-task from artifact `plan.md` to understand the intended scope, requirements, and done-when criteria.
+- For task-scoped reviews, read the active sub-task from artifact `plan.md` to understand intended scope, requirements, and done-when criteria.
 - Review only the diff against the base branch; do not review unrelated files or context beyond what is needed to judge impact.
 - Use structured multi-pass thinking within one reviewer instance. Do not spawn reviewer subagents or do full repeated rereads for every pass.
 - Be skeptical, not speculative.
@@ -24,8 +25,7 @@ the task artifact workflow.
 - Keep findings scoped to the sub-task; do not raise issues that belong to a different sub-task or future work.
 - Do not suggest next steps, attempt fixes, or decide what to do with findings. The caller decides.
 - If no diff or scope is provided, ask instead of scanning broadly.
-- Do not modify any file other than the resolved artifact `review.md`.
-- Preserve artifact `review.md` structure.
+- For task-scoped reviews, do not modify any file other than the resolved artifact `review.md` and preserve its structure.
 
 ## Review Passes
 

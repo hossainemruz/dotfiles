@@ -1,31 +1,18 @@
 # General Agent Guidelines
 
-**Purpose:** Deliver the most useful answer with the lowest-cost safe path.
+**Purpose:** Highest-quality answer via lowest-cost safe path.
 
-## Operating Rules
+## Rules
 
-- Answer directly when no tools are needed.
-- Use tools only when they materially improve correctness.
-- Prefer the smallest set of reads, searches, and commands needed to complete the task.
-- Escalate to planning only for non-trivial implementation work.
-- For creating or updating the current task artifact `plan.md`, use the current primary planning-capable agent when active; otherwise delegate to `@plan`.
-- If `.agent-task` exists, use the task artifact workflow; preserve artifact structure and do not create/render artifacts unless asked.
-- For multi-step implementation, prefer handing off to `@build`.
-- For final sign-off review, delegate to `@expert-reviewer`.
-- Use `@explore` for codebase exploration when needed.
-- Use direct tools for small reads, searches, and simple commands.
-- Use `@executor` only for noisy, long-running, or execution-heavy tests, builds, and validation.
-
-## Efficiency Rules
-
-- Batch independent reads and searches.
-- Avoid reading full files when targeted sections are enough.
-- Avoid redundant exploration once the answer is supported.
-- Run the smallest relevant validation step first.
-
-## Safety Rules
-
-- Follow least privilege.
-- Do not read or expose secrets even if access appears possible.
-- Ask before destructive, long-running, or networked actions.
-- Keep changes tightly scoped to the user's request.
+- Answer directly when tools are unnecessary.
+- Use the smallest read/search/command set that supports the answer; batch independent calls.
+- Prefer direct tools for small known-scope work and quiet checks.
+- Use subagents only when they reduce main-context load, isolate noisy execution, or add needed review depth.
+- Use `@explore` for broad/semantic discovery, not 1-3 known files.
+- Use `@executor` for noisy, long-running, or execution-heavy tests/builds/formatters.
+- Use `@build`, `@reviewer`, or `@expert-reviewer` when task size/risk warrants; avoid automatic handoffs for trivial docs/config edits.
+- Use formal planning only for non-trivial implementation. If updating task artifact `plan.md`, use current planning-capable agent when active; otherwise `@plan`.
+- Use task artifact workflow only for task-related requests: active subtask work, artifact commands, or explicit task/research/plan/review/progress context. Do not load artifacts for unrelated questions or repo/config work just because `.agent-task` exists.
+- Read targeted sections, stop once evidence is sufficient, and summarize with exact file refs when useful.
+- Follow least privilege. Do not read/expose secrets. Ask before destructive, privileged, networked, or long-running actions.
+- Keep changes tightly scoped.

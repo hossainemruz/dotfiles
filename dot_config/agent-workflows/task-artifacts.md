@@ -1,75 +1,53 @@
 # Personal Task Artifact Workflow
 
-This is a personal workflow for repositories that opt in with a `.agent-task`
-file. Do not require repository-level instructions for this workflow.
+Repos opt in with `.agent-task`. If absent, ignore this workflow. If present,
+use this workflow only when the user request is task-related: it mentions the
+active task, task artifacts, `/task-*` style commands, planning, research,
+implementation from `plan.md`, review feedback, validation status, or progress.
+For unrelated questions, repo/config edits, or general advice, do not read task
+artifacts just because `.agent-task` exists.
 
-## Resolving the current task
+## Resolve current task
 
-If the current repository contains a `.agent-task` file, read it as a relative
-path inside `$HOME/agent-vault`.
+- Read `.agent-task` as a relative path inside `$HOME/agent-vault`.
+- Artifact directory: `$HOME/agent-vault/<.agent-task contents>`.
+- Example: `tasks/faber/FB-001` → `$HOME/agent-vault/tasks/faber/FB-001`.
 
-Resolve the task artifact directory as:
+## Artifacts
 
-```text
-$HOME/agent-vault/<contents-of-.agent-task>
-```
+Expected: `task.md`, optional `research.md`, `plan.md`, `review.md`.
+Preserve existing structure and user-authored content. Do not recreate artifacts,
+overwrite whole files, or render template variables unless asked.
 
-For example, if `.agent-task` contains `tasks/faber/FB-001`, the task artifact
-directory is `$HOME/agent-vault/tasks/faber/FB-001`.
+## Source of truth
 
-## Artifacts and templates
+When artifacts/messages conflict:
+1. latest explicit user instruction
+2. `task.md` for scope, requirements, acceptance, constraints, non-goals
+3. `research.md` for evidence, options, tradeoffs, risks, recommended approach
+4. `plan.md` for sequencing, active work, progress
+5. `review.md` for findings and validation state
 
-Expected files: `task.md`, optional `research.md`, `plan.md`, `review.md`.
-
-The user usually creates the task folder from templates in
-`$HOME/agent-vault/templates/`. Agents should preserve each artifact's existing
-structure and user-authored content. Do not recreate artifacts, overwrite whole
-files, or render template variables unless explicitly asked.
-
-## Source-of-truth priority
-
-When artifacts and messages disagree, use this priority order:
-
-1. Latest explicit user instruction.
-2. `task.md` for scope and acceptance.
-3. `research.md` for evidence, options, tradeoffs, risks, and the recommended
-   implementation approach.
-4. `plan.md` for sequencing, active work, and progress.
-5. `review.md` for findings and validation state.
-
-`research.md` must not override the task scope, requirements, acceptance
-criteria, or non-goals in `task.md`. Treat research as implementation guidance
-for planning, not as a requirements contract.
-
-If the conflict affects correctness or scope, report it and ask before making
+`research.md` guides implementation only; it must not expand or override
+`task.md`. If conflict affects correctness or scope, report it and ask before
 irreversible changes.
 
-## Safe artifact updates
+## Safe updates
 
-- Prefer bounded updates to existing `Progress` and `Latest Review` sections.
-- Use status values consistently: `Pending`, `In Progress`, `Blocked`,
-  `Review`, and `Completed`.
-- Before starting implementation, mark exactly one commit-sized subtask or PR
-  group as `In Progress` when possible.
-- After implementation and validation, update only the relevant status/progress
-  in `plan.md`. Keep review feedback in `review.md` concise and current.
+- Prefer bounded updates to existing `Progress`, `Agent Status`, and `Latest Review` sections.
+- Use status values consistently: `Pending`, `In Progress`, `Blocked`, `Review`, `Completed`.
+- Before implementation, mark exactly one commit-sized subtask or PR group `In Progress` when possible.
+- After implementation/validation, update only relevant progress/status in `plan.md`.
+- Keep review feedback in `review.md` concise and current.
 
 ## Agent behavior
 
-When asked to research, plan, implement, review, summarize, or report progress
-for a task:
-
-1. Check whether `.agent-task` exists in the current repository.
-2. If it exists, resolve the task artifact directory using the rule above.
-3. Read only the relevant artifact files from that directory.
-4. Treat those files as task context and prefer them over ad hoc assumptions.
-5. Report missing required artifacts (`task.md`, `plan.md`, or `review.md`)
-   clearly. Report missing `research.md` only when a research step was requested
-   or planning depends on research context.
-6. Do not scan the whole Obsidian vault or `$HOME/agent-vault` unless the user
-   explicitly asks.
-7. If updating task progress, update only the relevant progress/status section
-   in `plan.md`. Use `review.md` only for current review findings and validation
-   review.
-8. Keep repository changes separate from artifact updates and mention both in
-   summaries when applicable.
+For task-related research, planning, implementation, review, summaries, or progress:
+1. Check for `.agent-task`.
+2. Resolve artifact directory using the rule above.
+3. Read only relevant artifact files.
+4. Treat artifacts as task context; prefer them over ad hoc assumptions.
+5. Report missing required artifacts (`task.md`, `plan.md`, `review.md`). Report missing `research.md` only for research or when planning depends on it.
+6. Do not scan the rest of `$HOME/agent-vault` unless asked.
+7. If updating task progress, update only relevant progress/status in `plan.md`; use `review.md` only for current review findings/validation review.
+8. Keep repository changes separate from artifact updates and mention both in summaries.

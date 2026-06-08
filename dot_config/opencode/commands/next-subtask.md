@@ -13,10 +13,10 @@ select exactly one active sub-task using this order:
 Treat the selected sub-task entry as the full implementation brief. Implement only that sub-task, following its related requirements, dependencies, in-scope and out-of-scope notes, risks, implementation suggestions, testing guidance, and done-when criteria.
 
 After implementation:
-1. ask the `@executor` subagent to run the smallest relevant validation first
-2. ask the `@reviewer` subagent to review the changes against the active sub-task and write feedback to artifact `review.md`
+1. run the smallest relevant validation; use `@executor` only for noisy/long checks
+2. review against the active sub-task; use `@reviewer` for non-trivial/risky/behavior-changing diffs, self-review trivial docs/config diffs
 3. fix any issues you agree with
-4. ask `@executor` to rerun the relevant validation after fixes
+4. rerun relevant validation after fixes
 5. update artifact `plan.md` to mark the sub-task `Completed`
 
 Finish with a short summary:

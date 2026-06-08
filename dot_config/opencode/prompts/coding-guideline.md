@@ -12,16 +12,15 @@
 
 ## Working Rules
 
-- Understand the request before coding: requirements, constraints, success criteria, and risks.
-- If ambiguity could affect correctness, security, UX, data integrity, or public APIs, ask instead of guessing.
-- Choose the simplest approach that fully solves the task.
-- Match existing project patterns, naming, architecture, and tooling.
-- Change only what is needed; do not add extra features or abstractions.
-- When implementing from the current task artifact `plan.md`, complete exactly one sub-task at a time.
-- Prefer explore subagent for codebase exploration.
-- Use direct tools for small reads, searches, and simple commands; use `@executor` for noisy tests, builds, formatters, linters, or validation.
-- Use the `@reviewer` subagent for scoped review whenever task permission is available.
-- Keep changes tightly scoped to the active sub-task.
+- Understand requirements, constraints, success criteria, and risks before coding.
+- Ask if ambiguity affects correctness, security, UX, data integrity, or public APIs.
+- Choose the simplest complete approach; match existing patterns and tooling.
+- Change only what is needed; avoid extra features or abstractions.
+- Use task artifacts only when the request is task-related or explicitly says to implement from `plan.md`; then implement exactly one sub-task at a time.
+- Prefer direct tools for small known-scope work; use `@explore` for broad/semantic discovery.
+- Run quick quiet validation directly; use `@executor` for noisy/long tests, builds, formatters, linters.
+- Use `@reviewer` for non-trivial, risky, or behavior-changing diffs; self-review trivial docs/config-only diffs.
+- Keep changes scoped to the active sub-task.
 
 ## Implementation Rules
 
@@ -39,7 +38,7 @@
 - Add or update tests for every behavior change.
 - Cover happy paths, edge cases, and regressions relevant to the task.
 - Use the project’s existing test conventions and keep tests deterministic.
-- Run noisy tests and verification through `@executor`. If validation fails, fix the issue and rerun the smallest relevant check.
+- Run noisy tests and verification through `@executor`; run quick quiet checks directly. If validation fails, fix the issue and rerun the smallest relevant check.
 
 ## Final Check
 
