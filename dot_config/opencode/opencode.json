@@ -119,9 +119,10 @@
   },
   "agent": {
     "general": {
-      "description": "Primary orchestrator for normal use, planning handoff, and final review handoff",
-      "model": "deepseek/deepseek-v4-pro",
+      "description": "Primary orchestrator for normal use, delegation, planning handoff, and review handoff",
+      "model": "openai/gpt-5.5",
       "mode": "primary",
+      "variant": "medium",
       "permission": {
         "external_directory": {
           "/home/emruz/agent-vault": "allow",
@@ -184,13 +185,14 @@
       "mode": "subagent",
       "hidden": true,
       "permission": {
+        "edit": "deny",
+        "task": "deny",
         "external_directory": {
           "/tmp": "allow",
           "/tmp/**": "allow",
           "/home/emruz/agent-vault": "allow",
           "/home/emruz/agent-vault/**": "allow"
-        },
-        "task": "deny"
+        }
       },
       "prompt": "{file:./prompts/executor-guideline.md}"
     },
