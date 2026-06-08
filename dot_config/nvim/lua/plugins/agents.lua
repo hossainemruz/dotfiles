@@ -1,6 +1,7 @@
 return {
-  "folke/snacks.nvim",
-  keys = function()
+  {
+    "folke/snacks.nvim",
+    keys = function()
     local last_terminal_name
     local last_terminal_cwd
 
@@ -380,49 +381,49 @@ return {
 
     return {
       {
-        "<leader>og",
+        "<leader>ag",
         function()
           toggle_terminal("general")
         end,
         desc = "Toggle opencode general",
       },
       {
-        "<leader>ob",
+        "<leader>ab",
         function()
           toggle_terminal("build")
         end,
         desc = "Toggle opencode build",
       },
       {
-        "<leader>oc",
+        "<leader>ac",
         function()
           toggle_terminal("claude")
         end,
         desc = "Toggle claude",
       },
       {
-        "<leader>ox",
+        "<leader>ax",
         function()
           toggle_terminal("codex")
         end,
         desc = "Toggle codex",
       },
       {
-        "<leader>of",
+        "<leader>af",
         function()
           send_reference(current_file_reference())
         end,
         desc = "Reference current file",
       },
       {
-        "<leader>ol",
+        "<leader>al",
         function()
           send_reference(current_line_reference())
         end,
         desc = "Reference current line",
       },
       {
-        "<leader>os",
+        "<leader>as",
         function()
           send_reference(current_selection_reference())
         end,
@@ -430,5 +431,14 @@ return {
         desc = "Reference selection",
       },
     }
-  end,
+    end,
+  },
+  {
+    "folke/which-key.nvim",
+    opts = {
+      spec = {
+        { "<leader>a", group = "agent", icon = "🤖", mode = { "n", "x" } },
+      },
+    },
+  },
 }
