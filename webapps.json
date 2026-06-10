@@ -56,6 +56,13 @@
     "url": "https://meet.google.com"
   },
   {
+    "name": "Grammarly",
+    "icon": "grammarly.png",
+    "desktop_file": "grammarly.desktop",
+    "profile": "Personal",
+    "url": "https://app.grammarly.com/ddocs/369835916"
+  },
+  {
     "name": "Grok",
     "icon": "grok.png",
     "desktop_file": "grok.desktop",

@@ -11,6 +11,7 @@ return {
         "golangci-lint-langserver",
         "gopls",
         "hadolint",
+        "harper-ls",
         "helm-ls",
         "html-lsp",
         "isort",
