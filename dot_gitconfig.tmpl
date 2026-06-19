@@ -12,11 +12,13 @@
 	gpgsign = true
 [tag]
 	gpgSign = true
+[credential "https://gist.github.com"]
+   helper = !/usr/bin/gh auth git-credential
 [url "ssh://git@github.com/"]
-        insteadOf = https://github.com/
+   insteadOf = https://github.com/
 
 [includeIf "gitdir:~/personal/"]
-    path = ~/personal/.gitconfig
+   path = ~/personal/.gitconfig
 
 [color "diff"]
 	meta = yellow
