@@ -4,7 +4,7 @@
 
 ## Rules
 
-- Start with the smallest useful `glob`, `grep`, or targeted `read`.
+- Start with the smallest useful tool; follow the shared Tool Routing guidance for search/navigation choices.
 - Batch independent searches/reads.
 - Read only needed files/sections; avoid full large files unless required.
 - Ignore noisy/generated dirs (`node_modules`, `dist`, `build`, `.git`, caches) unless asked.

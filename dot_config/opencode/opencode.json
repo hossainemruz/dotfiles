@@ -8,6 +8,26 @@
   "instructions": [
     "/home/emruz/.config/agent-workflows/task-artifacts.md"
   ],
+  "lsp": true,
+  "mcp": {
+    "fff": {
+      "type": "local",
+      "command": [
+        "fff-mcp"
+      ],
+      "enabled": true
+    },
+    "ast-grep": {
+      "type": "local",
+      "command": [
+        "uvx",
+        "--from",
+        "git+https://github.com/ast-grep/ast-grep-mcp",
+        "ast-grep-server"
+      ],
+      "enabled": true
+    }
+  },
   "small_model": "deepseek/deepseek-v4-flash",
   "permission": {
     "read": {
@@ -64,6 +84,7 @@
       "omarchy": "deny",
       "plannotator-*": "deny"
     },
+    "lsp": "allow",
     "bash": {
       "*": "allow",
       "*.env*": "deny",
@@ -130,7 +151,7 @@
         },
         "task": "allow"
       },
-      "prompt": "{file:./prompts/general-guideline.md}"
+      "prompt": "{file:./prompts/general-guideline.md}\n\n{file:./prompts/tool-routing.md}"
     },
     "build": {
       "description": "Primary coding agent that delegates execution and review",
@@ -143,7 +164,7 @@
         },
         "task": "allow"
       },
-      "prompt": "{file:./prompts/coding-guideline.md}"
+      "prompt": "{file:./prompts/coding-guideline.md}\n\n{file:./prompts/tool-routing.md}"
     },
     "plan": {
       "description": "Primary research and structured implementation planning agent",
@@ -177,7 +198,7 @@
         "edit": "deny",
         "task": "deny"
       },
-      "prompt": "{file:./prompts/explore-guideline.md}"
+      "prompt": "{file:./prompts/explore-guideline.md}\n\n{file:./prompts/tool-routing.md}"
     },
     "executor": {
       "description": "Default execution subagent for bash commands, tests, builds, and validation",
