@@ -14,6 +14,22 @@ source ~/.local/share/omarchy/default/bash/rc
 export GOPRIVATE=github.com/qdrant
 export PATH="$HOME/.local/bin:$PATH"
 
+# Use the last part of the current directory as the Ghostty tab/window title.
+__set_ghostty_title() {
+  [[ ${TERM_PROGRAM:-} == "ghostty" || -n ${GHOSTTY_RESOURCES_DIR:-} ]] || return
+
+  local title="${PWD##*/}"
+  [[ -n "$title" ]] || title="/"
+
+  printf '\033]2;%s\007' "$title"
+}
+
+if [[ "$(declare -p PROMPT_COMMAND 2>/dev/null)" == declare\ -[aA]* ]]; then
+  PROMPT_COMMAND+=(__set_ghostty_title)
+else
+  PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND;}__set_ghostty_title"
+fi
+
 # Start ssh-agent if is not running already
 if [ -z "$SSH_AUTH_SOCK" ]; then
   eval "$(ssh-agent -s)" >/dev/null
@@ -27,6 +43,7 @@ alias yz='yazi'
 alias dot='chezmoi'
 alias zed='zeditor'
 alias gcm='git checkout main && git fetch --all && git reset --hard origin/main'
+alias gomodup='go get -u ./... && go mod tidy'
 
 # kubectl helpers
 alias ctx='kubectx'

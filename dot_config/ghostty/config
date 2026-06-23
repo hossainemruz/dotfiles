@@ -20,8 +20,8 @@ cursor-style = "block"
 cursor-style-blink = false
 
 # Cursor styling + SSH session terminfo
-# (all shell integration options must be passed together)
-shell-integration-features = no-cursor,ssh-env
+# Keep Ghostty from overriding the custom basename title in ~/.bashrc.
+shell-integration-features = no-cursor,no-title,ssh-env
 
 # Keyboard bindings
 keybind = shift+insert=paste_from_clipboard

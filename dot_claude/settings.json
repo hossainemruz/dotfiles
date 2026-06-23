@@ -1,18 +1,4 @@
 {
-  "model": "opus[1m]",
-  "theme": "auto",
-  "skillOverrides": {
-    "omarchy": "off",
-    "plannotator-annotate": "off",
-    "plannotator-compound": "off",
-    "plannotator-last": "off",
-    "plannotator-review": "off",
-    "plannotator-setup-goal": "off",
-    "plannotator-visual-explainer": "off"
-  },
-  "enabledPlugins": {
-    "pyright-lsp@claude-plugins-official": true
-  },
   "permissions": {
     "allow": [
       "Bash(git status:*)",
@@ -95,5 +81,20 @@
       "Read(**/.pypirc)",
       "Read(**/secrets/**)"
     ]
-  }
+  },
+  "model": "opus[1m]",
+  "skillOverrides": {
+    "omarchy": "off",
+    "plannotator-annotate": "off",
+    "plannotator-compound": "off",
+    "plannotator-last": "off",
+    "plannotator-review": "off",
+    "plannotator-setup-goal": "off",
+    "plannotator-visual-explainer": "off"
+  },
+  "enabledPlugins": {
+    "pyright-lsp@claude-plugins-official": true,
+    "gopls-lsp@claude-plugins-official": true
+  },
+  "theme": "auto"
 }
