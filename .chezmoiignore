@@ -1,6 +1,7 @@
 apps.json
 webapps.json
 Brewfile
+Brewfile.lock.json
 projects.json
 chezmoi.toml
 README.md

@@ -5,25 +5,13 @@
 # Hierarchy:
 # $HOME
 # ├── work
-# │   ├── Downloads
-# │   ├── Documents
-# │   ├── Pictures
 # │   ├── projects
 # ├── personal
-# │   ├── Downloads
-# │   ├── Documents
-# │   ├── Pictures
 # │   ├── projects
 
 # Define the relative paths for the hierarchy under $HOME
 declare -a paths=(
-  "work/Downloads"
-  "work/Documents"
-  "work/Pictures"
   "work/projects"
-  "personal/Downloads"
-  "personal/Documents"
-  "personal/Pictures"
   "personal/projects"
 )
 

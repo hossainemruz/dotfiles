@@ -35,7 +35,8 @@ echo "Updating Homebrew..."
 brew update
 
 echo "Installing macOS apps from $BREWFILE..."
-brew bundle --file "$BREWFILE" --no-lock
+HOMEBREW_BUNDLE_NO_LOCK=1 brew bundle --file "$BREWFILE"
+rm -f "$CHEZMOI_DIR/Brewfile.lock.json"
 
 echo "Homebrew app installation complete."
 {{ end }}
