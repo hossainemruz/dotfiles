@@ -1,5 +1,6 @@
 apps.json
 webapps.json
+Brewfile
 projects.json
 chezmoi.toml
 README.md
@@ -8,3 +9,13 @@ icons/
 .opencode/
 .agent-task
 .gitignore
+
+{{ if eq .chezmoi.os "darwin" -}}
+.config/hypr/
+.config/waybar/
+{{ end -}}
+
+{{ if ne .chezmoi.os "darwin" -}}
+.zprofile
+.zshrc
+{{ end -}}

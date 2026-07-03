@@ -1,0 +1,116 @@
+{{ if eq .chezmoi.os "darwin" -}}
+# If not running interactively, don't do anything.
+[[ -o interactive ]] || return
+
+# Homebrew shellenv for non-login interactive shells.
+if ! command -v brew >/dev/null 2>&1; then
+  if [[ -x /opt/homebrew/bin/brew ]]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+  elif [[ -x /usr/local/bin/brew ]]; then
+    eval "$(/usr/local/bin/brew shellenv)"
+  fi
+fi
+
+# Environment variables.
+export GOPRIVATE=github.com/qdrant
+export PATH="$HOME/.local/bin:$PATH"
+
+if command -v mise >/dev/null 2>&1; then
+  eval "$(mise activate zsh)"
+fi
+
+# Source autojump from Homebrew when installed.
+if command -v brew >/dev/null 2>&1 && [[ -s "$(brew --prefix)/etc/profile.d/autojump.sh" ]]; then
+  source "$(brew --prefix)/etc/profile.d/autojump.sh"
+fi
+
+# Use the last part of the current directory as the Ghostty tab/window title.
+__set_ghostty_title() {
+  [[ ${TERM_PROGRAM:-} == "ghostty" || -n ${GHOSTTY_RESOURCES_DIR:-} ]] || return
+
+  local title="${PWD##*/}"
+  [[ -n "$title" ]] || title="/"
+
+  printf '\033]2;%s\007' "$title"
+}
+
+autoload -Uz add-zsh-hook
+add-zsh-hook precmd __set_ghostty_title
+
+# Aliases.
+alias gg='lazygit'
+alias j='autojump'
+alias yz='yazi'
+alias dot='chezmoi'
+alias gcm='git checkout main && git fetch --all && git reset --hard origin/main'
+alias gomodup='go get -u ./... && go mod tidy'
+
+if command -v zeditor >/dev/null 2>&1; then
+  alias zed='zeditor'
+fi
+
+# kubectl helpers.
+alias ctx='kubectx'
+alias k='kubectl'
+alias kd='kubectl describe'
+alias kdel='kubectl delete'
+alias ke='kubectl exec -it'
+alias kg='kubectl get'
+alias kl='kubectl logs'
+alias klf='kubectl logs -f'
+alias kns='kubens'
+alias kw='watch -n 1'
+alias ky='kubectl get -oyaml'
+alias kpf='kubectl port-forward'
+
+# Plannotator commands.
+alias pa='plannotator annotate'
+alias review='plannotator review'
+alias review-plan='plannotator annotate .agents/tasks/plan.md'
+alias review-task='plannotator annotate .agents/tasks/task.md'
+alias review-feedback='plannotator annotate .agents/tasks/review.md'
+
+# Set KUBECONFIG based on active Zellij tab.
+if [[ -n "${ZELLIJ:-}" ]] && command -v zellij >/dev/null 2>&1 && command -v jq >/dev/null 2>&1; then
+  _tab_name=$(zellij action current-tab-info -j 2>/dev/null | jq -r '.name')
+  case "$_tab_name" in
+  Development) export KUBECONFIG="$HOME/.kube/qdrant-dev.yaml" ;;
+  Staging) export KUBECONFIG="$HOME/.kube/qdrant-staging.yaml" ;;
+  Production) export KUBECONFIG="$HOME/.kube/qdrant-prod.yaml" ;;
+  esac
+  unset _tab_name
+fi
+
+__format_utc_hour_for_tz() {
+  local tz="$1"
+  local utc_ref="$2"
+
+  if date --date="UTC ${utc_ref}" +"%I:%M %p" >/dev/null 2>&1; then
+    TZ="$tz" date --date="UTC ${utc_ref}" +"%I:%M %p"
+  else
+    local today
+    today=$(TZ=UTC date +"%Y-%m-%d")
+    TZ="$tz" date -j -f "%Y-%m-%d %H:%M %Z" "$today ${utc_ref} UTC" +"%I:%M %p"
+  fi
+}
+
+# Function to print time table of selected zones.
+timetable() {
+  printf "%-10s %-10s %-10s\n" "UTC" "Berlin" "Dhaka"
+  printf "%-10s %-10s %-10s\n" "----------" "----------" "----------"
+
+  for h in {0..23}; do
+    utc_ref=$(printf "%02d:00" "$h")
+    utc_time=$(__format_utc_hour_for_tz UTC "$utc_ref")
+    berlin_time=$(__format_utc_hour_for_tz Europe/Berlin "$utc_ref")
+    dhaka_time=$(__format_utc_hour_for_tz Asia/Dhaka "$utc_ref")
+
+    printf "%-10s %-10s %-10s\n" "$utc_time" "$berlin_time" "$dhaka_time"
+  done
+}
+
+# Added by LM Studio CLI (lms).
+if [[ -d "$HOME/.lmstudio/bin" ]]; then
+  export PATH="$PATH:$HOME/.lmstudio/bin"
+fi
+{{ end }}

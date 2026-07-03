@@ -45,6 +45,18 @@ export GITHUB_USERNAME=hossainemruz
 sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply $GITHUB_USERNAME
 ```
 
+- **Setup a macOS machine:**
+
+```bash
+xcode-select --install # if Command Line Tools are not installed yet
+export GITHUB_USERNAME=hossainemruz
+sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply $GITHUB_USERNAME
+```
+
+On macOS, chezmoi installs Homebrew if needed and then runs `brew bundle` from
+`Brewfile`. Hyprland, Waybar, and the Linux webapp installer are skipped; native
+macOS apps are installed via Homebrew casks where available.
+
 - **Navigate to source directory:**
 ```bash
 chezmoi cd

@@ -1,18 +1,36 @@
 # If not running interactively, don't do anything (leave this at the top of this file)
 [[ $- != *i* ]] && return
 
-# All the default Omarchy aliases and functions
-# (don't mess with these directly, just overwrite them here!)
-source ~/.local/share/omarchy/default/bash/rc
+# All the default Omarchy aliases and functions, when available.
+if [[ -r "$HOME/.local/share/omarchy/default/bash/rc" ]]; then
+  source "$HOME/.local/share/omarchy/default/bash/rc"
+fi
+
+# Homebrew shellenv for macOS interactive shells.
+if [[ "$(uname -s)" == "Darwin" ]]; then
+  if [[ -x /opt/homebrew/bin/brew ]]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+  elif [[ -x /usr/local/bin/brew ]]; then
+    eval "$(/usr/local/bin/brew shellenv)"
+  fi
+fi
 
 # Source autojump
-[[ -s /usr/share/autojump/autojump.bash ]] && source /usr/share/autojump/autojump.bash
+if [[ -s /usr/share/autojump/autojump.bash ]]; then
+  source /usr/share/autojump/autojump.bash
+elif command -v brew >/dev/null 2>&1 && [[ -s "$(brew --prefix)/etc/profile.d/autojump.sh" ]]; then
+  source "$(brew --prefix)/etc/profile.d/autojump.sh"
+fi
 
 # Add your own exports, aliases, and functions here.
 
 # environment variables
 export GOPRIVATE=github.com/qdrant
 export PATH="$HOME/.local/bin:$PATH"
+
+if command -v mise >/dev/null 2>&1; then
+  eval "$(mise activate bash)"
+fi
 
 # Use the last part of the current directory as the Ghostty tab/window title.
 __set_ghostty_title() {
@@ -30,8 +48,9 @@ else
   PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND;}__set_ghostty_title"
 fi
 
-# Start ssh-agent if is not running already
-if [ -z "$SSH_AUTH_SOCK" ]; then
+# Start ssh-agent if is not running already. macOS normally provides this via
+# launchd/keychain, so avoid starting a nested agent there.
+if [ -z "${SSH_AUTH_SOCK:-}" ] && [[ "$(uname -s)" != "Darwin" ]]; then
   eval "$(ssh-agent -s)" >/dev/null
 fi
 
@@ -41,7 +60,9 @@ alias gg='lazygit'
 alias j='autojump'
 alias yz='yazi'
 alias dot='chezmoi'
-alias zed='zeditor'
+if command -v zeditor >/dev/null 2>&1; then
+  alias zed='zeditor'
+fi
 alias gcm='git checkout main && git fetch --all && git reset --hard origin/main'
 alias gomodup='go get -u ./... && go mod tidy'
 
@@ -79,6 +100,19 @@ if [[ -n "$ZELLIJ" ]]; then
 fi
 
 # Function to print time table of selected zone
+__format_utc_hour_for_tz() {
+    local tz="$1"
+    local utc_ref="$2"
+
+    if date --date="UTC ${utc_ref}" +"%I:%M %p" >/dev/null 2>&1; then
+        TZ="$tz" date --date="UTC ${utc_ref}" +"%I:%M %p"
+    else
+        local today
+        today=$(TZ=UTC date +"%Y-%m-%d")
+        TZ="$tz" date -j -f "%Y-%m-%d %H:%M %Z" "$today ${utc_ref} UTC" +"%I:%M %p"
+    fi
+}
+
 timetable() {
     # Print header
     printf "%-10s %-10s %-10s\n" "UTC" "Berlin" "Dhaka"
@@ -89,14 +123,10 @@ timetable() {
         # UTC reference time in 24h format (for date calculations)
         utc_ref=$(printf "%02d:00" "$h")
 
-        # UTC time in 12h format
-        utc_time=$(TZ=UTC date --date="UTC ${utc_ref}" +"%I:%M %p")
-
-        # Berlin time (Europe/Berlin automatically handles CET/CEST DST)
-        berlin_time=$(TZ=Europe/Berlin date --date="UTC ${utc_ref}" +"%I:%M %p")
-
-        # Dhaka time (Asia/Dhaka = UTC+6, no DST)
-        dhaka_time=$(TZ=Asia/Dhaka date --date="UTC ${utc_ref}" +"%I:%M %p")
+        # Time in 12h format. Works with both GNU date and macOS/BSD date.
+        utc_time=$(__format_utc_hour_for_tz UTC "$utc_ref")
+        berlin_time=$(__format_utc_hour_for_tz Europe/Berlin "$utc_ref")
+        dhaka_time=$(__format_utc_hour_for_tz Asia/Dhaka "$utc_ref")
 
         # Print the row
         printf "%-10s %-10s %-10s\n" "$utc_time" "$berlin_time" "$dhaka_time"
@@ -104,5 +134,7 @@ timetable() {
 }
 
 # Added by LM Studio CLI (lms)
-export PATH="$PATH:/home/emruz/.lmstudio/bin"
+if [[ -d "$HOME/.lmstudio/bin" ]]; then
+  export PATH="$PATH:$HOME/.lmstudio/bin"
+fi
 # End of LM Studio CLI section

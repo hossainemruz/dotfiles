@@ -1,0 +1,41 @@
+{{ if eq .chezmoi.os "darwin" -}}
+#!/bin/bash
+set -euo pipefail
+
+CHEZMOI_DIR="${CHEZMOI_SOURCE_DIR:-$HOME/.local/share/chezmoi}"
+BREWFILE="$CHEZMOI_DIR/Brewfile"
+
+if [[ ! -f "$BREWFILE" ]]; then
+  echo "Error: Brewfile not found at $BREWFILE"
+  exit 1
+fi
+
+load_homebrew_shellenv() {
+  if [[ -x /opt/homebrew/bin/brew ]]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+  elif [[ -x /usr/local/bin/brew ]]; then
+    eval "$(/usr/local/bin/brew shellenv)"
+  fi
+}
+
+load_homebrew_shellenv
+
+if ! command -v brew >/dev/null 2>&1; then
+  echo "Homebrew not found. Installing Homebrew..."
+  NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  load_homebrew_shellenv
+fi
+
+if ! command -v brew >/dev/null 2>&1; then
+  echo "Error: Homebrew installation completed, but brew is still not on PATH."
+  exit 1
+fi
+
+echo "Updating Homebrew..."
+brew update
+
+echo "Installing macOS apps from $BREWFILE..."
+brew bundle --file "$BREWFILE" --no-lock
+
+echo "Homebrew app installation complete."
+{{ end }}
