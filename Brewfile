@@ -10,11 +10,14 @@ brew "bash"
 brew "git"
 brew "gnupg"
 brew "mise"
+brew "neovim"
+brew "starship"
 brew "watch"
+brew "zsh-syntax-highlighting"
 
 # AI developer CLIs.
-brew "claude-code"
-brew "codex"
+cask "claude-code"
+cask "codex-app"
 brew "anomalyco/tap/opencode"
 
 # Terminal workflow tools not managed by mise.
@@ -25,26 +28,28 @@ brew "skopeo"
 
 # Fonts and desktop apps.
 cask "font-jetbrains-mono-nerd-font"
+cask "nikitabobko/tap/aerospace"
 cask "ghostty"
-cask "google-cloud-sdk"
+cask "gcloud-cli"
 cask "megasync"
 cask "obsidian"
 cask "raycast"
 cask "slack"
 cask "visual-studio-code"
+cask "whatsapp"
 cask "zed"
-cask "zen-browser"
+cask "zen"
 
 # Native macOS replacements for webapps.
 cask "chatgpt"
 cask "grammarly-desktop"
-cask "linear-linear"
+cask "linear"
 cask "notion"
-cask "proton-authenticator"
 cask "proton-drive"
 cask "proton-mail"
 cask "proton-pass"
-cask "todoist"
+cask "protonvpn"
+cask "todoist-app"
 
 # Local AI tooling.
 cask "lm-studio"

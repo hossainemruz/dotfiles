@@ -12,12 +12,18 @@ icons/
 .gitignore
 
 {{ if eq .chezmoi.os "darwin" -}}
+# Linux-specific files
 .config/hypr/
 .config/waybar/
 mise.toml
+run_once_install_apps.sh
+run_once_install_webapps.sh
 {{ end -}}
 
-{{ if ne .chezmoi.os "darwin" -}}
+{{ if eq .chezmoi.os "linux" -}}
+# macOS-specific files
+.config/aerospace/
 .zprofile
 .zshrc
+run_once_before_install_homebrew.sh
 {{ end -}}

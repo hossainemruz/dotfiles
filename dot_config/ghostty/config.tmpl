@@ -1,13 +1,15 @@
 {{ if eq .chezmoi.os "linux" -}}
 # Dynamic theme colors
-config-file = ?"~/.config/omarchy/current/theme/ghostty.conf"{{ else -}}
+config-file = ?"~/.config/omarchy/current/theme/ghostty.conf"
+{{ else -}}
 # Omarchy theme files are Linux-only.
-theme = catppuccin-mocha{{ end }}
+theme = Catppuccin Mocha
+{{ end }}
 
 # Font
 font-family = "JetBrainsMono Nerd Font"
 font-style = Regular
-font-size = 11
+font-size = 14
 
 # Window
 window-theme = ghostty
@@ -17,7 +19,8 @@ confirm-close-surface=false
 resize-overlay = never
 {{ if eq .chezmoi.os "linux" -}}
 gtk-toolbar-style = flat
-gtk-tabs-location = bottom{{ end }}
+gtk-tabs-location = bottom
+{{ end }}
 
 # Cursor styling
 cursor-style = "block"
@@ -44,4 +47,5 @@ working-directory = inherit
 
 {{ if eq .chezmoi.os "linux" -}}
 # Fix general slowness on hyprland (https://github.com/ghostty-org/ghostty/discussions/3224)
-async-backend = epoll{{ end }}
+async-backend = epoll
+{{ end }}

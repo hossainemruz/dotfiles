@@ -19,6 +19,28 @@ if command -v mise >/dev/null 2>&1; then
   eval "$(mise activate zsh)"
 fi
 
+# Docker Desktop ships its CLI inside the app bundle. This path is useful when
+# Homebrew cannot create privileged /usr/local/bin symlinks non-interactively.
+if [[ -d /Applications/Docker.app/Contents/Resources/bin ]]; then
+  export PATH="/Applications/Docker.app/Contents/Resources/bin:$PATH"
+fi
+
+if [[ -d /Applications/Docker.app/Contents/Resources/cli-plugins ]]; then
+  export PATH="/Applications/Docker.app/Contents/Resources/cli-plugins:$PATH"
+  export DOCKER_CLI_PLUGIN_EXTRA_DIRS="/Applications/Docker.app/Contents/Resources/cli-plugins${DOCKER_CLI_PLUGIN_EXTRA_DIRS:+:$DOCKER_CLI_PLUGIN_EXTRA_DIRS}"
+fi
+
+if command -v docker >/dev/null 2>&1 && command -v docker-compose >/dev/null 2>&1; then
+  docker() {
+    if [[ "$1" == "compose" ]]; then
+      shift
+      command docker-compose "$@"
+    else
+      command docker "$@"
+    fi
+  }
+fi
+
 # Source autojump from Homebrew when installed.
 if command -v brew >/dev/null 2>&1 && [[ -s "$(brew --prefix)/etc/profile.d/autojump.sh" ]]; then
   source "$(brew --prefix)/etc/profile.d/autojump.sh"
@@ -112,5 +134,15 @@ timetable() {
 # Added by LM Studio CLI (lms).
 if [[ -d "$HOME/.lmstudio/bin" ]]; then
   export PATH="$PATH:$HOME/.lmstudio/bin"
+fi
+
+# Prompt.
+if command -v starship >/dev/null 2>&1; then
+  eval "$(starship init zsh)"
+fi
+
+# Keep syntax highlighting last so it can observe the final ZLE state.
+if command -v brew >/dev/null 2>&1 && [[ -r "$(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]]; then
+  source "$(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 fi
 {{ end }}

@@ -2,7 +2,7 @@
 
 # Check if personal SSH key exists, generate if it doesn't
 if [ ! -f ~/.ssh/id_ed25519_personal ]; then
-  ssh-keygen -t ed25519 -C "hossainemruz@gmail.com" -f ~/.ssh/id_ed25519_personal -N ""
+  ssh-keygen -t ed25519 -C "emruz@proton.me" -f ~/.ssh/id_ed25519_personal -N ""
   echo "Generated personal SSH key."
 else
   echo "Personal SSH key already exists, skipping generation."
@@ -76,13 +76,13 @@ EOF
 }
 
 # Generate GPG key for personal profile
-generate_gpg_key "hossainemruz@gmail.com" "Hossain Emruz"
+generate_gpg_key "emruz@proton.me" "Emruz Hossain"
 
 # Generate GPG key for work profile
 generate_gpg_key "emruz.hossain@qdrant.com" "Emruz Hossain (Work)"
 
 # Instructions for adding GPG public keys to GitHub
 echo "To add your GPG keys to GitHub:"
-echo "1. Run 'gpg --armor --export hossainemruz@gmail.com' and copy the output."
+echo "1. Run 'gpg --armor --export emruz@proton.me' and copy the output."
 echo "2. Add it to GitHub: Settings > SSH and GPG keys > New GPG key."
 echo "3. Repeat for 'gpg --armor --export emruz.hossain@qdrant.com'."
