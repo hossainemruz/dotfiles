@@ -10,11 +10,11 @@ return {
       local terminals = {
         general = {
           count = 1,
-          cmd = { "env", "OPENCODE_EXPERIMENTAL_LSP_TOOL=true", "opencode", "--agent", "general" },
+          cmd = { "env", "OPENCODE_EXPERIMENTAL_LSP_TOOL=true", "OPENCODE_ENABLE_EXA=1", "opencode", "--agent", "general" },
         },
         build = {
           count = 2,
-          cmd = { "env", "OPENCODE_EXPERIMENTAL_LSP_TOOL=true", "opencode", "--agent", "build" },
+          cmd = { "env", "OPENCODE_EXPERIMENTAL_LSP_TOOL=true", "OPENCODE_ENABLE_EXA=1", "opencode", "--agent", "build" },
         },
         claude = {
           count = 3,
