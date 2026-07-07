@@ -7,13 +7,25 @@ start-at-login = true
 enable-normalization-flatten-containers = true
 enable-normalization-opposite-orientation-for-nested-containers = true
 
-# Treat each workspace as a full-window stack; explicit floating rules still float.
+# Treat each workspace as a full-window stack; new tiled windows are also
+# forced into AeroSpace fullscreen below. Explicit floating rules still float.
 accordion-padding = 0
 default-root-container-layout = 'accordion'
 default-root-container-orientation = 'horizontal'
 
 on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 automatically-unhide-macos-hidden-apps = true
+
+on-window-detected = [
+    # Keep AeroSpace's built-in floating dialogs/utilities floating.
+    { if = 'test %{window-layout} = floating', run = 'move-mouse window-force-center' },
+
+    # Explicit floating apps.
+    { if = 'test %{app-bundle-id} = me.proton.pass.electron', run = ['layout floating', 'move-mouse window-force-center'] },
+
+    # Everything else opens as an AeroSpace fullscreen window instead of tiling.
+    { if = 'true', run = 'fullscreen on --no-outer-gaps' },
+]
 
 [key-mapping]
 preset = 'qwerty'
@@ -85,7 +97,3 @@ cmd-shift-9 = 'move-node-to-workspace 9'
 # Floating escape hatch for small utility windows.
 cmd-shift-space = 'layout floating tiling'
 cmd-tab = 'workspace-back-and-forth'
-
-[[on-window-detected]]
-if.app-id = 'me.proton.pass.electron'
-run = ['layout floating', 'move-mouse window-lazy-center']
