@@ -22,7 +22,7 @@ run_once_install_webapps.sh
 
 {{ if eq .chezmoi.os "linux" -}}
 # macOS-specific files
-.config/aerospace/
+.hammerspoon/
 .zprofile
 .zshrc
 run_once_before_install_homebrew.sh
