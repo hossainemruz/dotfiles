@@ -7,9 +7,9 @@
   "monitor": "DP-3",
   "output": "DP-3",
   "modules-left": [
-    "custom/profile",
     "custom/omarchy",
-    "hyprland/workspaces",
+    "hyprland/workspaces#numbers",
+    "hyprland/workspaces#windows",
   ],
   "modules-center": [
     "clock",
@@ -30,7 +30,7 @@
     "cpu",
     "battery",
   ],
-  "hyprland/workspaces": {
+  "hyprland/workspaces#numbers": {
     "on-click": "activate",
     "persistent-only": true,
     "format": "{icon}",
@@ -57,6 +57,23 @@
       ]
     },
   },
+  "hyprland/workspaces#windows": {
+    "active-only": true,
+    "format": "{windows}",
+    "workspace-taskbar": {
+      "enable": true,
+      "update-active-window": true,
+      "active-window-position": "none",
+      "format": "{icon}",
+      "icon-size": 18,
+      "icon-theme": [
+        "Papirus-Dark",
+        "Papirus",
+        "Adwaita"
+      ],
+      "on-click-window": "hyprctl dispatch focuswindow address:{address}"
+    }
+  },
   "custom/omarchy": {
     "format": "<span font='omarchy'>\ue900</span>",
     "on-click": "omarchy-menu",
@@ -80,11 +97,6 @@
     },
     "exec": "waybar-next-events list --days=4 --limit=10",
     "return-type": "json"
-  },
-  "custom/profile": {
-    "format": "{} ",
-    "interval": 60,
-    "exec": "cat /home/emruz/profile",
   },
   "custom/rsync": {
     "format": "{}",
