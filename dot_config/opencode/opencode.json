@@ -21,8 +21,7 @@
       "type": "local",
       "command": [
         "fff-mcp"
-      ],
-      "enabled": true
+      ]
     },
     "ast-grep": {
       "type": "local",
@@ -31,72 +30,60 @@
         "--from",
         "git+https://github.com/ast-grep/ast-grep-mcp@732c339c3812a44e9111e6c3aefec64894acd58f",
         "ast-grep-server"
-      ],
-      "enabled": true
+      ]
     }
   },
   "small_model": "deepseek/deepseek-v4-flash",
   "permission": {
     "read": {
-      "/tmp": "allow",
-      "~/agent-vault": "allow",
-      "~/agent-vault/**": "allow",
-      "~/.ssh/**": "deny",
-      "~/.gnupg/**": "deny",
-      "~/.aws/**": "deny",
-      "~/.azure/**": "deny",
-      "~/.kube/**": "deny",
-      "~/.docker/**": "deny",
-      "~/.config/gcloud/**": "deny",
+      "~/.ssh/*": "deny",
+      "~/.gnupg/*": "deny",
+      "~/.aws/*": "deny",
+      "~/.azure/*": "deny",
+      "~/.kube/*": "deny",
+      "~/.docker/*": "deny",
+      "~/.config/gcloud/*": "deny",
       ".env*": "deny",
-      "**/.env*": "deny",
+      "*/.env*": "deny",
       "*.pem": "deny",
-      "**/*.pem": "deny",
       "*.key": "deny",
-      "**/*.key": "deny",
       "*.p12": "deny",
-      "**/*.p12": "deny",
       "*.jks": "deny",
-      "**/*.jks": "deny",
-      "*credentials*": "deny",
-      "**/*credentials*": "deny"
+      "*credentials*": "deny"
     },
     "edit": {
-      "/tmp": "allow",
-      "~/agent-vault": "allow",
-      "~/agent-vault/**": "allow",
-      "~/.aws/**": "deny",
-      "~/.azure/**": "deny",
-      "~/.ssh/**": "deny",
-      "~/.gnupg/**": "deny",
-      "~/.kube/**": "deny",
-      "~/.docker/**": "deny",
-      "~/.config/gcloud/**": "deny",
+      "~/.aws/*": "deny",
+      "~/.azure/*": "deny",
+      "~/.ssh/*": "deny",
+      "~/.gnupg/*": "deny",
+      "~/.kube/*": "deny",
+      "~/.docker/*": "deny",
+      "~/.config/gcloud/*": "deny",
       ".env*": "deny",
-      "**/.env*": "deny",
+      "*/.env*": "deny",
       "*.pem": "deny",
-      "**/*.pem": "deny",
       "*.key": "deny",
-      "**/*.key": "deny",
       "*.p12": "deny",
-      "**/*.p12": "deny",
       "*.jks": "deny",
-      "**/*.jks": "deny",
-      "*credentials*": "deny",
-      "**/*credentials*": "deny"
+      "*credentials*": "deny"
     },
     "external_directory": {
       "/tmp": "allow",
       "~/agent-vault": "allow",
-      "~/agent-vault/**": "allow"
+      "~/agent-vault/*": "allow"
     },
     "skill": {
       "omarchy": "deny",
       "plannotator-*": "deny"
     },
-    "lsp": "allow",
     "bash": {
-      "*": "allow",
+      "curl *": "ask",
+      "wget *": "ask",
+      "ssh *": "ask",
+      "scp *": "ask",
+      "git push *": "ask",
+      "brew install *": "ask",
+      "npm publish *": "ask",
       "*.env*": "deny",
       "*.pem*": "deny",
       "*.key*": "deny",
@@ -157,10 +144,6 @@
       "mode": "primary",
       "variant": "xhigh",
       "permission": {
-        "external_directory": {
-          "~/agent-vault": "allow",
-          "~/agent-vault/**": "allow"
-        },
         "task": {
           "*": "deny",
           "plan": "allow",
@@ -178,11 +161,9 @@
       "description": "Primary coding agent that delegates execution and review",
       "model": "openai/gpt-5.6-terra",
       "variant": "high",
-      "mode": "all",
       "permission": {
         "external_directory": {
-          "/tmp": "allow",
-          "/tmp/**": "allow"
+          "/tmp/*": "allow"
         },
         "task": {
           "*": "deny",
@@ -202,11 +183,7 @@
           "*": "deny",
           ".work/*": "allow",
           "~/agent-vault": "allow",
-          "~/agent-vault/**": "allow"
-        },
-        "external_directory": {
-          "~/agent-vault": "allow",
-          "~/agent-vault/**": "allow"
+          "~/agent-vault/*": "allow"
         },
         "task": {
           "*": "deny",
@@ -222,10 +199,6 @@
       "mode": "subagent",
       "hidden": true,
       "permission": {
-        "external_directory": {
-          "~/agent-vault": "allow",
-          "~/agent-vault/**": "allow"
-        },
         "edit": "deny",
         "task": "deny"
       },
@@ -241,10 +214,7 @@
         "edit": "deny",
         "task": "deny",
         "external_directory": {
-          "/tmp": "allow",
-          "/tmp/**": "allow",
-          "~/agent-vault": "allow",
-          "~/agent-vault/**": "allow"
+          "/tmp/*": "allow"
         }
       },
       "prompt": "{file:./prompts/executor-guideline.md}"
@@ -256,10 +226,6 @@
       "mode": "subagent",
       "hidden": true,
       "permission": {
-        "external_directory": {
-          "~/agent-vault": "allow",
-          "~/agent-vault/**": "allow"
-        },
         "task": {
           "*": "deny",
           "executor": "allow"
@@ -278,11 +244,7 @@
           "*": "deny",
           ".work/*": "allow",
           "~/agent-vault": "allow",
-          "~/agent-vault/**": "allow"
-        },
-        "external_directory": {
-          "~/agent-vault": "allow",
-          "~/agent-vault/**": "allow"
+          "~/agent-vault/*": "allow"
         },
         "task": "deny"
       },
@@ -299,11 +261,7 @@
           "*": "deny",
           ".work/*": "allow",
           "~/agent-vault": "allow",
-          "~/agent-vault/**": "allow"
-        },
-        "external_directory": {
-          "~/agent-vault": "allow",
-          "~/agent-vault/**": "allow"
+          "~/agent-vault/*": "allow"
         },
         "task": {
           "*": "deny",

@@ -13,6 +13,7 @@ preserving its structure. You may use `@executor` for execution-heavy
 validation, but do not delegate review.
 
 Return a compact final summary with:
+
 - validation result
 - review verdict
 - blocking findings, if any
