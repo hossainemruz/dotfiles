@@ -1,15 +1,15 @@
 ---
 description: Create or refresh the implementation plan from the current task artifact.
+agent: plan
+subtask: true
 ---
 
 Resolve the current task artifact directory from `.agent-task` as
 `$HOME/agent-vault/<contents-of-.agent-task>`. Read `task.md` and, when present,
 `research.md` from that directory. Create or refresh `plan.md` in the same
-directory directly in the current agent/model using the `planning` skill; do not
-delegate this command to a planning subagent unless the user explicitly asks.
-The current agent/model may use `@explore` for focused codebase evidence
-gathering, pattern lookup, and similar-implementation discovery, but it must make
-the final plan and approach decisions itself.
+directory. You may use `@explore` for focused codebase evidence gathering,
+pattern lookup, and similar-implementation discovery, but make the final plan
+and approach decisions yourself.
 Preserve the existing plan template structure. Treat artifact `task.md` as the
 source of truth for scope and acceptance; treat `research.md` as implementation
 evidence and recommended approach only. Ask clarifying questions only if missing

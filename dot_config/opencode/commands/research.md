@@ -1,14 +1,15 @@
 ---
 description: Research implementation options before planning the current task.
+agent: plan
+subtask: true
 ---
 
 Resolve the current task artifact directory from `.agent-task` as
 `$HOME/agent-vault/<contents-of-.agent-task>`. Read `task.md` and any existing
-`research.md` from that directory. Perform the research directly in the current
-agent/model; do not delegate this command to a research subagent. The current
-agent/model may use `@explore` for focused codebase evidence gathering, pattern
-lookup, and similar-implementation discovery, but it must make the final
-approach decision itself. If `research.md` is missing, create it from
+`research.md` from that directory. Perform the research yourself. You may use
+`@explore` for focused codebase evidence gathering, pattern lookup, and
+similar-implementation discovery, but make the final approach decision
+yourself. If `research.md` is missing, create it from
 `$HOME/agent-vault/templates/research-template.md` and resolve template
 variables using values from `task.md` metadata/frontmatter when available:
 `{{TASK_ID}}`, `{{TASK_TITLE}}`, `{{PROJECT_NAME}}`, and `{{DATE}}`. Use the

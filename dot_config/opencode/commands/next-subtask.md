@@ -1,5 +1,7 @@
 ---
 description: Implement the next self-contained sub-task from the plan.
+agent: build
+subtask: true
 ---
 
 Resolve the current task artifact directory from `.agent-task` as

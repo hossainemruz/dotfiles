@@ -5,8 +5,15 @@
     "deepseek",
     "openai"
   ],
+  "provider": {
+    "openai": {
+      "options": {
+        "setCacheKey": true
+      }
+    }
+  },
   "instructions": [
-    "/home/emruz/.config/agent-workflows/task-artifacts.md"
+    "./prompts/task-artifact-gate.md"
   ],
   "lsp": true,
   "mcp": {
@@ -22,7 +29,7 @@
       "command": [
         "uvx",
         "--from",
-        "git+https://github.com/ast-grep/ast-grep-mcp",
+        "git+https://github.com/ast-grep/ast-grep-mcp@732c339c3812a44e9111e6c3aefec64894acd58f",
         "ast-grep-server"
       ],
       "enabled": true
@@ -31,8 +38,9 @@
   "small_model": "deepseek/deepseek-v4-flash",
   "permission": {
     "read": {
-      "/home/emruz/agent-vault": "allow",
-      "/home/emruz/agent-vault/**": "allow",
+      "/tmp": "allow",
+      "~/agent-vault": "allow",
+      "~/agent-vault/**": "allow",
       "~/.ssh/**": "deny",
       "~/.gnupg/**": "deny",
       "~/.aws/**": "deny",
@@ -54,8 +62,9 @@
       "**/*credentials*": "deny"
     },
     "edit": {
-      "/home/emruz/agent-vault": "allow",
-      "/home/emruz/agent-vault/**": "allow",
+      "/tmp": "allow",
+      "~/agent-vault": "allow",
+      "~/agent-vault/**": "allow",
       "~/.aws/**": "deny",
       "~/.azure/**": "deny",
       "~/.ssh/**": "deny",
@@ -77,8 +86,9 @@
       "**/*credentials*": "deny"
     },
     "external_directory": {
-      "/home/emruz/agent-vault": "allow",
-      "/home/emruz/agent-vault/**": "allow"
+      "/tmp": "allow",
+      "~/agent-vault": "allow",
+      "~/agent-vault/**": "allow"
     },
     "skill": {
       "omarchy": "deny",
@@ -125,7 +135,7 @@
       "git restore *": "ask"
     }
   },
-  "model": "deepseek/deepseek-v4-pro",
+  "model": "openai/gpt-5.6-terra",
   "default_agent": "general",
   "experimental": {
     "disable_paste_summary": true
@@ -136,54 +146,75 @@
   },
   "compaction": {
     "auto": true,
-    "tail_turns": 18
+    "prune": true,
+    "tail_turns": 6,
+    "preserve_recent_tokens": 8000
   },
   "agent": {
     "general": {
       "description": "Primary orchestrator for normal use, delegation, planning handoff, and review handoff",
-      "model": "openai/gpt-5.5",
+      "model": "openai/gpt-5.6-terra",
       "mode": "primary",
-      "variant": "medium",
+      "variant": "xhigh",
       "permission": {
         "external_directory": {
-          "/home/emruz/agent-vault": "allow",
-          "/home/emruz/agent-vault/**": "allow"
+          "~/agent-vault": "allow",
+          "~/agent-vault/**": "allow"
         },
-        "task": "allow"
+        "task": {
+          "*": "deny",
+          "plan": "allow",
+          "explore": "allow",
+          "executor": "allow",
+          "build": "allow",
+          "simplifier": "allow",
+          "reviewer": "allow",
+          "expert-reviewer": "allow"
+        }
       },
       "prompt": "{file:./prompts/general-guideline.md}\n\n{file:./prompts/tool-routing.md}"
     },
     "build": {
       "description": "Primary coding agent that delegates execution and review",
-      "model": "deepseek/deepseek-v4-pro",
+      "model": "openai/gpt-5.6-terra",
+      "variant": "high",
       "mode": "all",
       "permission": {
         "external_directory": {
           "/tmp": "allow",
           "/tmp/**": "allow"
         },
-        "task": "allow"
+        "task": {
+          "*": "deny",
+          "explore": "allow",
+          "executor": "allow",
+          "reviewer": "allow"
+        }
       },
       "prompt": "{file:./prompts/coding-guideline.md}\n\n{file:./prompts/tool-routing.md}"
     },
     "plan": {
       "description": "Primary research and structured implementation planning agent",
-      "model": "openai/gpt-5.5",
+      "model": "openai/gpt-5.6-sol",
       "variant": "high",
       "permission": {
         "edit": {
           "*": "deny",
           ".work/*": "allow",
-          "/home/emruz/agent-vault": "allow",
-          "/home/emruz/agent-vault/**": "allow"
+          "~/agent-vault": "allow",
+          "~/agent-vault/**": "allow"
         },
         "external_directory": {
-          "/home/emruz/agent-vault": "allow",
-          "/home/emruz/agent-vault/**": "allow"
+          "~/agent-vault": "allow",
+          "~/agent-vault/**": "allow"
         },
-        "task": "allow"
+        "task": {
+          "*": "deny",
+          "explore": "allow",
+          "executor": "allow"
+        }
       },
-      "prompt": "{skill:planning}"
+      "prompt": "{file:./skills/planning/SKILL.md}"
     },
     "explore": {
       "description": "Semantic codebase exploration",
@@ -192,8 +223,8 @@
       "hidden": true,
       "permission": {
         "external_directory": {
-          "/home/emruz/agent-vault": "allow",
-          "/home/emruz/agent-vault/**": "allow"
+          "~/agent-vault": "allow",
+          "~/agent-vault/**": "allow"
         },
         "edit": "deny",
         "task": "deny"
@@ -205,55 +236,40 @@
       "model": "deepseek/deepseek-v4-flash",
       "mode": "subagent",
       "hidden": true,
+      "steps": 4,
       "permission": {
         "edit": "deny",
         "task": "deny",
         "external_directory": {
           "/tmp": "allow",
           "/tmp/**": "allow",
-          "/home/emruz/agent-vault": "allow",
-          "/home/emruz/agent-vault/**": "allow"
+          "~/agent-vault": "allow",
+          "~/agent-vault/**": "allow"
         }
       },
       "prompt": "{file:./prompts/executor-guideline.md}"
     },
     "simplifier": {
       "description": "Review changed code for reuse, quality, and efficiency, then fix worthwhile issues",
-      "model": "deepseek/deepseek-v4-pro",
+      "model": "openai/gpt-5.6-terra",
+      "variant": "high",
       "mode": "subagent",
       "hidden": true,
       "permission": {
         "external_directory": {
-          "/home/emruz/agent-vault": "allow",
-          "/home/emruz/agent-vault/**": "allow"
+          "~/agent-vault": "allow",
+          "~/agent-vault/**": "allow"
         },
-        "task": "allow"
+        "task": {
+          "*": "deny",
+          "executor": "allow"
+        }
       },
-      "prompt": "{skill:simplify}"
+      "prompt": "{file:./skills/simplify/SKILL.md}"
     },
     "reviewer": {
       "description": "Automated risk-adaptive multi-pass code review agent",
-      "model": "deepseek/deepseek-v4-pro",
-      "mode": "subagent",
-      "hidden": true,
-      "permission": {
-        "edit": {
-          "*": "deny",
-          ".work/*": "allow",
-          "/home/emruz/agent-vault": "allow",
-          "/home/emruz/agent-vault/**": "allow"
-        },
-        "external_directory": {
-          "/home/emruz/agent-vault": "allow",
-          "/home/emruz/agent-vault/**": "allow"
-        },
-        "task": "deny"
-      },
-      "prompt": "{skill:code-review}"
-    },
-    "expert-reviewer": {
-      "description": "In-depth final review with premium model",
-      "model": "openai/gpt-5.5",
+      "model": "openai/gpt-5.6-terra",
       "variant": "high",
       "mode": "subagent",
       "hidden": true,
@@ -261,14 +277,38 @@
         "edit": {
           "*": "deny",
           ".work/*": "allow",
-          "/home/emruz/agent-vault": "allow",
-          "/home/emruz/agent-vault/**": "allow"
+          "~/agent-vault": "allow",
+          "~/agent-vault/**": "allow"
         },
         "external_directory": {
-          "/home/emruz/agent-vault": "allow",
-          "/home/emruz/agent-vault/**": "allow"
+          "~/agent-vault": "allow",
+          "~/agent-vault/**": "allow"
         },
-        "task": "allow"
+        "task": "deny"
+      },
+      "prompt": "{file:./skills/code-review/SKILL.md}"
+    },
+    "expert-reviewer": {
+      "description": "In-depth final review with premium model",
+      "model": "openai/gpt-5.6-sol",
+      "variant": "high",
+      "mode": "subagent",
+      "hidden": true,
+      "permission": {
+        "edit": {
+          "*": "deny",
+          ".work/*": "allow",
+          "~/agent-vault": "allow",
+          "~/agent-vault/**": "allow"
+        },
+        "external_directory": {
+          "~/agent-vault": "allow",
+          "~/agent-vault/**": "allow"
+        },
+        "task": {
+          "*": "deny",
+          "executor": "allow"
+        }
       },
       "prompt": "{file:./prompts/expert-reviewer-guideline.md}"
     }

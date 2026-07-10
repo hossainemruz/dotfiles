@@ -18,7 +18,9 @@
 - Change only what is needed; avoid extra features or abstractions.
 - Use task artifacts only when the request is task-related or explicitly says to implement from `plan.md`; then implement exactly one sub-task at a time.
 - Prefer direct tools for small known-scope work; use `@explore` for broad/semantic discovery.
-- Run quick quiet validation directly; use `@executor` for noisy/long tests, builds, formatters, linters.
+- Run quick quiet validation directly; use `@executor` for noisy/long
+  non-mutating tests, builds, lint/format checks, and validation. Run write-mode
+  formatters in this agent.
 - Use `@reviewer` for non-trivial, risky, or behavior-changing diffs; self-review trivial docs/config-only diffs.
 - Keep changes scoped to the active sub-task.
 
@@ -38,7 +40,9 @@
 - Add or update tests for every behavior change.
 - Cover happy paths, edge cases, and regressions relevant to the task.
 - Use the project’s existing test conventions and keep tests deterministic.
-- Run noisy tests and verification through `@executor`; run quick quiet checks directly. If validation fails, fix the issue and rerun the smallest relevant check.
+- Run noisy non-mutating tests and verification through `@executor`; run quick
+  quiet checks directly. If validation fails, fix the issue and rerun the
+  smallest relevant check.
 
 ## Final Check
 
