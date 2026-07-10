@@ -222,7 +222,7 @@
     "simplifier": {
       "description": "Review changed code for reuse, quality, and efficiency, then fix worthwhile issues",
       "model": "openai/gpt-5.6-terra",
-      "variant": "high",
+      "variant": "xhigh",
       "mode": "subagent",
       "hidden": true,
       "permission": {
@@ -236,7 +236,7 @@
     "reviewer": {
       "description": "Automated risk-adaptive multi-pass code review agent",
       "model": "openai/gpt-5.6-terra",
-      "variant": "high",
+      "variant": "xhigh",
       "mode": "subagent",
       "hidden": true,
       "permission": {
