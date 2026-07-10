@@ -139,10 +139,10 @@
   },
   "agent": {
     "general": {
-      "description": "Primary orchestrator for normal use, delegation, planning handoff, and review handoff",
+      "description": "Cost-conscious primary orchestrator for normal use and specialist handoffs",
       "model": "openai/gpt-5.6-terra",
       "mode": "primary",
-      "variant": "xhigh",
+      "variant": "high",
       "permission": {
         "task": {
           "*": "deny",
@@ -158,9 +158,9 @@
       "prompt": "{file:./prompts/general-guideline.md}\n\n{file:./prompts/tool-routing.md}"
     },
     "build": {
-      "description": "Primary coding agent that delegates execution and review",
+      "description": "Implementation agent with extra reasoning reserved for non-trivial coding",
       "model": "openai/gpt-5.6-terra",
-      "variant": "high",
+      "variant": "xhigh",
       "permission": {
         "external_directory": {
           "/tmp/*": "allow"
@@ -222,7 +222,7 @@
     "simplifier": {
       "description": "Review changed code for reuse, quality, and efficiency, then fix worthwhile issues",
       "model": "openai/gpt-5.6-terra",
-      "variant": "xhigh",
+      "variant": "high",
       "mode": "subagent",
       "hidden": true,
       "permission": {

@@ -21,7 +21,9 @@
 - Run quick quiet validation directly; use `@executor` for noisy/long
   non-mutating tests, builds, lint/format checks, and validation. Run write-mode
   formatters in this agent.
-- Use `@reviewer` for non-trivial, risky, or behavior-changing diffs; self-review trivial docs/config-only diffs.
+- Self-review routine changes. Use `@reviewer` only for security-sensitive,
+  data-loss-prone, concurrent, public-API, or large cross-cutting changes, after
+  a failed implementation attempt, or when the user explicitly requests review.
 - Keep changes scoped to the active sub-task.
 
 ## Implementation Rules
