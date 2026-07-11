@@ -35,8 +35,8 @@ vim.api.nvim_create_autocmd("FileType", {
   callback = function()
     vim.keymap.set("n", "<leader>fp", function()
       local filepath = vim.fn.expand("%:p")
-      -- Detach = true ensures Typora stays open even if you close Neovim
-      vim.fn.jobstart({ "typora", filepath }, { detach = true })
+      local command = vim.fn.has("mac") == 1 and { "open", "-a", "Typora", filepath } or { "typora", filepath }
+      vim.fn.jobstart(command, { detach = true })
     end, { buffer = true, desc = "Open in Typora" })
   end,
 })
