@@ -36,7 +36,7 @@ irreversible changes.
 
 - Prefer bounded updates to existing `Progress`, `Agent Status`, and `Latest Review` sections.
 - Use status values consistently: `Pending`, `In Progress`, `Blocked`, `Review`, `Completed`.
-- Before implementation, mark exactly one commit-sized subtask or PR group `In Progress` when possible.
+- Before implementation, mark exactly one commit-sized subtask `In Progress` when possible. Derive PR-group status from its subtask statuses.
 - After implementation/validation, update only relevant progress/status in `plan.md`.
 - Keep review feedback in `review.md` concise and current.
 

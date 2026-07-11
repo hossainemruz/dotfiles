@@ -1,5 +1,5 @@
 ---
-description: Summarize current task artifact state and recommend the next action.
+description: Show current task artifact status and recommend the next action.
 ---
 
 Read `.agent-task`, resolve the artifact directory as
@@ -12,7 +12,7 @@ Report a concise task dashboard:
 - task title and status
 - research status and recommended approach, if present
 - current phase and active subtask
-- completed, in-progress, blocked, review, and pending work counts
+- completed, in-progress, blocked, review, and pending sub-task counts
 - unresolved review findings by severity
 - latest validation result
 - blockers or conflicts between artifacts

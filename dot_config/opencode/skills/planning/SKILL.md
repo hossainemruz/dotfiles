@@ -1,8 +1,6 @@
 ---
 name: planning
 description: Researches implementation options and writes clear, detailed, step-by-step implementation plans to task artifacts.
-permissions:
-  edit: allow
 ---
 
 Research implementation options or write execution plans. Use the task artifact workflow only when the request is task-related or explicitly asks to write/read artifacts; do not load artifacts for unrelated planning/advice just because `.agent-task` exists.
@@ -47,16 +45,16 @@ Research implementation options or write execution plans. Use the task artifact 
 2. Extract a concise Requirements Snapshot from `task.md`, including acceptance criteria, constraints, edge cases, and non-goals. Assign stable IDs (`R1`, `R2`, ...); preserve existing AC IDs inside text when present.
 3. If `research.md` exists, carry forward selected approach, evidence, rejected alternatives, risks, dependencies, open questions, and validation implications without expanding scope.
 4. If research is missing but needed because approaches/risk/patterns are unclear, recommend `/research` before planning.
-5. Break work into ordered PR-sized groups, each cohesive and independently reviewable when possible.
+5. Break work into ordered PR-sized groups, each cohesive and independently reviewable when possible. Group status is derived from its sub-tasks rather than recorded separately.
 6. Break each PR group into atomic commit-sized sub-tasks. Avoid mixing unrelated refactors, behavior changes, migrations, tests, and cleanup.
-7. For each PR group include: status `Pending`, objective, related requirement IDs, dependencies, review scope, expected files/areas, in-scope work, non-goals, risks, implementation suggestions, validation, and done-when criteria.
+7. For each PR group include: objective, related requirement IDs, dependencies, review scope, expected files/areas, in-scope work, non-goals, risks, implementation suggestions, validation, and done-when criteria.
 8. For each sub-task include: status `Pending`, purpose, related requirement IDs, concrete changes, validation, and review notes.
 9. Isolate public API, schema, migration, or compatibility-affecting changes when practical.
 10. Write a self-contained `plan.md` another agent can execute without this conversation.
 
 ## Status Rules
 
-- Newly created PR groups and sub-tasks start as `Pending`.
+- Newly created sub-tasks start as `Pending`; PR groups do not carry a separate status.
 - Use consistent status values: `Pending`, `In Progress`, `Blocked`, `Review`, `Completed`.
 - Do not mark work complete during planning.
 

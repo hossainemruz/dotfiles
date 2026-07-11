@@ -1,8 +1,6 @@
 ---
 name: code-review
 description: Guideline for reviewing code.
-permissions:
-  edit: allow
 ---
 
 Produce high-signal, evidence-based reviews focused on real risk. For

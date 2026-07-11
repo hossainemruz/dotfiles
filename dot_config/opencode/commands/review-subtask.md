@@ -7,11 +7,9 @@ subtask: true
 Resolve the current task artifact directory from `.agent-task` as
 `$HOME/agent-vault/<contents-of-.agent-task>`. Review current branch changes
 against the default/agreed base using `plan.md` and optional `research.md`.
-Focus on the single sub-task marked `In Progress`; if multiple sub-tasks are marked
-`In Progress`, review the one the current changes most clearly implement and
-state that assumption in the review. If none is marked `In Progress`, use the
-single sub-task that the current changes most clearly implement and state that
-assumption in the review. Evaluate the diff against that sub-task's related
+Require exactly one sub-task marked `In Progress`. If none or multiple are
+marked `In Progress`, stop and report the status inconsistency without writing
+review feedback. Evaluate the diff against the active sub-task's related
 requirements, dependencies, scope boundaries, risks, implementation
 suggestions, testing guidance, done-when criteria, and selected research approach
 when relevant. Check for correctness issues, regressions, duplication, missing
