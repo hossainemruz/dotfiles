@@ -6,15 +6,12 @@ return {
       local last_terminal_cwd
       local is_managed_terminal
       local schedule_agent_panel_sync
+      local hide_neo_tree_for_agent_panel = vim.fn.has("macunix") == 1
 
       local terminals = {
-        general = {
+        opencode = {
           count = 1,
-          cmd = { "env", "OPENCODE_EXPERIMENTAL_LSP_TOOL=true", "OPENCODE_ENABLE_EXA=1", "opencode", "--agent", "general" },
-        },
-        build = {
-          count = 2,
-          cmd = { "env", "OPENCODE_EXPERIMENTAL_LSP_TOOL=true", "OPENCODE_ENABLE_EXA=1", "opencode", "--agent", "build" },
+          cmd = { "env", "OPENCODE_EXPERIMENTAL_LSP_TOOL=true", "OPENCODE_ENABLE_EXA=1", "opencode" },
         },
         claude = {
           count = 3,
@@ -42,7 +39,7 @@ return {
         return terminals[name].cmd
       end
 
-      -- Keep the editing area wide on small displays while an agent panel is open.
+      -- Keep the editing area wide on macOS while an agent panel is open.
       local neo_tree_restore_by_tab = {}
       local pending_agent_panel_sync_by_tab = {}
 
@@ -171,6 +168,10 @@ return {
       end
 
       schedule_agent_panel_sync = function(tabpage)
+        if not hide_neo_tree_for_agent_panel then
+          return
+        end
+
         tabpage = valid_tabpage(tabpage) and tabpage or current_tabpage()
         if pending_agent_panel_sync_by_tab[tabpage] then
           return
@@ -257,12 +258,15 @@ return {
         return false
       end
 
-      vim.api.nvim_create_autocmd({ "BufWinEnter", "TabEnter", "WinClosed" }, {
-        group = vim.api.nvim_create_augroup("agent_neo_tree_sidebar", { clear = true }),
-        callback = function()
-          schedule_agent_panel_sync()
-        end,
-      })
+      local agent_neo_tree_sidebar = vim.api.nvim_create_augroup("agent_neo_tree_sidebar", { clear = true })
+      if hide_neo_tree_for_agent_panel then
+        vim.api.nvim_create_autocmd({ "BufWinEnter", "TabEnter", "WinClosed" }, {
+          group = agent_neo_tree_sidebar,
+          callback = function()
+            schedule_agent_panel_sync()
+          end,
+        })
+      end
 
       local function hide_other_managed_terminals(target)
         for _, terminal in ipairs(Snacks.terminal.list()) do
@@ -462,7 +466,7 @@ return {
         end
 
         local cmd = terminal_command(terminal)
-        if type(cmd) == "table" and vim.deep_equal(cmd, terminals.general.cmd) then
+        if type(cmd) == "table" and vim.deep_equal(cmd, terminals.opencode.cmd) then
           return buffer_contains(terminal.buf, "Ask anything")
             or buffer_contains(terminal.buf, "General · DeepSeek V4 Pro OpenCode Go · max")
             or buffer_contains(terminal.buf, "ctrl+p commands")
@@ -478,12 +482,12 @@ return {
           return terminal
         end
 
-        remember_terminal("general", cwd)
+        remember_terminal("opencode", cwd)
         hide_other_managed_terminals(nil)
 
-        local general_terminal = get_terminal("general", cwd, true)
-        if general_terminal and general_terminal:buf_valid() then
-          return general_terminal
+        local opencode_terminal = get_terminal("opencode", cwd, true)
+        if opencode_terminal and opencode_terminal:buf_valid() then
+          return opencode_terminal
         end
       end
 
@@ -537,18 +541,11 @@ return {
 
       return {
         {
-          "<leader>ag",
+          "<leader>ao",
           function()
-            toggle_terminal("general")
+            toggle_terminal("opencode")
           end,
-          desc = "Toggle opencode general",
-        },
-        {
-          "<leader>ab",
-          function()
-            toggle_terminal("build")
-          end,
-          desc = "Toggle opencode build",
+          desc = "Toggle opencode",
         },
         {
           "<leader>ac",
