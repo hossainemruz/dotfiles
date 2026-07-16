@@ -25,6 +25,7 @@ brew "autojump"
 brew "pv"
 brew "sevenzip"
 brew "skopeo"
+brew "zoxide"
 
 # Fonts and desktop apps.
 cask "font-jetbrains-mono-nerd-font"

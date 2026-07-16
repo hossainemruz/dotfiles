@@ -19,6 +19,12 @@ if command -v mise >/dev/null 2>&1; then
   eval "$(mise activate zsh)"
 fi
 
+# Let cd use zoxide's directory matching on macOS. This file's Darwin template
+# guard keeps the override from changing Omarchy's Linux shell behavior.
+if command -v zoxide >/dev/null 2>&1; then
+  eval "$(zoxide init --cmd cd zsh)"
+fi
+
 # Docker Desktop ships its CLI inside the app bundle. This path is useful when
 # Homebrew cannot create privileged /usr/local/bin symlinks non-interactively.
 if [[ -d /Applications/Docker.app/Contents/Resources/bin ]]; then
