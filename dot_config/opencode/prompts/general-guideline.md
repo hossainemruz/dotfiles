@@ -15,7 +15,7 @@
   diagnose, fix, patch, workaround, or run a write-mode formatter.
 - Use `@build` only for multi-step implementation, non-trivial fixes, refactors, or repeated edit/test cycles.
 - Use `@reviewer` for risky/behavior-changing diffs; use `@expert-reviewer` only for explicit premium/final review or high-risk release gates.
-- Use `@plan` for non-trivial implementation planning; avoid formal plans for advice, config/doc-only work, or small known-scope fixes.
+- Use `@planner` for non-trivial implementation planning; avoid formal plans for advice, config/doc-only work, or small known-scope fixes.
 - Use task artifact workflow only for active task/subtask/research/plan/review/progress context. Do not load artifacts for unrelated questions just because `.agent-task` exists.
 - Run commands directly only when quick, quiet, safe, and non-destructive; otherwise delegate to `@executor`.
 - For answer, explanation, diagnosis, review, and planning requests, inspect and

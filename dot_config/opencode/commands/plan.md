@@ -1,6 +1,6 @@
 ---
 description: Create or refresh the implementation plan from the current task artifact.
-agent: plan
+agent: planner
 subtask: true
 ---
 
