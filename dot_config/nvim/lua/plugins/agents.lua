@@ -28,6 +28,7 @@ return {
         closing = false,
         transitioning = false,
       }
+      local diff_jobs = {}
 
       local function normalize_path(path)
         if not path or path == "" then
@@ -118,6 +119,36 @@ return {
         return terminal.opts and terminal.opts.cwd or nil
       end
 
+      local function terminal_job_id(terminal)
+        if not terminal or not terminal:buf_valid() then
+          return nil
+        end
+
+        local ok, job_id = pcall(function()
+          return vim.b[terminal.buf].terminal_job_id
+        end)
+
+        if ok and type(job_id) == "number" and job_id > 0 then
+          return job_id
+        end
+      end
+
+      local function stop_terminal_job(terminal, fallback_job_id)
+        local job_id = terminal_job_id(terminal) or fallback_job_id
+        if job_id then
+          pcall(vim.fn.jobstop, job_id)
+        end
+      end
+
+      local function stop_diff_terminal(terminal)
+        if not terminal then
+          return
+        end
+
+        stop_terminal_job(terminal, diff_jobs[terminal])
+        diff_jobs[terminal] = nil
+      end
+
       local function terminal_matches_cwd(terminal, cwd)
         return normalize_path(terminal_cwd(terminal)) == normalize_path(cwd)
       end
@@ -167,6 +198,16 @@ return {
         callback = sync_agent_panel_tabline,
       })
 
+      local agent_panel_cleanup = vim.api.nvim_create_augroup("agent_panel_cleanup", { clear = true })
+      vim.api.nvim_create_autocmd("VimLeavePre", {
+        group = agent_panel_cleanup,
+        callback = function()
+          for terminal in pairs(diff_jobs) do
+            stop_diff_terminal(terminal)
+          end
+        end,
+      })
+
       local function hide_other_managed_terminals(target)
         for _, terminal in ipairs(Snacks.terminal.list()) do
           if terminal ~= target and is_managed_terminal(terminal) and terminal:valid() then
@@ -194,8 +235,11 @@ return {
 
         -- The agent session survives panel toggles, but the diff watcher should
         -- only run while the panel is visible.
-        if watcher and watcher:buf_valid() then
-          watcher:close()
+        if watcher then
+          stop_diff_terminal(watcher)
+          if watcher:buf_valid() then
+            watcher:close()
+          end
         end
 
         if valid_tabpage(panel_tabpage) then
@@ -278,10 +322,16 @@ return {
             wo = {
               winbar = diff_terminal.count .. ": Hunk",
             },
-            on_close = schedule_panel_close,
+            on_close = function(terminal)
+              -- Stop the job while its terminal buffer is still available.
+              -- Deferring all cleanup to close_agent_panel can lose the job id.
+              stop_diff_terminal(terminal)
+              schedule_panel_close(terminal)
+            end,
           },
         })
         agent_panel.diff_terminal = watcher
+        diff_jobs[watcher] = terminal_job_id(watcher)
         agent_panel.transitioning = false
 
         terminal:focus()
@@ -426,16 +476,6 @@ return {
         terminal:focus()
         vim.cmd.startinsert()
         return true
-      end
-
-      local function terminal_job_id(terminal)
-        local ok, job_id = pcall(function()
-          return vim.b[terminal.buf].terminal_job_id
-        end)
-
-        if ok and type(job_id) == "number" and job_id > 0 then
-          return job_id
-        end
       end
 
       local function terminal_command(terminal)
