@@ -1,18 +1,11 @@
 # Task Artifact Gate
 
-Use this workflow only when the request concerns the active task, research,
-planning, implementation from `plan.md`, review feedback, validation, progress,
-or a task-artifact command. Ignore `.agent-task` for unrelated advice and
-ordinary repo/config work.
-
-When applicable:
-
-1. Read `.agent-task` and resolve it under `~/agent-vault/`.
-2. Read only the relevant files: `task.md`, optional `research.md`, `plan.md`,
-   and `review.md`.
-3. Follow this precedence: latest user instruction; `task.md` requirements and
-   scope; `research.md` evidence; `plan.md` sequencing; `review.md` findings.
-4. Preserve artifact structure and user-authored content. Do not recreate files,
-   render placeholders, or scan the rest of the vault unless asked.
-5. Keep repository changes separate from artifact status updates and mention
-   both when relevant.
+Use this workflow only for active task, research, planning, implementation,
+review, validation, progress, or task-artifact requests; ignore `.agent-task`
+for unrelated work. When applicable, resolve `.agent-task` under
+`~/agent-vault/` and read only the relevant `task.md`, optional `research.md`,
+`plan.md`, and `review.md`. Follow this precedence: latest user instruction;
+task requirements and scope; research evidence; plan sequencing; review
+findings. Preserve artifact structure and user content; do not recreate files,
+render placeholders, or scan the vault unless asked. Keep repository changes
+separate from artifact updates.

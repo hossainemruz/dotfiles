@@ -150,10 +150,13 @@
   "compaction": {
     "auto": true,
     "prune": true,
-    "tail_turns": 6,
-    "preserve_recent_tokens": 8000
+    "tail_turns": 3,
+    "preserve_recent_tokens": 4000
   },
   "agent": {
+    "plan": {
+      "disable": true
+    },
     "general": {
       "description": "Cost-conscious primary orchestrator for normal use and specialist handoffs",
       "model": "openai/gpt-5.6-sol",

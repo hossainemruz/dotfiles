@@ -24,7 +24,9 @@ Research implementation options or write execution plans. Use the task artifact 
 
 ## Efficiency
 
-- Use targeted `glob`, `grep`, and `read`; avoid broad scans and generated/noisy directories.
+- Prefer FFF for file/content discovery, LSP for symbol navigation, and ast-grep
+  for structural searches; use `glob`/`grep` only for exact-glob or regex fallback,
+  then read targeted ranges. Avoid broad scans and generated/noisy directories.
 - Use `@explore` only for focused codebase evidence or pattern lookup that would cost more in main context.
 - Use `@executor` only for command-heavy validation needed for research/planning.
 - Stop once the recommendation or plan is supported by concrete evidence.

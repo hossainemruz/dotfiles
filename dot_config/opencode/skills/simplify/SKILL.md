@@ -13,6 +13,8 @@ Review the current branch state against the repository's default branch for reus
 - Determine the comparison branch robustly. Prefer `origin/HEAD` when available, then the current branch upstream, then `origin/main`, `origin/master`, `main`, and `master`. If none succeeds, stop and report that you could not determine the base branch.
 - Keep changes tightly scoped to files changed in the branch diff unless a very small adjacent refactor materially improves the result.
 - Prefer high-confidence, low-risk simplifications. Skip speculative or wide-scope refactors.
+- Prefer FFF for file/content discovery, LSP for symbol navigation, and ast-grep
+  for structural searches; use `glob`/`grep` only for exact-glob or regex fallback.
 - Skip generated, vendored, minified, lock, cache, build-output, and other non-source artifacts unless they are directly relevant to the simplification.
 - Use `@executor` only for tests, builds, git commands, or other execution-heavy validation when behavior may have changed or command output is needed.
 - If you skip a candidate because it is a false positive, too risky, or not worthwhile, mention it briefly in the final summary.
