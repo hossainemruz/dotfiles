@@ -588,7 +588,7 @@ return {
 
       return {
         {
-          "<M-Tab>",
+          "<M-t>",
           function()
             vim.cmd.tabnext()
           end,
