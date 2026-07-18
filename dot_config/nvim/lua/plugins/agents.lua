@@ -4,9 +4,7 @@ return {
     keys = function()
       local last_terminal_name
       local last_terminal_cwd
-      local is_managed_terminal
-      local schedule_agent_panel_sync
-      local hide_neo_tree_for_agent_panel = vim.fn.has("macunix") == 1
+      local close_agent_panel
 
       local terminals = {
         opencode = {
@@ -21,6 +19,14 @@ return {
           count = 4,
           cmd = { "codex" },
         },
+      }
+      local diff_terminal = {
+        count = 1,
+        cmd = { "hunk", "diff", "--watch" },
+      }
+      local agent_panel = {
+        closing = false,
+        transitioning = false,
       }
 
       local function normalize_path(path)
@@ -39,10 +45,6 @@ return {
         return terminals[name].cmd
       end
 
-      -- Keep the editing area wide on macOS while an agent panel is open.
-      local neo_tree_restore_by_tab = {}
-      local pending_agent_panel_sync_by_tab = {}
-
       local function current_tabpage()
         return vim.api.nvim_get_current_tabpage()
       end
@@ -51,136 +53,27 @@ return {
         return tabpage and vim.api.nvim_tabpage_is_valid(tabpage)
       end
 
-      local function terminal_tabpage(terminal)
-        if not terminal or not terminal:win_valid() then
-          return nil
-        end
-
-        local ok, tabpage = pcall(vim.api.nvim_win_get_tabpage, terminal.win)
-        if ok then
-          return tabpage
-        end
-
-        return nil
-      end
-
-      local function left_neo_tree(tabpage)
-        if not valid_tabpage(tabpage) then
-          return nil
-        end
-
-        for _, win in ipairs(vim.api.nvim_tabpage_list_wins(tabpage)) do
-          local ok_config, config = pcall(vim.api.nvim_win_get_config, win)
-          if ok_config and not config.zindex then
-            local buf = vim.api.nvim_win_get_buf(win)
-            if vim.bo[buf].filetype == "neo-tree" then
-              local ok_position, position = pcall(vim.api.nvim_buf_get_var, buf, "neo_tree_position")
-              if ok_position and position == "left" then
-                local ok_source, source = pcall(vim.api.nvim_buf_get_var, buf, "neo_tree_source")
-                return {
-                  source = ok_source and source or nil,
-                  tabpage = tabpage,
-                }
-              end
-            end
-          end
-        end
-
-        return nil
-      end
-
-      local function execute_neo_tree(args)
-        local ok, command = pcall(require, "neo-tree.command")
-        if ok and command and command.execute then
-          local executed = pcall(command.execute, args)
-          if executed then
-            return
-          end
-        end
-
-        local parts = { "silent! Neotree" }
-        if args.action then
-          table.insert(parts, "action=" .. args.action)
-        end
-        if args.source then
-          table.insert(parts, "source=" .. args.source)
-        end
-        if args.position then
-          table.insert(parts, "position=" .. args.position)
-        end
-
-        pcall(vim.cmd, table.concat(parts, " "))
-      end
-
-      local function close_left_neo_tree(info)
-        execute_neo_tree({
-          action = "close",
-          source = info and info.source or nil,
-          position = "left",
-        })
-      end
-
-      local function show_left_neo_tree(info)
-        execute_neo_tree({
-          action = "show",
-          source = info and info.source or nil,
-          position = "left",
-        })
-      end
-
-      local function agent_panel_is_open(tabpage)
-        if not _G.Snacks or not Snacks.terminal or not is_managed_terminal then
-          return false
-        end
-
-        for _, terminal in ipairs(Snacks.terminal.list()) do
-          if is_managed_terminal(terminal) and terminal:win_valid() and terminal_tabpage(terminal) == tabpage then
-            return true
-          end
-        end
-
-        return false
-      end
-
-      local function sync_neo_tree_for_agent_panel(tabpage)
-        tabpage = tabpage or current_tabpage()
-        if not valid_tabpage(tabpage) or tabpage ~= current_tabpage() then
+      local panel_close_scheduled = false
+      local function schedule_panel_close(terminal)
+        if
+          agent_panel.closing
+          or agent_panel.transitioning
+          or (terminal ~= agent_panel.agent_terminal and terminal ~= agent_panel.diff_terminal)
+          or panel_close_scheduled
+        then
           return
         end
 
-        local neo_tree = left_neo_tree(tabpage)
-
-        if agent_panel_is_open(tabpage) then
-          if neo_tree then
-            neo_tree_restore_by_tab[tabpage] = neo_tree_restore_by_tab[tabpage] or neo_tree
-            close_left_neo_tree(neo_tree)
-          end
-          return
-        end
-
-        local restore = neo_tree_restore_by_tab[tabpage]
-        if restore then
-          neo_tree_restore_by_tab[tabpage] = nil
-          if not neo_tree then
-            show_left_neo_tree(restore)
-          end
-        end
-      end
-
-      schedule_agent_panel_sync = function(tabpage)
-        if not hide_neo_tree_for_agent_panel then
-          return
-        end
-
-        tabpage = valid_tabpage(tabpage) and tabpage or current_tabpage()
-        if pending_agent_panel_sync_by_tab[tabpage] then
-          return
-        end
-
-        pending_agent_panel_sync_by_tab[tabpage] = true
+        panel_close_scheduled = true
         vim.schedule(function()
-          pending_agent_panel_sync_by_tab[tabpage] = nil
-          sync_neo_tree_for_agent_panel(tabpage)
+          panel_close_scheduled = false
+          if
+            not agent_panel.closing
+            and not agent_panel.transitioning
+            and (terminal == agent_panel.agent_terminal or terminal == agent_panel.diff_terminal)
+          then
+            close_agent_panel()
+          end
         end)
       end
 
@@ -189,14 +82,8 @@ return {
           count = terminals[name].count,
           cwd = cwd,
           win = {
-            position = "right",
-            width = 0.4,
-            on_win = function(terminal)
-              schedule_agent_panel_sync(terminal_tabpage(terminal))
-            end,
-            on_close = function(terminal)
-              schedule_agent_panel_sync(terminal_tabpage(terminal))
-            end,
+            position = "current",
+            on_close = schedule_panel_close,
           },
         }
       end
@@ -235,9 +122,9 @@ return {
         return normalize_path(terminal_cwd(terminal)) == normalize_path(cwd)
       end
 
-      is_managed_terminal = function(terminal)
+      local function managed_terminal_name(terminal)
         if not terminal or not terminal:buf_valid() then
-          return false
+          return nil
         end
 
         local ok, data = pcall(function()
@@ -246,27 +133,39 @@ return {
         local cmd = ok and data and data.cmd or terminal.cmd
 
         if type(cmd) ~= "table" then
-          return false
+          return nil
         end
 
-        for _, terminal_config in pairs(terminals) do
+        for name, terminal_config in pairs(terminals) do
           if vim.deep_equal(cmd, terminal_config.cmd) then
-            return true
+            return name
           end
         end
 
-        return false
+        return nil
       end
 
-      local agent_neo_tree_sidebar = vim.api.nvim_create_augroup("agent_neo_tree_sidebar", { clear = true })
-      if hide_neo_tree_for_agent_panel then
-        vim.api.nvim_create_autocmd({ "BufWinEnter", "TabEnter", "WinClosed" }, {
-          group = agent_neo_tree_sidebar,
-          callback = function()
-            schedule_agent_panel_sync()
-          end,
-        })
+      local function is_managed_terminal(terminal)
+        return managed_terminal_name(terminal) ~= nil
       end
+
+      local function agent_panel_is_open()
+        return valid_tabpage(agent_panel.tabpage)
+      end
+
+      local function sync_agent_panel_tabline()
+        if agent_panel_is_open() then
+          vim.o.showtabline = 0
+        elseif agent_panel.showtabline ~= nil then
+          vim.o.showtabline = agent_panel.showtabline
+        end
+      end
+
+      local agent_panel_tabline = vim.api.nvim_create_augroup("agent_panel_tabline", { clear = true })
+      vim.api.nvim_create_autocmd("TabEnter", {
+        group = agent_panel_tabline,
+        callback = sync_agent_panel_tabline,
+      })
 
       local function hide_other_managed_terminals(target)
         for _, terminal in ipairs(Snacks.terminal.list()) do
@@ -276,28 +175,131 @@ return {
         end
       end
 
+      close_agent_panel = function()
+        if agent_panel.closing or not agent_panel.tabpage then
+          return
+        end
+
+        agent_panel.closing = true
+        local panel_tabpage = agent_panel.tabpage
+        local return_tabpage = agent_panel.return_tabpage
+        local return_win = agent_panel.return_win
+        local panel_was_current = valid_tabpage(panel_tabpage) and current_tabpage() == panel_tabpage
+        local terminal = agent_panel.agent_terminal
+        local watcher = agent_panel.diff_terminal
+
+        if terminal and terminal:win_valid() then
+          terminal:hide()
+        end
+
+        -- The agent session survives panel toggles, but the diff watcher should
+        -- only run while the panel is visible.
+        if watcher and watcher:buf_valid() then
+          watcher:close()
+        end
+
+        if valid_tabpage(panel_tabpage) then
+          local tab_number = vim.api.nvim_tabpage_get_number(panel_tabpage)
+          pcall(vim.cmd, "silent! tabclose " .. tab_number)
+        end
+
+        if agent_panel.showtabline ~= nil then
+          vim.o.showtabline = agent_panel.showtabline
+        end
+
+        agent_panel.tabpage = nil
+        agent_panel.return_tabpage = nil
+        agent_panel.return_win = nil
+        agent_panel.agent_terminal = nil
+        agent_panel.diff_terminal = nil
+        agent_panel.showtabline = nil
+        agent_panel.closing = false
+
+        if panel_was_current and valid_tabpage(return_tabpage) then
+          pcall(vim.api.nvim_set_current_tabpage, return_tabpage)
+          if
+            return_win
+            and vim.api.nvim_win_is_valid(return_win)
+            and vim.api.nvim_win_get_tabpage(return_win) == return_tabpage
+          then
+            pcall(vim.api.nvim_set_current_win, return_win)
+          end
+        end
+      end
+
+      local function open_agent_panel(name, cwd, terminal)
+        if agent_panel_is_open() then
+          close_agent_panel()
+        end
+
+        hide_other_managed_terminals(nil)
+
+        local return_tabpage = current_tabpage()
+        local return_win = vim.api.nvim_get_current_win()
+
+        -- A temporary tab keeps the editor layout intact for restoration.
+        agent_panel.showtabline = vim.o.showtabline
+        vim.cmd.tabnew()
+        local placeholder_buf = vim.api.nvim_get_current_buf()
+        if vim.api.nvim_buf_get_name(placeholder_buf) == "" and vim.bo[placeholder_buf].buftype == "" then
+          vim.bo[placeholder_buf].bufhidden = "wipe"
+        end
+        agent_panel.tabpage = current_tabpage()
+        agent_panel.return_tabpage = return_tabpage
+        agent_panel.return_win = return_win
+        agent_panel.transitioning = true
+        sync_agent_panel_tabline()
+
+        terminal = terminal or get_terminal(name, cwd, true)
+        agent_panel.agent_terminal = terminal
+        if not terminal then
+          agent_panel.transitioning = false
+          close_agent_panel()
+          vim.notify("Could not open agent terminal", vim.log.levels.ERROR)
+          return nil
+        end
+
+        if not terminal:win_valid() then
+          terminal:show()
+        end
+
+        local watcher = Snacks.terminal.get(diff_terminal.cmd, {
+          count = diff_terminal.count,
+          cwd = cwd,
+          interactive = false,
+          auto_insert = true,
+          win = {
+            position = "right",
+            relative = "win",
+            win = terminal.win,
+            width = 0.6,
+            stack = false,
+            enter = false,
+            wo = {
+              winbar = diff_terminal.count .. ": Hunk",
+            },
+            on_close = schedule_panel_close,
+          },
+        })
+        agent_panel.diff_terminal = watcher
+        agent_panel.transitioning = false
+
+        terminal:focus()
+        vim.cmd.startinsert()
+        return terminal
+      end
+
       local function toggle_terminal(name)
         local cwd = project_cwd()
         local terminal = get_terminal(name, cwd, false)
         remember_terminal(name, cwd)
 
-        if terminal and terminal:win_valid() then
-          terminal:hide()
+        if agent_panel_is_open() and terminal and agent_panel.agent_terminal == terminal then
+          close_agent_panel()
           return
         end
 
-        hide_other_managed_terminals(terminal)
-
-        if terminal then
-          terminal:show()
-          terminal:focus()
-          return
-        end
-
-        local created_terminal = get_terminal(name, cwd, true)
-        if created_terminal then
-          created_terminal:focus()
-        end
+        open_agent_panel(name, cwd, terminal)
       end
 
       local function current_buffer_relative_path()
@@ -404,14 +406,21 @@ return {
       end
 
       local function focus_terminal(terminal)
-        if not terminal then
+        local name = managed_terminal_name(terminal)
+        local cwd = terminal_cwd(terminal)
+        if not name or not cwd then
           return false
         end
 
-        hide_other_managed_terminals(terminal)
-
-        if not terminal:win_valid() then
-          terminal:show()
+        if agent_panel_is_open() and agent_panel.agent_terminal == terminal and terminal:win_valid() then
+          if current_tabpage() ~= agent_panel.tabpage then
+            vim.api.nvim_set_current_tabpage(agent_panel.tabpage)
+          end
+        else
+          terminal = open_agent_panel(name, cwd, terminal)
+          if not terminal then
+            return false
+          end
         end
 
         terminal:focus()
@@ -483,9 +492,7 @@ return {
         end
 
         remember_terminal("opencode", cwd)
-        hide_other_managed_terminals(nil)
-
-        local opencode_terminal = get_terminal("opencode", cwd, true)
+        local opencode_terminal = open_agent_panel("opencode", cwd)
         if opencode_terminal and opencode_terminal:buf_valid() then
           return opencode_terminal
         end
@@ -540,6 +547,14 @@ return {
       end
 
       return {
+        {
+          "<M-Tab>",
+          function()
+            vim.cmd.tabnext()
+          end,
+          mode = { "n", "t" },
+          desc = "Next tab",
+        },
         {
           "<leader>ao",
           function()
