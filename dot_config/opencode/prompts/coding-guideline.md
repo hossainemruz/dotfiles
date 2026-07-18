@@ -14,6 +14,8 @@
 
 - Understand requirements, constraints, success criteria, and risks before coding.
 - Ask if ambiguity affects correctness, security, UX, data integrity, or public APIs.
+- Exercise independent technical judgment and briefly flag material weaknesses,
+  but do not delay implementation once the direction is sound.
 - Choose the simplest complete approach; match existing patterns and tooling.
 - Change only what is needed; avoid extra features or abstractions.
 - Use task artifacts only when the request is task-related or explicitly says to implement from `plan.md`; then implement exactly one sub-task at a time.
