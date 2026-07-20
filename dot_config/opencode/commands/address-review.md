@@ -1,13 +1,20 @@
 ---
-description: Address review feedback.
+description: Address the latest PR review findings.
 agent: build
 subtask: true
 ---
 
-Resolve the current task artifact directory from `.agent-task` as
-`$HOME/agent-vault/<contents-of-.agent-task>`. Read artifact `review.md` and
-address actionable findings one by one without widening scope. Run relevant
-validation; use `@executor` only for noisy/long checks. Then
-mark each finding in `review.md` as `Addressed` or `Not Addressed`, with brief
-rationale for anything unresolved. Finish with changed files and whether another
-review pass is recommended.
+Run only on explicit user invocation after `/review-pr`. Run `taskctl context`;
+require `review.md` to identify the current PR/branch and contain actionable
+findings. Run `taskctl step get` and require the single corrective Step created
+by `/review-pr`; run `taskctl step start` if pending, continue if in progress,
+or, if ready, apply explicit feedback via `taskctl step revise` and continue;
+otherwise stop for `/accept-step`.
+
+Treat `review.md` as the PR-wide scope. Address every actionable finding,
+validate affected behavior, self-review, and fix issues. Do not edit
+`review.md`, map findings to original Steps, or use a separate reviewer. Run
+`taskctl step submit` when ready; never complete it without acceptance.
+
+Return findings addressed, files, validation, status, then `/accept-step` and
+`/review-pr`.

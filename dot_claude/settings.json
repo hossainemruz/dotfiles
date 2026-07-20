@@ -50,11 +50,10 @@
       "Bash(ruff:*)",
       "Bash(mypy:*)",
       "Bash(chezmoi:*)",
-      "Read(/home/emruz/agent-vault/**)",
-      "Edit(/home/emruz/agent-vault/**)",
-      "Write(/home/emruz/agent-vault/**)",
-      "Edit(//tmp/**)",
-      "Write(//tmp/**)"
+      "Bash(taskctl:*)",
+      "Read(~/agent-vault/**)",
+      "Edit(~/agent-vault/**)",
+      "Edit(//tmp/**)"
     ],
     "deny": [
       "Read(.env)",

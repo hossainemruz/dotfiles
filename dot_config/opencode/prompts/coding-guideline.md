@@ -18,7 +18,9 @@
   but do not delay implementation once the direction is sound.
 - Choose the simplest complete approach; match existing patterns and tooling.
 - Change only what is needed; avoid extra features or abstractions.
-- Use task artifacts only when the request is task-related or explicitly says to implement from `plan.md`; then implement exactly one sub-task at a time.
+- Use `taskctl` artifacts only for Task-related work or an explicit request to
+  implement from `plan.md`; then implement exactly one selected Step at a time
+  and record lifecycle changes through `taskctl`.
 - Prefer direct tools for small known-scope work; use `@explore` for broad/semantic discovery.
 - Run quick quiet validation directly; use `@executor` for noisy/long
   non-mutating tests, builds, lint/format checks, and validation. Run write-mode
@@ -26,7 +28,14 @@
 - Self-review routine changes. Use `@reviewer` only for security-sensitive,
   data-loss-prone, concurrent, public-API, or large cross-cutting changes, after
   a failed implementation attempt, or when the user explicitly requests review.
-- Keep changes scoped to the active sub-task.
+- For a `taskctl` Step, do not invoke a separate reviewer; validate the Step and
+  perform a focused self-review, then defer formal review until the completed PR
+  is reviewed with `/review-pr`.
+- When the user gives direct feedback on a submitted Step, run
+  `taskctl context` and `taskctl step get`, transition it with
+  `taskctl step revise`, apply the feedback, validate and self-review the update,
+  then submit it again. Never write Step feedback to `review.md`.
+- Keep changes scoped to the active Step.
 
 ## Implementation Rules
 

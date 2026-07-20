@@ -1,53 +1,86 @@
-# Personal Task Artifact Workflow
+# Personal taskctl Workflow
 
-Repos opt in with `.agent-task`. If absent, ignore this workflow. If present,
-use this workflow only when the user request is task-related: it mentions the
-active task, task artifacts, `/task-*` style commands, planning, research,
-implementation from `plan.md`, review feedback, validation status, or progress.
-For unrelated questions, repo/config edits, or general advice, do not read task
-artifacts just because `.agent-task` exists.
+Use this workflow only when the request concerns the selected Task, its
+artifacts, research, planning, Step implementation, PR review, validation, or
+progress. For unrelated questions, repository/config edits, or general advice,
+do not invoke `taskctl` merely because the repository has a selected Task.
 
-## Resolve current task
+## Resolve context
 
-- Read `.agent-task` as a relative path inside `$HOME/agent-vault`.
-- Artifact directory: `$HOME/agent-vault/<.agent-task contents>`.
-- Example: `tasks/faber/FB-001` → `$HOME/agent-vault/tasks/faber/FB-001`.
+- For Task- or PR-level work, run `taskctl context` once from the project
+  repository and use the returned Task, PR, and absolute artifact paths.
+- For `/next-step` and direct feedback on a Step, run `taskctl context` first to
+  resolve aggregate PR state, then `taskctl step get` to resolve the selected
+  Step and artifact paths.
+- Use `taskctl path <task|research|plan|review>` only to locate an artifact that
+  must already exist.
+- If context is missing, stale, or ambiguous, report the `taskctl` error and ask
+  the user to run the appropriate `taskctl new`, `taskctl use`, or branch setup.
 
-## Artifacts
+## Sources of truth
 
-Expected: `task.md`, optional `research.md`, `plan.md`, `review.md`.
-Preserve existing structure and user-authored content. Do not recreate artifacts,
-overwrite whole files, or render template variables unless asked.
+- `task.yaml` is canonical for Task, PR, and Step hierarchy and lifecycle. Never
+  edit it directly; make lifecycle changes only with `taskctl`.
+- `task.md` is authoritative for requirements, acceptance criteria, constraints,
+  and non-goals.
+- `research.md` contains evidence, options, trade-offs, risks, and the selected
+  implementation approach. It cannot expand or override `task.md`.
+- `plan.md` contains detailed PR and Step implementation prose. Its generated
+  `taskctl:progress` block is a projection of `task.yaml`; never edit content
+  between those markers.
+- `review.md` stores only the latest PR-level review. There is no separate
+  persisted or command-driven Step review.
 
-## Source of truth
+When sources conflict, follow the latest explicit user instruction, then
+`task.md`, `research.md`, and `plan.md`. Treat `taskctl` lifecycle state as
+canonical. Ask before proceeding when a conflict affects correctness or scope.
 
-When artifacts/messages conflict:
-1. latest explicit user instruction
-2. `task.md` for scope, requirements, acceptance, constraints, non-goals
-3. `research.md` for evidence, options, tradeoffs, risks, recommended approach
-4. `plan.md` for sequencing, active work, progress
-5. `review.md` for findings and validation state
+## Artifact operations
 
-`research.md` guides implementation only; it must not expand or override
-`task.md`. If conflict affects correctness or scope, report it and ask before
-irreversible changes.
+- Create missing optional artifacts only with
+  `taskctl artifact ensure <research|plan|review>`; use the printed absolute
+  path. The command is idempotent and preserves existing prose.
+- Preserve template headings and user-authored content. Do not render template
+  placeholders or recreate existing artifacts.
+- Initial plans use exact `### PR-NNN: Title` and
+  `#### STEP-NNN: Title` headings. After writing the prose, register the same
+  IDs, titles, order, and parentage with `taskctl plan apply` JSON.
+- After execution starts, append newly approved work with `taskctl pr add` or
+  `taskctl step add` and add the returned ID's detailed heading to `plan.md`.
+  Do not bulk-rewrite started hierarchy.
 
-## Safe updates
+## Lifecycle rules
 
-- Prefer bounded updates to existing `Progress`, `Agent Status`, and `Latest Review` sections.
-- Use status values consistently: `Pending`, `In Progress`, `Blocked`, `Review`, `Completed`.
-- Before implementation, mark exactly one commit-sized subtask `In Progress` when possible. Derive PR-group status from its subtask statuses.
-- After implementation/validation, update only relevant progress/status in `plan.md`.
-- Keep review feedback in `review.md` concise and current.
+- The human starts the workflow with `taskctl new <title>`, fills in `task.md`,
+  and invokes `/plan`. Planning ensures `plan.md`, writes the detailed PR/Step
+  plan, and registers the matching hierarchy with `taskctl plan apply`.
+- The user creates or checks out branches; `taskctl` does not manage Git
+  branches. `/next-step` automatically selects the first pending PR and records
+  the current named branch with `taskctl pr start <pr-id>` when no PR is active.
+  If the checkout is still on a completed PR's branch, ask the user to switch to
+  the intended next branch and rerun `/next-step`.
+- For one Step at a time, `/next-step` resolves context with both
+  `taskctl context` and `taskctl step get`, starts the selected Step, implements
+  it, validates it, performs an automatic self-review, fixes accepted issues,
+  and runs `taskctl step submit` for user review. Do not invoke a separate
+  reviewer or write Step feedback to `review.md`.
+- On explicit user acceptance only, run `taskctl step complete`. If the user
+  instead gives direct feedback, the agent runs `taskctl context` and
+  `taskctl step get`, uses `taskctl step revise`, addresses the feedback,
+  validates and self-reviews the update, and submits again. No dedicated revise
+  or Step-review command is used.
+- There is no persisted `blocked` state. Leave blocked work `in_progress` and
+  report the blocker.
+- `/review-pr` reviews the completed current PR. Replace `review.md` with the
+  latest review and identify the PR and branch. Findings are PR-wide, not tied
+  to individual Steps. If findings are actionable, add one corrective Step with
+  `taskctl step add` as the lifecycle container for all remediation and append
+  its detailed plan heading; this reopens the PR and Task. The reviewer stops
+  there. The user explicitly invokes `/address-review`, which runs only in this
+  state and addresses the complete `review.md` scope. `/next-step` must detect
+  and refuse to start that review-created corrective Step. After the PR is
+  approved, the user creates or checks out the next PR branch and invokes
+  `/next-step`.
 
-## Agent behavior
-
-For task-related research, planning, implementation, review, summaries, or progress:
-1. Check for `.agent-task`.
-2. Resolve artifact directory using the rule above.
-3. Read only relevant artifact files.
-4. Treat artifacts as task context; prefer them over ad hoc assumptions.
-5. Report missing required artifacts (`task.md`, `plan.md`, `review.md`). Report missing `research.md` only for research or when planning depends on it.
-6. Do not scan the rest of `$HOME/agent-vault` unless asked.
-7. If updating task progress, update only relevant progress/status in `plan.md`; use `review.md` only for current review findings/validation review.
-8. Keep repository changes separate from artifact updates and mention both in summaries.
+Keep repository changes separate from artifact and lifecycle updates, and
+mention both in summaries.
