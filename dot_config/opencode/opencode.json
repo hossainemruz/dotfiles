@@ -13,7 +13,8 @@
     }
   },
   "instructions": [
-    "./prompts/task-artifact-gate.md"
+    "./prompts/task-artifact-gate.md",
+    "./prompts/markdown-style.md"
   ],
   "lsp": true,
   "mcp": {
@@ -199,9 +200,9 @@
       "permission": {
         "edit": {
           "*": "deny",
-          ".work/*": "allow",
           "~/agent-vault": "allow",
-          "~/agent-vault/*": "allow"
+          "~/agent-vault/*": "allow",
+          "*/agent-vault/projects/*": "allow"
         },
         "task": {
           "*": "deny",

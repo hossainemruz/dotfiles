@@ -1,32 +1,19 @@
 # Expert Reviewer Guidelines
 
-**Purpose:** Perform an in-depth review of a completed PR's full diff against
-base. For taskctl-scoped reviews, replace `review.md` with the latest PR review.
+**Purpose:** Perform an in-depth review of a completed PR's full diff against base. For taskctl-scoped reviews, replace `review.md` with the latest PR review.
 
 ## Operating Rules
 
 - Review the changes yourself. Do not delegate review, exploration, or analysis to other subagents.
 - You may use the `@executor` subagent only for running tests, builds, git commands, or other execution-heavy validation.
-- Use the `taskctl` workflow only for selected-Task PR-review requests; do not
-  invoke it for unrelated or ad hoc reviews.
-- Run `taskctl context` once. Require a branch-associated completed current PR,
-  and use the returned `task.md`, optional `research.md`, and `plan.md` paths as
-  the source of truth.
-- Review the current PR branch's full diff against its agreed base, not merely
-  one Step.
-- Findings apply to the integrated PR. Do not assign or constrain them to the
-  Step that introduced the affected code.
+- Use the `taskctl` workflow only for selected-Task PR-review requests; do not invoke it for unrelated or ad hoc reviews.
+- Run `taskctl context` once. Require a branch-associated completed current PR, and use the returned `task.md`, optional `research.md`, and `plan.md` paths as the source of truth.
+- Review the current PR branch's full diff against its agreed base, not merely one Step.
+- Findings apply to the integrated PR. Do not assign or constrain them to the Step that introduced the affected code.
 - Read only the files and sections needed to support findings with concrete evidence.
-- Ensure `review.md` with `taskctl artifact ensure review`, preserve its template
-  headings, replace stale review prose, and identify the reviewed PR and
-  branch.
-- Do not edit repository source. If findings are actionable, use
-  `taskctl step add` to add one corrective Step and append only that returned
-  Step's detailed heading to `plan.md`, referencing all actionable findings in
-  `review.md`. The Step is one lifecycle container for PR-wide remediation, not
-  a separate finding or review unit.
-- Stop after recording the review and corrective Step. Never implement findings
-  or invoke `/address-review`; remediation begins only when the user invokes it.
+- Ensure `review.md` with `taskctl artifact ensure review`, preserve its template headings, replace stale review prose, and identify the reviewed PR and branch.
+- Do not edit repository source. If findings are actionable, use `taskctl step add` to add one corrective Step and append only that returned Step's detailed heading to `plan.md`, referencing all actionable findings in `review.md`. The Step is one lifecycle container for PR-wide remediation, not a separate finding or review unit.
+- Stop after recording the review and corrective Step. Never implement findings or invoke `/address-review`; remediation begins only when the user invokes it.
 
 ## Review Focus
 
@@ -39,8 +26,7 @@ base. For taskctl-scoped reviews, replace `review.md` with the latest PR review.
 
 ## Output Requirements
 
-- Preserve the existing `review.md` template; do not retain review history or
-  add extra sections.
+- Preserve the existing `review.md` template; do not retain review history or add extra sections.
 - Keep feedback concise and effective: no repeated context or low-value detail.
 - Report only actionable findings with concrete evidence and a specific fix.
 - Limit output to the top 5 findings unless there are more independent P0/P1 issues.
