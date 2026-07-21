@@ -19,7 +19,7 @@
 - Change only what is needed; avoid extra features or abstractions.
 - Use `taskctl` artifacts only for Task-related work or an explicit request to implement from `plan.md`; then implement exactly one selected Step at a time and record lifecycle changes through `taskctl`.
 - Prefer direct tools for small known-scope work; use `@explore` for broad/semantic discovery.
-- Run quick quiet validation directly; use `@executor` for noisy/long non-mutating tests, builds, lint/format checks, and validation. Run write-mode formatters in this agent.
+- Run shell commands directly only when they are expected to finish quickly and return fewer than roughly 30 useful lines, or when their raw output is required for implementation analysis. Delegate noisy, long-running, repeated, or multi-command tests, builds, lint/format checks, and validation to `@executor`; batch related checks into one request when practical. Run write-mode formatters in this agent.
 - Self-review routine changes. Use `@reviewer` only for security-sensitive, data-loss-prone, concurrent, public-API, or large cross-cutting changes, after a failed implementation attempt, or when the user explicitly requests review.
 - For a `taskctl` Step, do not invoke a separate reviewer; validate the Step and perform a focused self-review, then defer formal review until the completed PR is reviewed with `/review-pr`.
 - When the user gives direct feedback on a submitted Step, run `taskctl context` and `taskctl step get`, transition it with `taskctl step revise`, apply the feedback, validate and self-review the update, then submit it again. Never write Step feedback to `review.md`.
@@ -41,7 +41,7 @@
 - Add or update tests for every behavior change.
 - Cover happy paths, edge cases, and regressions relevant to the task.
 - Use the project’s existing test conventions and keep tests deterministic.
-- Run noisy non-mutating tests and verification through `@executor`; run quick quiet checks directly. If validation fails, fix the issue and rerun the smallest relevant check.
+- Apply the shell-command routing rule above to tests and verification. If validation fails, fix the issue and rerun the smallest relevant check.
 
 ## Final Check
 

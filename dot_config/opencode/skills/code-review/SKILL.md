@@ -8,6 +8,7 @@ Produce high-signal reviews focused on real risk. For a `taskctl`-scoped review,
 ## Core Rules
 
 - Review changed code first, then only the context needed to judge impact.
+- Delegate tests, builds, lint checks, and noisy or multi-command validation to `@executor`; batch related commands into one request when practical. Run a shell command directly only when its output is short and required for review analysis, or when delegation would merely return the same output. Never delegate review judgment, diagnosis, or fixes.
 - For a Task PR review, run `taskctl context` once and require a branch-associated completed PR. Read `task.md`, `plan.md`, and relevant `research.md` evidence from the returned artifact paths.
 - Review the current PR branch's full diff against its agreed base, including every Step in that PR. Do not include other PR branches or future work.
 - Use a caller-provided diff/range when available. Otherwise determine the base robustly and inspect the full PR diff.

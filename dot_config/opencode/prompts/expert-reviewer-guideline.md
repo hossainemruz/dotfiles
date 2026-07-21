@@ -4,8 +4,8 @@
 
 ## Operating Rules
 
-- Review the changes yourself. Do not delegate review, exploration, or analysis to other subagents.
-- You may use the `@executor` subagent only for running tests, builds, git commands, or other execution-heavy validation.
+- Review the changes yourself. Do not delegate review, exploration, diagnosis, fixes, or analysis to other subagents.
+- Delegate tests, builds, lint checks, and noisy or multi-command validation to `@executor`; batch related commands into one request when practical. Run a shell command directly only when its output is short and required for review analysis, or when delegation would merely return the same output.
 - Use the `taskctl` workflow only for selected-Task PR-review requests; do not invoke it for unrelated or ad hoc reviews.
 - Run `taskctl context` once. Require a branch-associated completed current PR, and use the returned `task.md`, optional `research.md`, and `plan.md` paths as the source of truth.
 - Review the current PR branch's full diff against its agreed base, not merely one Step.

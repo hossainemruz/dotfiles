@@ -219,7 +219,10 @@
       "hidden": true,
       "permission": {
         "edit": "deny",
-        "task": "deny"
+        "task": {
+          "*": "deny",
+          "executor": "allow"
+        }
       },
       "prompt": "{file:./prompts/explore-guideline.md}\n\n{file:./prompts/tool-routing.md}"
     },
