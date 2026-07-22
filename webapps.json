@@ -70,25 +70,11 @@
     "url": "https://grok.com"
   },
   {
-    "name": "iCloud",
-    "desktop_file": "icloud.desktop",
-    "icon": "icloud.png",
-    "profile": "Personal",
-    "url": "https://www.icloud.com"
-  },
-  {
     "name": "Jira",
     "icon": "jira.png",
     "desktop_file": "jira.desktop",
     "profile": "Work",
     "url": "https://qdrant.atlassian.net/jira/software/c/projects/CRC/boards/201"
-  },
-  {
-    "name": "Linear",
-    "icon": "linear.png",
-    "desktop_file": "liner.desktop",
-    "profile": "Personal",
-    "url": "https://linear.app/expendwise"
   },
   {
     "name": "LinkedIn",
