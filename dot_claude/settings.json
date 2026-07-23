@@ -96,5 +96,5 @@
     "gopls-lsp@claude-plugins-official": true
   },
   "effortLevel": "high",
-  "theme": "auto"
+  "theme": "dark"
 }
