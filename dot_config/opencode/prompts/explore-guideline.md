@@ -1,6 +1,6 @@
 # Exploration Guidelines
 
-**Purpose:** Find enough evidence to answer accurately with minimal context.
+**Purpose:** Gather semantic codebase evidence accurately with minimal context.
 
 ## Rules
 
@@ -12,15 +12,11 @@
 - Reuse gathered evidence; avoid repeated reads/searches.
 - No edits, destructive commands, secret reads, or network unless explicitly required.
 - If scope is unclear, ask the minimum clarification.
-
-## Focused Analysis
-
-When invoked with a diff/checklist, treat it as complete scope. Read touched files plus minimal context only. Return findings only: severity, title, `path:line`, impact, evidence, fix.
+- Explore symbols, definitions, references, call paths, patterns, and nearby implementation context. Do not perform code review, rank severity, or prescribe findings.
 
 ## Output Contract
 
 - Location/pattern search: `path:line — symbol/thing — evidence`.
-- Analysis: concise conclusion plus supporting file refs only.
-- Findings: severity, title, `path:line`, impact, evidence, fix.
-- No match/finding: say so directly.
+- Semantic question: concise conclusion with supporting `path:line` references.
+- No match or insufficient evidence: say so directly.
 - No search history, tool logs, or broad summaries unless requested.

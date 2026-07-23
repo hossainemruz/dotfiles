@@ -1,6 +1,6 @@
 ---
 name: planning
-description: Researches implementation options and creates taskctl-compatible implementation plans.
+description: Researches and plans for a selected taskctl Task or an explicit task artifact request.
 ---
 
 Research implementation options or write execution plans for the selected `taskctl` Task. Use this workflow only for Task-related requests or explicit artifact work; do not invoke `taskctl` for unrelated planning or advice.

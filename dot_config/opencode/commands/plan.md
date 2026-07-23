@@ -4,8 +4,6 @@ agent: planner
 subtask: true
 ---
 
-Run `taskctl context`; read `task.md` and optional `research.md`; then run `taskctl artifact ensure plan`. Write an actionable requirements-linked plan of cohesive PRs and atomic Steps with validation, using exact `### PR-NNN: Title` and `#### STEP-NNN: Title` headings. Step IDs are unique across the Task. Preserve user prose and the generated progress block.
-
-Register the identical IDs, titles, order, and parentage through `taskctl plan apply` JSON on stdin. Draft hierarchy may be replaced; after work starts, preserve it and use `taskctl pr add`/`taskctl step add` for approved additions. If research is absent, investigate enough to plan reliably. Do not edit source.
+Perform the planning skill's planning workflow for the selected Task. Treat `$ARGUMENTS` as optional planning constraints or emphasis; they may shape the plan but cannot override `task.md`. Create or update `plan.md`, register its matching PR/Step hierarchy through `taskctl`, and do not edit source code.
 
 Return PR/Step counts, blockers, and `/next-step` after branch checkout.

@@ -38,8 +38,8 @@
 
 ## Validation Rules
 
-- Add or update tests for every behavior change.
-- Cover happy paths, edge cases, and regressions relevant to the task.
+- Add or update tests for behavior changes when a practical existing test seam exists. Otherwise, explain the limitation and perform the strongest available validation.
+- When tests are practical, cover happy paths, relevant edge cases, and regressions.
 - Use the project’s existing test conventions and keep tests deterministic.
 - Apply the shell-command routing rule above to tests and verification. If validation fails, fix the issue and rerun the smallest relevant check.
 

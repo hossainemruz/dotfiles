@@ -12,6 +12,6 @@ Run `taskctl context`:
 
 Never manage Git branches. Run `taskctl step get`; Step IDs are Task-wide. If the selected Step is the `/review-pr` corrective Step referencing `review.md`, stop and require the user to invoke `/address-review`.
 
-For `pending`, run `taskctl step start`; for `in_progress`, continue. For `ready_for_review`, apply explicit feedback via `taskctl step revise`, or otherwise stop for `/accept-step`. Read the relevant artifacts, implement only this Step, validate, self-review the diff, fix issues, and rerun affected checks. Do not use a separate reviewer or `review.md`.
+Treat `$ARGUMENTS` as optional feedback or implementation guidance for the selected Step; it may clarify the work but cannot widen the Step scope. For `pending`, run `taskctl step start`; for `in_progress`, continue. For `ready_for_review`, apply explicit feedback, including feedback supplied in `$ARGUMENTS`, via `taskctl step revise`, or otherwise stop for `/accept-step`. Read the relevant artifacts, implement only this Step, validate, self-review the diff, fix issues, and rerun affected checks. Do not use a separate reviewer or `review.md`.
 
 Run `taskctl step submit` when ready; never complete without explicit acceptance. Report PR/Step, files, validation, self-review, status, and next action.

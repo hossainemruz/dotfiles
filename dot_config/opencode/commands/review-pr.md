@@ -1,11 +1,11 @@
 ---
 description: Review the completed current PR.
-agent: expert-reviewer
+agent: reviewer
 subtask: true
 ---
 
-Run `taskctl context`; require a branch-associated completed PR; read its Task, optional research, and plan artifacts. Run `taskctl artifact ensure review`, validate the PR, and review its full branch diff against the agreed base. Replace `review.md` prose while preserving headings; identify PR and branch. Findings are PR-wide, not Step-specific.
+Perform the review skill's workflow for the selected Task's branch-associated completed PR. Treat `$ARGUMENTS` as optional review focus; it cannot narrow the required review of the full PR diff against its agreed base. Run `taskctl context`, read the Task artifacts, run `taskctl artifact ensure review`, and record the latest evidence-backed PR-wide review in `review.md` while preserving its template headings and identifying the PR and branch.
 
-For actionable findings, add exactly one Step with `taskctl step add --pr <pr-id> --title "Address PR review findings"` and append its exact detailed heading to that PR in `plan.md`, referencing all findings. Do not edit source or begin remediation; only the user invokes `/address-review`. If there are no actionable findings, add no Step.
+If there are actionable findings, add exactly one Step with `taskctl step add --pr <pr-id> --title "Address PR review findings"`, then append that returned Step's exact detailed heading under the PR in `plan.md`, referencing every finding in `review.md`. Add no Step when there are no findings. Do not edit source, begin remediation, or assign findings to original Steps; only the user invokes `/address-review`.
 
 Return validation, verdict, findings, PR/branch, corrective Step, readiness, and next action: `/address-review`, or branch checkout plus `/next-step` if approved.
