@@ -10,17 +10,6 @@
       "options": {
         "setCacheKey": true
       }
-    },
-    "deepseek": {
-      "models": {
-        "deepseek-v4-flash": {
-          "options": {
-            "thinking": {
-              "type": "disabled"
-            }
-          }
-        }
-      }
     }
   },
   "instructions": [

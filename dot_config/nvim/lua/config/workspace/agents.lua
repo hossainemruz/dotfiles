@@ -291,7 +291,8 @@ function M.focus()
     vim.cmd.startinsert()
     return true
   end
-  return false
+  M.show("opencode")
+  return true
 end
 
 local function current_buffer_relative_path()
