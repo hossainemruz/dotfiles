@@ -209,6 +209,29 @@ local function ensure_content_window(tabpage, kind)
   return win
 end
 
+local function protect_initial_scratch_buffer(win)
+  if vim.fn.argc() ~= 0 or not window_in_tabpage(win, workspace.tabs.nvim) then
+    return
+  end
+
+  local buf = vim.api.nvim_win_get_buf(win)
+  if
+    vim.api.nvim_buf_get_name(buf) ~= ""
+    or vim.bo[buf].buftype ~= ""
+    or vim.bo[buf].filetype ~= ""
+    or vim.bo[buf].modified
+    or vim.api.nvim_buf_line_count(buf) ~= 1
+    or vim.api.nvim_buf_get_lines(buf, 0, 1, false)[1] ~= ""
+  then
+    return
+  end
+
+  vim.bo[buf].buftype = "nofile"
+  vim.bo[buf].bufhidden = "wipe"
+  vim.bo[buf].swapfile = false
+  vim.bo[buf].modifiable = false
+end
+
 local function filesystem_neotree_window(tabpage, cwd)
   if not valid_tabpage(tabpage) then
     return nil
@@ -519,7 +542,7 @@ local function resize_agent_panes()
   local total_width = vim.api.nvim_win_get_width(workspace.agent_win)
     + vim.api.nvim_win_get_width(workspace.hunk_win)
     + 1
-  local agent_width = math.max(vim.o.winminwidth, math.floor(total_width * 0.4))
+  local agent_width = math.max(vim.o.winminwidth, math.floor(total_width * 0.5))
   if vim.api.nvim_win_get_width(workspace.agent_win) ~= agent_width then
     pcall(vim.api.nvim_win_set_width, workspace.agent_win, agent_width)
   end
@@ -808,6 +831,9 @@ local function ensure_workspace(initial)
     set_tab_role(workspace.tabs.nvim, "nvim")
   end
   workspace.nvim_win = ensure_content_window(workspace.tabs.nvim, "nvim")
+  if initial then
+    protect_initial_scratch_buffer(workspace.nvim_win)
+  end
 
   if agent_was_missing then
     local tabpage, win = create_tab_after(workspace.tabs.nvim, "agent")
@@ -872,6 +898,15 @@ local function ensure_workspace(initial)
     if window_in_tabpage(focus_win, focus_tabpage) then
       vim.api.nvim_set_current_win(focus_win)
     end
+  end
+
+  if initial and current_tabpage() == workspace.tabs.nvim then
+    vim.cmd.stopinsert()
+    vim.schedule(function()
+      if not workspace.cleaning and current_tabpage() == workspace.tabs.nvim then
+        vim.cmd.stopinsert()
+      end
+    end)
   end
 
   queue_neotree(workspace.tabs.nvim, workspace.cwd, workspace.nvim_win)
