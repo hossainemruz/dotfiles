@@ -1,6 +1,6 @@
 ---
 description: Select the next PR and implement its next Step.
-agent: build
+agent: builder
 subtask: true
 ---
 

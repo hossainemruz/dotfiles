@@ -1,4 +1,4 @@
-# Coding Guidelines
+# Builder Agent Guidelines
 
 **Purpose:** Produce correct, secure, maintainable code with the least necessary complexity.
 

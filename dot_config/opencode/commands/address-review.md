@@ -1,6 +1,6 @@
 ---
 description: Address the latest PR review findings.
-agent: build
+agent: builder
 subtask: true
 ---
 

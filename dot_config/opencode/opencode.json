@@ -140,7 +140,7 @@
     }
   },
   "model": "openai/gpt-5.6-terra",
-  "default_agent": "general",
+  "default_agent": "orchestrator",
   "experimental": {
     "disable_paste_summary": true
   },
@@ -158,31 +158,37 @@
     "plan": {
       "disable": true
     },
-    "general": {
+    "build": {
+      "disable": true
+    },
+    "orchestrator": {
       "description": "Cost-conscious primary orchestrator for normal use and specialist handoffs",
       "model": "openai/gpt-5.6-sol",
       "mode": "primary",
       "variant": "medium",
       "permission": {
+        "question": "allow",
+        "todowrite": "allow",
         "task": {
           "*": "deny",
           "planner": "allow",
           "explore": "allow",
           "executor": "allow",
-          "build": "allow",
+          "builder": "allow",
           "simplifier": "allow",
           "reviewer": "allow",
           "expert-reviewer": "allow"
         }
       },
-      "prompt": "{file:./prompts/general-guideline.md}\n\n{file:./prompts/tool-routing.md}"
+      "prompt": "{file:./prompts/orchestrator-guideline.md}\n\n{file:./prompts/tool-routing.md}"
     },
-    "build": {
+    "builder": {
       "description": "Implementation agent reserved for non-trivial coding",
       "model": "openai/gpt-5.6-sol",
       "mode": "subagent",
       "variant": "high",
       "permission": {
+        "todowrite": "allow",
         "task": {
           "*": "deny",
           "explore": "allow",
@@ -190,7 +196,7 @@
           "reviewer": "allow"
         }
       },
-      "prompt": "{file:./prompts/coding-guideline.md}\n\n{file:./prompts/tool-routing.md}"
+      "prompt": "{file:./prompts/builder-guideline.md}\n\n{file:./prompts/tool-routing.md}"
     },
     "planner": {
       "description": "Research and structured implementation planning subagent",
@@ -198,6 +204,8 @@
       "mode": "subagent",
       "variant": "high",
       "permission": {
+        "question": "allow",
+        "todowrite": "deny",
         "edit": {
           "*": "deny",
           "~/agent-vault": "allow",
@@ -219,6 +227,7 @@
       "variant": "high",
       "hidden": true,
       "permission": {
+        "todowrite": "deny",
         "edit": "deny",
         "task": {
           "*": "deny",
@@ -234,6 +243,7 @@
       "hidden": true,
       "steps": 4,
       "permission": {
+        "todowrite": "deny",
         "edit": "deny",
         "task": "deny"
       },
@@ -246,6 +256,7 @@
       "mode": "subagent",
       "hidden": true,
       "permission": {
+        "todowrite": "deny",
         "task": {
           "*": "deny",
           "executor": "allow"
@@ -260,6 +271,7 @@
       "mode": "subagent",
       "hidden": true,
       "permission": {
+        "todowrite": "deny",
         "edit": {
           "*": "deny",
           ".work/*": "allow",
@@ -281,6 +293,7 @@
       "mode": "subagent",
       "hidden": true,
       "permission": {
+        "todowrite": "deny",
         "edit": {
           "*": "deny",
           ".work/*": "allow",

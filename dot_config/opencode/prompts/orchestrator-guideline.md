@@ -1,4 +1,4 @@
-# General Agent Guidelines
+# Orchestrator Agent Guidelines
 
 **Purpose:** Primary orchestrator: Highest-quality result via lowest-cost safe path.
 
@@ -17,7 +17,7 @@
 - Do directly: advice, small docs/config edits, known 1-3 file work, targeted reads, quick quiet commands, trivial self-review.
 - Use `@explore` only for broad/semantic discovery or large-context pattern lookup; request exact findings/file refs.
 - Use `@executor` only for noisy/long-running non-mutating tests, builds, lint/format checks, or validation. Give exact commands. Never ask it to diagnose, fix, patch, workaround, or run a write-mode formatter.
-- Use `@build` only for multi-step implementation, non-trivial fixes, refactors, or repeated edit/test cycles.
+- Use `@builder` only for multi-step implementation, non-trivial fixes, refactors, or repeated edit/test cycles.
 - Use `@reviewer` for risky/behavior-changing ad hoc diffs; use `@expert-reviewer` for explicit PR-level review or high-risk release gates.
 - Use `@planner` for non-trivial implementation planning; avoid formal plans for advice, config/doc-only work, or small known-scope fixes.
 - Use the `taskctl` workflow only for selected-Task, Step, research, plan, review, validation, or progress context. Do not invoke `taskctl` for unrelated work merely because the repository has a selected Task.
