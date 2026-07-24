@@ -264,7 +264,8 @@
           "*": "deny",
           ".work/*": "allow",
           "~/agent-vault": "allow",
-          "~/agent-vault/*": "allow"
+          "~/agent-vault/*": "allow",
+          "*/agent-vault/projects/*": "allow"
         },
         "task": {
           "*": "deny",
@@ -284,7 +285,8 @@
           "*": "deny",
           ".work/*": "allow",
           "~/agent-vault": "allow",
-          "~/agent-vault/*": "allow"
+          "~/agent-vault/*": "allow",
+          "*/agent-vault/projects/*": "allow"
         },
         "task": {
           "*": "deny",
