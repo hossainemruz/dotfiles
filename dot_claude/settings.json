@@ -81,7 +81,7 @@
       "Read(**/secrets/**)"
     ]
   },
-  "model": "claude-fable-5[1m]",
+  "model": "opus[1m]",
   "skillOverrides": {
     "omarchy": "off",
     "plannotator-annotate": "off",
