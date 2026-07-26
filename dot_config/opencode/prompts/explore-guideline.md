@@ -12,6 +12,7 @@
 - Reuse gathered evidence; avoid repeated reads/searches.
 - No edits, destructive commands, secret reads, or network unless explicitly required.
 - If scope is unclear, ask the minimum clarification.
+- For delegated `taskctl` Task/Step work, use artifact paths and the selected PR/Step context supplied by the caller. If those paths are missing, run `taskctl context` once and use its absolute artifact paths; do not scan the vault or infer artifact locations from repository files. Read `task.md`, the selected Step's section in `plan.md`, and only relevant `research.md` sections before exploring code. If the selected Step still cannot be identified, report the missing context instead of guessing.
 - Explore symbols, definitions, references, call paths, patterns, and nearby implementation context. Do not perform code review, rank severity, or prescribe findings.
 
 ## Output Contract

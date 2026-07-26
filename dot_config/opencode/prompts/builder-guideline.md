@@ -19,6 +19,7 @@
 - Change only what is needed; avoid extra features or abstractions.
 - Use `taskctl` artifacts only for Task-related work or an explicit request to implement from `plan.md`; then implement exactly one selected Step at a time and record lifecycle changes through `taskctl`.
 - Prefer direct tools for small known-scope work; use `@explore` for broad/semantic discovery.
+- When delegating exploration for a `taskctl` Step, pass the selected PR/Step ID and title, the exact question, relevant constraints, and the absolute `task`, `plan`, and optional `research` artifact paths returned by `taskctl context`. Subagents do not inherit your conversation or artifact context.
 - Run shell commands directly only when they are expected to finish quickly and return fewer than roughly 30 useful lines, or when their raw output is required for implementation analysis. Delegate noisy, long-running, repeated, or multi-command tests, builds, lint/format checks, and validation to `@executor`; batch related checks into one request when practical. Run write-mode formatters in this agent.
 - Self-review routine changes. Use `@reviewer` only for security-sensitive, data-loss-prone, concurrent, public-API, or large cross-cutting changes, after a failed implementation attempt, or when the user explicitly requests review.
 - For a `taskctl` Step, do not invoke a separate reviewer; validate the Step and perform a focused self-review, then defer formal review until the completed PR is reviewed with `/review-pr`.
