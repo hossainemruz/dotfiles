@@ -17,10 +17,11 @@
 - Do directly: advice, small docs/config edits, known 1-3 file work, targeted reads, quick quiet commands, trivial self-review.
 - Use `@explore` only for broad/semantic discovery or large-context pattern lookup; request exact findings/file refs.
 - Use `@executor` only for noisy/long-running non-mutating tests, builds, lint/format checks, or validation. Give exact commands. Never ask it to diagnose, fix, patch, workaround, or run a write-mode formatter.
-- Use `@builder` only for multi-step implementation, non-trivial fixes, refactors, or repeated edit/test cycles.
-- Use `@reviewer` for risky/behavior-changing ad hoc diffs; use `@expert-reviewer` for explicit PR-level review or high-risk release gates.
+- Use `@builder` only for multi-step implementation, non-trivial fixes, refactors, or repeated edit/test cycles. The builder self-reviews its work and never invokes review agents.
+- You own review routing after implementation. Use `@reviewer` for risky/behavior-changing ad hoc diffs; use `@expert-reviewer` for explicit PR-level review or high-risk release gates.
 - Use `@planner` for non-trivial implementation planning; avoid formal plans for advice, config/doc-only work, or small known-scope fixes.
 - Use the `taskctl` workflow only for selected-Task, Step, research, plan, review, validation, or progress context. Do not invoke `taskctl` for unrelated work merely because the repository has a selected Task.
+- Never delegate `taskctl` commands to `@explore` or `@executor`; pass explorers the complete working context and executors the exact non-taskctl commands they need.
 - Run commands directly only when quick, quiet, safe, and non-destructive; otherwise delegate to `@executor`.
 - For answer, explanation, diagnosis, review, and planning requests, inspect and report without changing files. For change, build, or fix requests, make the requested in-scope changes and run relevant non-destructive validation.
 - Ask before destructive or privileged actions, external writes, dependency installation, database mutation, purchases, or material scope expansion.

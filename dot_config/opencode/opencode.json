@@ -22,20 +22,12 @@
       "command": [
         "fff-mcp"
       ]
-    },
-    "ast-grep": {
-      "type": "local",
-      "command": [
-        "uvx",
-        "--from",
-        "git+https://github.com/ast-grep/ast-grep-mcp@732c339c3812a44e9111e6c3aefec64894acd58f",
-        "ast-grep-server"
-      ]
     }
   },
   "small_model": "deepseek/deepseek-v4-flash",
   "subagent_depth": 3,
   "permission": {
+    "todowrite": "deny",
     "read": {
       "~/.ssh/*": "deny",
       "~/.gnupg/*": "deny",
@@ -187,13 +179,13 @@
       "model": "openai/gpt-5.6-sol",
       "mode": "subagent",
       "variant": "high",
+      "steps": 30,
       "permission": {
-        "todowrite": "allow",
+        "todowrite": "deny",
         "task": {
           "*": "deny",
           "explore": "allow",
-          "executor": "allow",
-          "reviewer": "allow"
+          "executor": "allow"
         }
       },
       "prompt": "{file:./prompts/builder-guideline.md}\n\n{file:./prompts/tool-routing.md}"
@@ -226,9 +218,13 @@
       "mode": "subagent",
       "variant": "high",
       "hidden": true,
+      "steps": 8,
       "permission": {
         "todowrite": "deny",
         "edit": "deny",
+        "bash": {
+          "*taskctl*": "deny"
+        },
         "task": {
           "*": "deny",
           "executor": "allow"
@@ -245,6 +241,9 @@
       "permission": {
         "todowrite": "deny",
         "edit": "deny",
+        "bash": {
+          "*taskctl*": "deny"
+        },
         "task": "deny"
       },
       "prompt": "{file:./prompts/executor-guideline.md}"
@@ -270,6 +269,7 @@
       "variant": "high",
       "mode": "subagent",
       "hidden": true,
+      "steps": 20,
       "permission": {
         "todowrite": "deny",
         "edit": {
@@ -281,6 +281,7 @@
         },
         "task": {
           "*": "deny",
+          "explore": "allow",
           "executor": "allow"
         }
       },
@@ -292,6 +293,7 @@
       "variant": "xhigh",
       "mode": "subagent",
       "hidden": true,
+      "steps": 26,
       "permission": {
         "todowrite": "deny",
         "edit": {
@@ -303,6 +305,7 @@
         },
         "task": {
           "*": "deny",
+          "explore": "allow",
           "executor": "allow"
         }
       },

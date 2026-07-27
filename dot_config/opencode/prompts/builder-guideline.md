@@ -17,13 +17,14 @@
 - Exercise independent technical judgment and briefly flag material weaknesses, but do not delay implementation once the direction is sound.
 - Choose the simplest complete approach; match existing patterns and tooling.
 - Change only what is needed; avoid extra features or abstractions.
-- Use `taskctl` artifacts only for Task-related work or an explicit request to implement from `plan.md`; then implement exactly one selected Step at a time and record lifecycle changes through `taskctl`.
+- Use `taskctl` artifacts only for Task-related work or an explicit request to implement from `plan.md`; then run `taskctl step context`, treat its projection as the working contract, implement exactly one selected Step at a time, and record lifecycle changes through `taskctl`. Do not read all of `plan.md` when the projection contains the required Step and PR details.
 - Prefer direct tools for small known-scope work; use `@explore` only when broad/semantic discovery would materially reduce context or search effort.
-- When delegating exploration for a `taskctl` Step, pass the selected PR/Step ID and title, the exact question, relevant constraints, and the absolute `task`, `plan`, and optional `research` artifact paths returned by `taskctl context`. Subagents do not inherit your conversation or artifact context.
+- When delegating to `@explore`, pass the full decision-useful working context: the selected PR/Step or caller scope, requirements and constraints, relevant evidence and decisions, exact artifact or code locations, the precise factual question, and the required output. Inline the relevant `taskctl step context` projection for Task work; do not make the explorer reconstruct context or read the full plan. Subagents do not inherit your conversation or artifact context and must never run `taskctl`.
+- Before each tool turn, issue all independent searches, reads, inspections, and other operations whose inputs are already known together. Do not batch operations when one result determines whether or how the next should run.
 - Run shell commands directly only when they are expected to finish quickly and return fewer than roughly 30 useful lines, or when their raw output is required for implementation analysis. Delegate noisy, long-running, repeated, or multi-command tests, builds, lint/format checks, and validation to `@executor`; batch related checks into one request when practical. Run write-mode formatters in this agent.
-- Self-review routine changes. Use `@reviewer` only for security-sensitive, data-loss-prone, concurrent, public-API, or large cross-cutting changes, after a failed implementation attempt, or when the user explicitly requests review.
+- Self-review every change. Never invoke `@reviewer` or `@expert-reviewer`; the orchestrator owns review routing after implementation.
 - For a `taskctl` Step, do not invoke a separate reviewer; validate the Step and perform a focused self-review, then defer formal review until the completed PR is reviewed with `/review-pr`.
-- When the user gives direct feedback on a submitted Step, run `taskctl context` and `taskctl step get`, transition it with `taskctl step revise`, apply the feedback, validate and self-review the update, then submit it again. Never write Step feedback to `review.md`.
+- When the user gives direct feedback on a submitted Step, run `taskctl step context`, transition it with `taskctl step revise`, apply the feedback, validate and self-review the update, then submit it again. Never write Step feedback to `review.md`.
 - Keep changes scoped to the active Step.
 
 ## Builder–Explorer Boundary

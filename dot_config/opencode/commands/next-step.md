@@ -10,7 +10,7 @@ Run `taskctl context`:
 - No current PR: select the first pending PR from `taskctl pr list --json` and run `taskctl pr start <pr-id>` on the current named, non-default branch; if no PR is pending, report no planned work.
 - Completed current PR: identify the first pending PR, ask the user to switch to its branch, and stop. If none remains, report no planned work.
 
-Never manage Git branches. Run `taskctl step get`; Step IDs are Task-wide. If the selected Step is the `/review-pr` corrective Step referencing `review.md`, stop and require the user to invoke `/address-review`.
+Never manage Git branches. Once the current PR is established, run `taskctl step context` and use its projected requirements, PR, Step, and artifact context as the working contract; do not read all of `plan.md` by default. Step IDs are Task-wide. If the selected Step is the `/review-pr` corrective Step referencing `review.md`, stop and require the user to invoke `/address-review`.
 
 Treat `$ARGUMENTS` as optional feedback or implementation guidance for the selected Step; it may clarify the work but cannot widen the Step scope. For `pending`, run `taskctl step start`; for `in_progress`, continue. For `ready_for_review`, apply explicit feedback, including feedback supplied in `$ARGUMENTS`, via `taskctl step revise`, or otherwise stop for `/accept-step`. Read the relevant artifacts, implement only this Step, validate, self-review the diff, fix issues, and rerun affected checks. Do not use a separate reviewer or `review.md`.
 

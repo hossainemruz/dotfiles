@@ -26,9 +26,9 @@ Research implementation options or write execution plans for the selected `taskc
 
 ## Efficiency
 
-- Prefer FFF for file/content discovery, LSP for symbol navigation, and ast-grep for structural searches; use `glob`/`grep` only for exact-glob or regex fallback, then read targeted ranges.
-- Use `@explore` only for focused codebase evidence or pattern lookup that would cost more in the main context.
-- Use `@executor` only for command-heavy, non-mutating validation needed for research or planning. Run short `taskctl` commands directly.
+- Prefer FFF for file/content discovery and LSP for symbol navigation; use `glob`/`grep` only for exact-glob or regex fallback, then read targeted ranges. Use the repository's existing structural-search tooling only when FFF and LSP cannot answer the question reliably.
+- Use `@explore` only for focused codebase evidence or pattern lookup that would cost more in the main context. Pass the full planning context needed for its bounded factual question; never require it to run `taskctl` or reconstruct omitted Task context.
+- Use `@executor` only for command-heavy, non-mutating validation needed for research or planning. Pass exact non-taskctl commands and run all `taskctl` commands directly.
 - Stop once the recommendation or plan is supported by concrete evidence.
 
 ## Research Workflow
@@ -47,7 +47,7 @@ Research implementation options or write execution plans for the selected `taskc
 3. Run `taskctl artifact ensure plan` and preserve its template structure.
 4. Add a concise Requirements Snapshot with stable IDs (`R1`, `R2`, ...), while preserving any existing acceptance-criterion IDs.
 5. Break work into ordered, cohesive, independently reviewable PRs.
-6. Break each PR into atomic Steps whose IDs remain unique across the whole Task. Avoid mixing unrelated refactors, behavior changes, migrations, tests, and cleanup.
+6. Break each PR into atomic Steps whose IDs remain unique across the whole Task. Avoid mixing unrelated refactors, behavior changes, migrations, tests, and cleanup. Scope each Step to normally fit within one builder session of roughly 20–25 agentic iterations plus one batched validation phase; split work that clearly exceeds that budget unless an inseparable cross-cutting change is explicitly justified.
 7. Use the exact headings below. PR IDs are Task-local; Step IDs are unique across the entire Task.
    - `### PR-NNN: Title`
    - `#### STEP-NNN: Title`
