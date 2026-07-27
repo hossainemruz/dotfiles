@@ -809,6 +809,18 @@ local function flush_pending_actions()
   end
 end
 
+local function stop_insert_in_nvim_tab()
+  if current_tabpage() ~= workspace.tabs.nvim then
+    return
+  end
+  vim.cmd.stopinsert()
+  vim.schedule(function()
+    if not workspace.cleaning and current_tabpage() == workspace.tabs.nvim then
+      vim.cmd.stopinsert()
+    end
+  end)
+end
+
 local function ensure_workspace(initial)
   if workspace.cleaning or workspace.exiting or workspace.initializing then
     return workspace.ready
@@ -901,12 +913,7 @@ local function ensure_workspace(initial)
   end
 
   if initial and current_tabpage() == workspace.tabs.nvim then
-    vim.cmd.stopinsert()
-    vim.schedule(function()
-      if not workspace.cleaning and current_tabpage() == workspace.tabs.nvim then
-        vim.cmd.stopinsert()
-      end
-    end)
+    stop_insert_in_nvim_tab()
   end
 
   queue_neotree(workspace.tabs.nvim, workspace.cwd, workspace.nvim_win)
@@ -1081,6 +1088,10 @@ function M.setup(opts)
         M.schedule_repair()
       end
     end,
+  })
+  vim.api.nvim_create_autocmd("TabEnter", {
+    group = workspace.augroup,
+    callback = stop_insert_in_nvim_tab,
   })
   vim.api.nvim_create_autocmd("VimLeavePre", {
     group = workspace.augroup,
