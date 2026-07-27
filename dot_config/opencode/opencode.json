@@ -183,7 +183,7 @@
       "prompt": "{file:./prompts/orchestrator-guideline.md}\n\n{file:./prompts/tool-routing.md}"
     },
     "builder": {
-      "description": "Implementation agent reserved for non-trivial coding",
+      "description": "Implementation agent that owns technical decisions for non-trivial coding",
       "model": "openai/gpt-5.6-sol",
       "mode": "subagent",
       "variant": "high",
@@ -221,7 +221,7 @@
       "prompt": "{file:./skills/planning/SKILL.md}"
     },
     "explore": {
-      "description": "Semantic codebase exploration",
+      "description": "Read-only codebase evidence retrieval; no implementation recommendations",
       "model": "deepseek/deepseek-v4-pro",
       "mode": "subagent",
       "variant": "high",
