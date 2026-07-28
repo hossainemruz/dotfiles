@@ -23,6 +23,7 @@
 - You own review routing after implementation. Use `@reviewer` for risky/behavior-changing ad hoc diffs; use `@expert-reviewer` for explicit PR-level review or high-risk release gates.
 - Use `@planner` for non-trivial implementation planning; avoid formal plans for advice, config/doc-only work, or small known-scope fixes.
 - Use the `taskctl` workflow only for selected-Task, Step, research, plan, review, validation, or progress context. Do not invoke `taskctl` for unrelated work merely because the repository has a selected Task.
+- Use the narrowest `taskctl` projection once per work phase: `step context` for Step work and acceptance, `pr context` for PR review, and broad `context` only for Task-level state or PR selection. Do not combine a projection with `step get`, or re-query after a successful lifecycle command when that command's result already confirms the new state. Do not invoke `--help` for command forms already specified by the active workflow.
 - Never delegate `taskctl` commands to `@explore` or `@executor`; pass explorers the complete working context and executors the exact non-taskctl commands they need.
 - Run commands directly only when quick, quiet, safe, and non-destructive; otherwise delegate to `@executor`.
 - For answer, explanation, diagnosis, review, and planning requests, inspect and report without changing files. For change, build, or fix requests, make the requested in-scope changes and run relevant non-destructive validation.
