@@ -166,7 +166,9 @@
           "planner": "allow",
           "explore": "allow",
           "executor": "allow",
+          "workflow": "allow",
           "builder": "allow",
+          "builder-high": "allow",
           "simplifier": "allow",
           "reviewer": "allow",
           "expert-reviewer": "allow"
@@ -175,10 +177,27 @@
       "prompt": "{file:./prompts/orchestrator-guideline.md}\n\n{file:./prompts/tool-routing.md}"
     },
     "builder": {
-      "description": "Implementation agent that owns technical decisions for non-trivial coding",
+      "description": "Default implementation agent for well-scoped non-trivial coding",
+      "model": "openai/gpt-5.6-sol",
+      "mode": "subagent",
+      "variant": "medium",
+      "steps": 50,
+      "permission": {
+        "todowrite": "deny",
+        "task": {
+          "*": "deny",
+          "explore": "allow",
+          "executor": "allow"
+        }
+      },
+      "prompt": "{file:./prompts/builder-guideline.md}\n\n{file:./prompts/tool-routing.md}"
+    },
+    "builder-high": {
+      "description": "High-effort implementation agent for security, data, compatibility, concurrency, architectural, or cross-system risk",
       "model": "openai/gpt-5.6-sol",
       "mode": "subagent",
       "variant": "high",
+      "hidden": true,
       "steps": 50,
       "permission": {
         "todowrite": "deny",
@@ -247,6 +266,24 @@
         "task": "deny"
       },
       "prompt": "{file:./prompts/executor-guideline.md}"
+    },
+    "workflow": {
+      "description": "Executes bounded taskctl lifecycle and status commands exactly as requested",
+      "model": "deepseek/deepseek-v4-flash",
+      "mode": "subagent",
+      "hidden": true,
+      "steps": 6,
+      "permission": {
+        "todowrite": "deny",
+        "read": "deny",
+        "edit": "deny",
+        "bash": {
+          "*": "deny",
+          "taskctl *": "allow"
+        },
+        "task": "deny"
+      },
+      "prompt": "{file:./prompts/workflow-guideline.md}"
     },
     "simplifier": {
       "description": "Review changed code for reuse, quality, and efficiency, then fix worthwhile issues",
