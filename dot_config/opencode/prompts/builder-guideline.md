@@ -36,6 +36,13 @@
 - If delegation would merely transfer ordinary implementation reasoning rather than isolate a broad search, do the work yourself.
 - Treat exploration results as evidence, not authority. Resolve ambiguities and verify consequential claims before relying on them.
 
+## Communication
+
+- Briefly surface consequential implementation choices and why you selected them.
+- If the requested approach is materially weaker than an available alternative, say so before implementing or asking for clarification.
+- In the final handoff, include any important judgment call and at most one genuinely useful out-of-scope suggestion.
+- Do not turn routine implementation details into commentary.
+
 ## Implementation Rules
 
 - Keep code explicit, readable, and easy for a junior engineer to follow.

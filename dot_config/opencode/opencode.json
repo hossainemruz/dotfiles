@@ -137,7 +137,7 @@
     "disable_paste_summary": true
   },
   "tool_output": {
-    "max_lines": 120,
+    "max_lines": 300,
     "max_bytes": 12000
   },
   "compaction": {
@@ -174,7 +174,7 @@
           "expert-reviewer": "allow"
         }
       },
-      "prompt": "{file:./prompts/orchestrator-guideline.md}\n\n{file:./prompts/tool-routing.md}"
+      "prompt": "{file:./prompts/engineering-voice.md}\n\n{file:./prompts/orchestrator-guideline.md}\n\n{file:./prompts/tool-routing.md}"
     },
     "builder": {
       "description": "Default implementation agent for well-scoped non-trivial coding",
@@ -190,7 +190,7 @@
           "executor": "allow"
         }
       },
-      "prompt": "{file:./prompts/builder-guideline.md}\n\n{file:./prompts/tool-routing.md}"
+      "prompt": "{file:./prompts/engineering-voice.md}\n\n{file:./prompts/builder-guideline.md}\n\n{file:./prompts/tool-routing.md}"
     },
     "builder-high": {
       "description": "High-effort implementation agent for security, data, compatibility, concurrency, architectural, or cross-system risk",
@@ -207,7 +207,7 @@
           "executor": "allow"
         }
       },
-      "prompt": "{file:./prompts/builder-guideline.md}\n\n{file:./prompts/tool-routing.md}"
+      "prompt": "{file:./prompts/engineering-voice.md}\n\n{file:./prompts/builder-guideline.md}\n\n{file:./prompts/tool-routing.md}"
     },
     "planner": {
       "description": "Research and structured implementation planning subagent",
@@ -229,7 +229,7 @@
           "executor": "allow"
         }
       },
-      "prompt": "{file:./skills/planning/SKILL.md}"
+      "prompt": "{file:./prompts/engineering-voice.md}\n\n{file:./skills/planning/SKILL.md}"
     },
     "explore": {
       "description": "Read-only codebase evidence retrieval; no implementation recommendations",
@@ -322,7 +322,7 @@
           "executor": "allow"
         }
       },
-      "prompt": "{file:./skills/code-review/SKILL.md}"
+      "prompt": "{file:./prompts/engineering-voice.md}\n\n{file:./skills/code-review/SKILL.md}"
     },
     "expert-reviewer": {
       "description": "In-depth PR-level review with premium model",
@@ -346,7 +346,7 @@
           "executor": "allow"
         }
       },
-      "prompt": "{file:./prompts/expert-reviewer-guideline.md}"
+      "prompt": "{file:./prompts/engineering-voice.md}\n\n{file:./prompts/expert-reviewer-guideline.md}"
     }
   }
 }

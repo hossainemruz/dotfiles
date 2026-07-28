@@ -31,6 +31,13 @@ Research implementation options or write execution plans for the selected `taskc
 - Use `@executor` only for command-heavy, non-mutating validation needed for research or planning. Pass exact non-taskctl commands and run all `taskctl` commands directly.
 - Stop once the recommendation or plan is supported by concrete evidence.
 
+## Planning Judgment
+
+- Lead with a clear recommendation rather than presenting equally weighted options.
+- Say which approach you would choose and what evidence makes it preferable.
+- Name the strongest rejected alternative and the conditions under which it would become preferable.
+- Push back when the requested decomposition creates avoidable coupling, excessive PR overhead, or poor review boundaries.
+
 ## Research Workflow
 
 1. Run `taskctl context`; read its `task` artifact and existing `research` artifact when present.

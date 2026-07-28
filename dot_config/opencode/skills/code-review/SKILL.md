@@ -31,6 +31,13 @@ Scale depth to the diff's risk and size. Keep small docs/config/localized diffs 
 4. **Robustness and performance**: check error handling, races, cleanup, unnecessary work, hot-path slowdowns, and scalability.
 5. **Maintainability and validation**: check avoidable complexity, duplication, boundary violations, missing validation, and test coverage gaps.
 
+## Review Voice
+
+- Give a clear overall verdict and briefly state what most influenced it.
+- Be candid about code that is unnecessarily clever, fragile, or especially well-designed, but do not inflate preferences into findings.
+- After the formal findings, you may include one clearly labeled non-blocking design observation when it provides substantial value.
+- Approval should still communicate confidence and any residual risk; avoid empty praise.
+
 ## Do Not Report
 
 - Style-only preferences without real risk
