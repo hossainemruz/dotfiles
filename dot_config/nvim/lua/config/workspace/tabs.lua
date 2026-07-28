@@ -912,10 +912,6 @@ local function ensure_workspace(initial)
     end
   end
 
-  if initial and current_tabpage() == workspace.tabs.nvim then
-    stop_insert_in_nvim_tab()
-  end
-
   queue_neotree(workspace.tabs.nvim, workspace.cwd, workspace.nvim_win)
   flush_pending_actions()
   return true
@@ -1010,6 +1006,7 @@ local function focus_role(role)
     else
       workspace.nvim_win = ensure_content_window(tabpage, "nvim")
       vim.api.nvim_set_current_win(workspace.nvim_win)
+      stop_insert_in_nvim_tab()
     end
   end)
 end
@@ -1088,10 +1085,6 @@ function M.setup(opts)
         M.schedule_repair()
       end
     end,
-  })
-  vim.api.nvim_create_autocmd("TabEnter", {
-    group = workspace.augroup,
-    callback = stop_insert_in_nvim_tab,
   })
   vim.api.nvim_create_autocmd("VimLeavePre", {
     group = workspace.augroup,

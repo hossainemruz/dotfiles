@@ -136,6 +136,8 @@ local function terminal_opts(name, cwd)
   return {
     count = terminals[name].count,
     cwd = cwd,
+    auto_insert = false,
+    start_insert = false,
     auto_close = false,
     win = {
       position = "current",
