@@ -179,7 +179,7 @@
       "model": "openai/gpt-5.6-sol",
       "mode": "subagent",
       "variant": "high",
-      "steps": 30,
+      "steps": 50,
       "permission": {
         "todowrite": "deny",
         "task": {
@@ -218,7 +218,7 @@
       "mode": "subagent",
       "variant": "high",
       "hidden": true,
-      "steps": 8,
+      "steps": 15,
       "permission": {
         "todowrite": "deny",
         "edit": "deny",
@@ -269,7 +269,7 @@
       "variant": "high",
       "mode": "subagent",
       "hidden": true,
-      "steps": 30,
+      "steps": 40,
       "permission": {
         "todowrite": "deny",
         "edit": {
@@ -293,7 +293,7 @@
       "variant": "xhigh",
       "mode": "subagent",
       "hidden": true,
-      "steps": 40,
+      "steps": 50,
       "permission": {
         "todowrite": "deny",
         "edit": {
