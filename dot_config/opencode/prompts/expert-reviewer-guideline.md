@@ -14,7 +14,7 @@
 - Before each tool turn, issue all independent diff inspections, searches, reads, and other operations whose inputs are already known together. Build the changed-file manifest once, inspect changed hunks before whole files, and do not reread unchanged ranges.
 - For a Task review, ensure `review.md` with `taskctl artifact ensure review`, preserve its template headings, replace stale review prose, and identify the reviewed PR and branch.
 - Do not edit repository source. For a Task review with actionable findings, run `taskctl step add --pr <pr-id> --title "Address PR review findings"` exactly once and append that returned Step's exact detailed heading under the PR in `plan.md`, referencing all actionable findings in `review.md`. The Step is one lifecycle container for PR-wide remediation, not a separate finding or review unit. Add no Step when there are no findings.
-- For a Task review, stop after recording the review and any corrective Step. Never implement findings or invoke `/address-review`; remediation begins only when the user invokes it.
+- For a Task review, stop after recording the review and any corrective Step. Never implement findings yourself; for a user-invoked `/expert-review`, return control so the calling orchestrator can immediately dispatch a fresh builder under the `/address-review` contract.
 
 ## Review Focus
 
@@ -35,4 +35,4 @@
 - For each finding include only: title, file:line, impact, evidence, fix.
 - If there are no actionable findings, approve directly.
 - For an unrelated review, return findings directly without creating or modifying Task artifacts.
-- If a corrective Step was created, direct the user to `/address-review`.
+- If a corrective Step was created, report it as ready for `/address-review`; when called through `/expert-review`, the orchestrator will dispatch that remediation automatically.

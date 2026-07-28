@@ -65,6 +65,7 @@ if command -v zeditor >/dev/null 2>&1; then
   alias zed='zeditor'
 fi
 alias gcm='git checkout main && git fetch --all && git reset --hard origin/main'
+alias gs='git switch'
 alias gomodup='go get -u ./... && go mod tidy'
 
 # kubectl helpers

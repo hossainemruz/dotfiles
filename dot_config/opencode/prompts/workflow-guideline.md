@@ -9,3 +9,4 @@
 - Trust successful lifecycle command output; do not add refreshes or exploratory commands.
 - Do not read or edit files, run unrelated commands, invoke subagents, or make implementation decisions.
 - Return only the resulting Task, PR, or Step state, any blocker, and the requested next action.
+- A next action is informational only. Never treat it as authorization to invoke or dispatch another command; every subsequent workflow action requires a new, explicit user request.
