@@ -1,0 +1,118 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+if [[ $# -ne 1 || -z ${1:-} ]]; then
+  echo "Usage: sync-git-repo REPOSITORY" >&2
+  exit 64
+fi
+
+repository=$1
+
+if [[ ! -d "$repository" ]]; then
+  echo "Error: repository directory does not exist: $repository" >&2
+  exit 1
+fi
+
+if [[ $(git -C "$repository" rev-parse --is-inside-work-tree 2>/dev/null || true) != true ]]; then
+  echo "Error: not a Git work tree: $repository" >&2
+  exit 1
+fi
+
+repository=$(git -C "$repository" rev-parse --show-toplevel)
+
+operation_in_progress() {
+  local git_path
+  git_path=$(git -C "$repository" rev-parse --git-path "$1")
+  if [[ "$git_path" == /* ]]; then
+    [[ -e "$git_path" ]]
+  else
+    [[ -e "$repository/$git_path" ]]
+  fi
+}
+
+if operation_in_progress MERGE_HEAD; then
+  echo "Error: a merge is already in progress in $repository; resolve or abort it before automatic sync." >&2
+  exit 1
+fi
+
+if operation_in_progress rebase-merge || operation_in_progress rebase-apply; then
+  echo "Error: a rebase is already in progress in $repository; resolve or abort it before automatic sync." >&2
+  exit 1
+fi
+
+if operation_in_progress CHERRY_PICK_HEAD; then
+  echo "Error: a cherry-pick is already in progress in $repository; resolve or abort it before automatic sync." >&2
+  exit 1
+fi
+
+if operation_in_progress REVERT_HEAD; then
+  echo "Error: a revert is already in progress in $repository; resolve or abort it before automatic sync." >&2
+  exit 1
+fi
+
+if operation_in_progress sequencer; then
+  echo "Error: a sequenced Git operation is already in progress in $repository; resolve or abort it before automatic sync." >&2
+  exit 1
+fi
+
+if [[ -n $(git -C "$repository" diff --name-only --diff-filter=U) ]]; then
+  echo "Error: $repository contains unresolved conflicts; resolve them before automatic sync." >&2
+  exit 1
+fi
+
+branch=$(git -C "$repository" symbolic-ref --quiet --short HEAD) || {
+  echo "Error: $repository has no checked-out branch (detached HEAD)." >&2
+  exit 1
+}
+
+upstream_ref=$(git -C "$repository" rev-parse --symbolic-full-name '@{upstream}' 2>/dev/null) || {
+  echo "Error: branch $branch in $repository has no configured upstream." >&2
+  exit 1
+}
+
+remote=$(git -C "$repository" config --get "branch.$branch.remote") || {
+  echo "Error: branch $branch in $repository has no configured upstream remote." >&2
+  exit 1
+}
+
+if [[ -z "$remote" || "$remote" == . ]]; then
+  echo "Error: branch $branch in $repository must track a remote branch, not a local branch." >&2
+  exit 1
+fi
+
+merge_refs=$(git -C "$repository" config --get-all "branch.$branch.merge") || {
+  echo "Error: branch $branch in $repository has no configured upstream branch." >&2
+  exit 1
+}
+
+if [[ "$merge_refs" == *$'\n'* ]]; then
+  echo "Error: branch $branch in $repository has multiple upstream merge refs; exactly one is required." >&2
+  exit 1
+fi
+
+merge_ref=$merge_refs
+if [[ "$merge_ref" != refs/heads/* || "$merge_ref" == refs/heads/ ]]; then
+  echo "Error: upstream merge ref for branch $branch must be a refs/heads/* branch (found: $merge_ref)." >&2
+  exit 1
+fi
+
+expected_upstream_ref="refs/remotes/$remote/${merge_ref#refs/heads/}"
+if [[ "$upstream_ref" != "$expected_upstream_ref" ]]; then
+  echo "Error: configured upstream $upstream_ref does not correspond to $remote:$merge_ref." >&2
+  exit 1
+fi
+
+git -C "$repository" add --all
+if ! git -C "$repository" diff --cached --quiet; then
+  git -C "$repository" commit --no-gpg-sign -m "chore: automatic sync"
+fi
+
+git -C "$repository" fetch --prune -- "$remote"
+
+# If this conflicts, Git intentionally leaves the rebase in place for manual resolution.
+git -C "$repository" -c commit.gpgSign=false rebase "$upstream_ref"
+
+ahead_count=$(git -C "$repository" rev-list --count "$upstream_ref..HEAD")
+if (( ahead_count > 0 )); then
+  git -C "$repository" push -- "$remote" "HEAD:$merge_ref"
+fi

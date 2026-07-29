@@ -6,6 +6,11 @@ This are configuration I use across different machines.
 
 - [chezmoi](https://www.chezmoi.io/)
 
+Automatic sync also requires [Dagu](https://dagu.cloud/). Install the tool
+already declared in the mise configuration with `mise install dagu` before
+applying these dotfiles. Linux desktop notifications require `notify-send`
+(provided by Arch's `libnotify` package); macOS uses the built-in `osascript`.
+
 ## Usage
 
 - **Setup**
@@ -66,4 +71,37 @@ chezmoi cd
 
 ```bash
 chezmoi merge
+```
+
+## Automatic repository sync
+
+Dagu runs independent sync workflows for `$HOME/agent-vault` and the chezmoi
+source repository every 15 minutes. Each workflow commits local changes without
+GPG signing, fetches and rebases onto the branch's configured upstream, then
+pushes only when the local branch is ahead. The Dagu scheduler starts at login
+as a systemd user service on Arch Linux or a LaunchAgent on macOS. The web UI is
+not started automatically; run `dagu server`, then open
+<http://localhost:8080>, when it is needed.
+
+Both repositories must have a checked-out branch with a remote upstream. A
+failed rebase is deliberately left in place and triggers a desktop notification;
+inspect the Dagu run, resolve the conflict, run `git rebase --continue` (or
+`git rebase --abort`), then restart the failed workflow from the UI.
+
+On Linux, Dagu and interactive shells share a per-user systemd SSH agent. An
+encrypted key must be unlocked once per login/session with `ssh-add` before
+unattended sync can authenticate, unless another non-interactive credential
+mechanism is configured.
+
+Useful service commands:
+
+```bash
+# Arch Linux
+systemctl --user status dagu
+systemctl --user status ssh-agent
+journalctl --user -u dagu
+
+# macOS
+launchctl print "gui/$(id -u)/com.hossainemruz.dagu"
+tail -f ~/.local/share/dagu/launchd.stderr.log
 ```

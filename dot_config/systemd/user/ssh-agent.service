@@ -1,0 +1,13 @@
+[Unit]
+Description=Per-user SSH authentication agent
+
+[Service]
+Type=simple
+RuntimeDirectory=ssh-agent
+RuntimeDirectoryMode=0700
+ExecStart=/usr/bin/ssh-agent -D -a %t/ssh-agent/agent.sock
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=default.target

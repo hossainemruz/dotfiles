@@ -1,0 +1,15 @@
+[Unit]
+Description=Dagu workflow scheduler
+Wants=network-online.target
+Requires=ssh-agent.service
+After=network-online.target ssh-agent.service
+
+[Service]
+Type=simple
+ExecStart=%h/.local/bin/dagu-scheduler
+Environment=SSH_AUTH_SOCK=%t/ssh-agent/agent.sock
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=default.target

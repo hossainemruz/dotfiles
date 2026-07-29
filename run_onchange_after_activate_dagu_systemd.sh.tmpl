@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+# Restart when a unit or the stable Dagu launcher changes.
+# dagu unit: {{ include "dot_config/systemd/user/dagu.service" | sha256sum }}
+# ssh-agent unit: {{ include "dot_config/systemd/user/ssh-agent.service" | sha256sum }}
+# launcher: {{ include "dot_local/bin/executable_dagu-scheduler" | sha256sum }}
+
+export PATH="$HOME/.local/bin:$HOME/.local/share/mise/shims:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin"
+
+if ! command -v dagu >/dev/null 2>&1; then
+  echo "Error: dagu is required before activating its user service. Run 'mise install dagu', then run 'chezmoi apply' again." >&2
+  exit 1
+fi
+
+if [[ ! -x /usr/bin/ssh-agent ]]; then
+  echo "Error: /usr/bin/ssh-agent is required before activating the user services." >&2
+  exit 1
+fi
+
+systemctl --user daemon-reload
+systemctl --user enable ssh-agent.service dagu.service
+systemctl --user restart ssh-agent.service dagu.service

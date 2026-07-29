@@ -15,7 +15,10 @@ icons/
 # Linux-specific files
 .config/hypr/
 .config/waybar/
+.config/systemd/user/dagu.service
+.config/systemd/user/ssh-agent.service
 mise.toml
+activate_dagu_systemd.sh
 run_once_install_apps.sh
 run_once_install_webapps.sh
 {{ end -}}
@@ -23,7 +26,9 @@ run_once_install_webapps.sh
 {{ if eq .chezmoi.os "linux" -}}
 # macOS-specific files
 .hammerspoon/
+Library/LaunchAgents/com.hossainemruz.dagu.plist
 .zprofile
 .zshrc
+activate_dagu_launchd.sh
 run_once_before_install_homebrew.sh
 {{ end -}}

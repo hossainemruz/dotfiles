@@ -1,0 +1,11 @@
+name: sync-agent-vault
+schedule: "*/15 * * * *"
+overlap_policy: skip
+env:
+  - PATH: "${HOME}/.local/bin:${HOME}/.local/share/mise/shims:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin"
+steps:
+  - id: sync
+    run: sync-git-repo "${HOME}/agent-vault"
+handler_on:
+  failure:
+    run: notify-sync-failure "agent-vault sync failed" "Automatic sync failed for ${HOME}/agent-vault. Inspect the Dagu logs, or start 'dagu server' to use the web UI; a rebase conflict may require manual resolution."

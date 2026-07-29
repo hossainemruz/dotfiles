@@ -49,10 +49,10 @@ else
   PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND;}__set_ghostty_title"
 fi
 
-# Start ssh-agent if is not running already. macOS normally provides this via
-# launchd/keychain, so avoid starting a nested agent there.
-if [ -z "${SSH_AUTH_SOCK:-}" ] && [[ "$(uname -s)" != "Darwin" ]]; then
-  eval "$(ssh-agent -s)" >/dev/null
+# Linux uses the systemd user agent shared with unattended services. macOS
+# continues to use the agent provided by launchd/keychain.
+if [[ "$(uname -s)" != "Darwin" ]]; then
+  export SSH_AUTH_SOCK="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}/ssh-agent/agent.sock"
 fi
 
 # Make an alias for invoking commands you use constantly

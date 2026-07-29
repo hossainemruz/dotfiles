@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+export PATH="$HOME/.local/bin:$HOME/.local/share/mise/shims:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin"
+export DAGU_SKIP_EXAMPLES=true
+
+if ! command -v dagu >/dev/null 2>&1; then
+  echo "Error: dagu is not installed or is not available on the service PATH. Run 'mise install dagu'." >&2
+  exit 127
+fi
+
+exec dagu scheduler --dags "$HOME/.config/dagu/dags"
