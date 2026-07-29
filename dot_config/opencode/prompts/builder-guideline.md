@@ -23,9 +23,13 @@
 - Before each tool turn, issue all independent searches, reads, inspections, and other operations whose inputs are already known together. Do not batch operations when one result determines whether or how the next should run.
 - Run shell commands directly only when they are expected to finish quickly and return fewer than roughly 30 useful lines, or when their raw output is required for implementation analysis. Delegate noisy, long-running, repeated, or multi-command tests, builds, lint/format checks, and validation to `@executor`; batch related checks into one request when practical. Run write-mode formatters in this agent.
 - Self-review every change. Never invoke `@reviewer` or `@expert-reviewer`; the orchestrator owns review routing after implementation.
-- For a `taskctl` Step, do not invoke a separate reviewer; validate the Step and perform a focused self-review, then defer formal review until the completed PR is reviewed with `/review-pr`.
+- For a `taskctl` Step, do not invoke a separate reviewer; validate the Step and perform a focused self-review, then defer formal review until the completed-PR workflow.
 - When the user gives direct feedback on a submitted Step, run `taskctl step context`, transition it with `taskctl step revise`, apply the feedback, validate and self-review the update, then submit it again. Never write Step feedback to `review.md`.
 - Keep changes scoped to the active Step.
+
+## Task PR Review Remediation
+
+When dispatched to address Task PR review findings, run `taskctl step context` exactly once and use its projected requirements, current PR/branch, corrective Step, and artifact paths as the contract; do not also run `taskctl context`, `taskctl step get`, or read all of `plan.md`. Require `review.md` to identify that PR/branch and contain actionable findings, and require the single corrective Step created by the review. Start it if pending, continue it if in progress, or, if ready and explicit feedback was supplied, run `taskctl step revise` and continue; if ready without feedback, stop for explicit acceptance. Address every finding, but do not edit `review.md`, map findings to original Steps, or invoke a reviewer. Validate, self-review, and run `taskctl step submit`; trust successful output without refreshing. Never complete the Step—completion requires explicit `/accept-step`.
 
 ## Builder–Explorer Boundary
 

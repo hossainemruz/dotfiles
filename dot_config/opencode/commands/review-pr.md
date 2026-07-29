@@ -4,8 +4,4 @@ agent: reviewer
 subtask: true
 ---
 
-Perform the review skill's workflow for the selected Task's branch-associated completed PR. Treat `$ARGUMENTS` as optional review focus; it cannot narrow the required review of the full PR diff against its agreed base. Run `taskctl pr context` and use its projected requirements, PR, Steps, and artifact paths as the working contract; do not read all of `plan.md` by default. Run `taskctl artifact ensure review`, and record the latest evidence-backed PR-wide review in `review.md` while preserving its template headings and identifying the PR and branch.
-
-If there are actionable findings, add exactly one Step with `taskctl step add --pr <pr-id> --title "Address PR review findings"`, then append that returned Step's exact detailed heading under the PR in `plan.md`, referencing every finding in `review.md`. Add no Step when there are no findings. Do not edit source, begin remediation, or assign findings to original Steps; return control so the calling orchestrator can immediately dispatch a fresh builder under the `/address-review` contract.
-
-Return validation, verdict, findings, PR/branch, corrective Step, and readiness. When findings are actionable, the calling orchestrator owns automatic `/address-review` remediation; when approved, report branch checkout plus `/next-step` as an informational next action only.
+Run the review skill's Task PR workflow in `remediation-enabled` mode. Treat `$ARGUMENTS` as optional focus; it cannot narrow the full PR diff or required review passes. Return the workflow's validation, verdict, findings, PR/branch, corrective-Step state, and readiness. With findings, return control for orchestrator remediation; when approved, report branch checkout plus `/next-step` as informational only.
