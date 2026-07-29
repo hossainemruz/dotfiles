@@ -25,7 +25,7 @@
     }
   },
   "small_model": "deepseek/deepseek-v4-flash",
-  "subagent_depth": 3,
+  "subagent_depth": 2,
   "permission": {
     "todowrite": "deny",
     "read": {
@@ -183,7 +183,6 @@
       "variant": "medium",
       "steps": 50,
       "permission": {
-        "todowrite": "deny",
         "task": {
           "*": "deny",
           "explore": "allow",
@@ -200,7 +199,6 @@
       "hidden": true,
       "steps": 50,
       "permission": {
-        "todowrite": "deny",
         "task": {
           "*": "deny",
           "explore": "allow",
@@ -216,7 +214,6 @@
       "variant": "high",
       "permission": {
         "question": "allow",
-        "todowrite": "deny",
         "edit": {
           "*": "deny",
           "~/agent-vault": "allow",
@@ -239,15 +236,11 @@
       "hidden": true,
       "steps": 15,
       "permission": {
-        "todowrite": "deny",
         "edit": "deny",
         "bash": {
           "*taskctl*": "deny"
         },
-        "task": {
-          "*": "deny",
-          "executor": "allow"
-        }
+        "task": "deny"
       },
       "prompt": "{file:./prompts/explore-guideline.md}\n\n{file:./prompts/tool-routing.md}"
     },
@@ -258,7 +251,6 @@
       "hidden": true,
       "steps": 4,
       "permission": {
-        "todowrite": "deny",
         "edit": "deny",
         "bash": {
           "*taskctl*": "deny"
@@ -274,7 +266,6 @@
       "hidden": true,
       "steps": 6,
       "permission": {
-        "todowrite": "deny",
         "read": "deny",
         "edit": "deny",
         "bash": {
@@ -292,7 +283,6 @@
       "mode": "subagent",
       "hidden": true,
       "permission": {
-        "todowrite": "deny",
         "task": {
           "*": "deny",
           "executor": "allow"
@@ -308,7 +298,6 @@
       "hidden": true,
       "steps": 40,
       "permission": {
-        "todowrite": "deny",
         "edit": {
           "*": "deny",
           ".work/*": "allow",
@@ -332,7 +321,6 @@
       "hidden": true,
       "steps": 50,
       "permission": {
-        "todowrite": "deny",
         "edit": {
           "*": "deny",
           ".work/*": "allow",

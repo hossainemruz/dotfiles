@@ -8,4 +8,4 @@ Run after a Task-backed `/review-pr` or `/expert-review` with actionable finding
 
 Treat `review.md` as the PR-wide scope. Address every actionable finding, validate affected behavior, self-review, and fix issues. Do not edit `review.md`, map findings to original Steps, or use a separate reviewer. Run `taskctl step submit` when ready; when it succeeds, trust its returned state and do not follow it with `taskctl step get` or another context query. Never complete it without acceptance.
 
-Return findings addressed, files, validation, status, then `/accept-step` and `/review-pr`.
+Return findings addressed, files, validation, status, then `/accept-step`; after explicit acceptance, the calling orchestrator automatically performs the single completed-PR `/review-pr` review.
