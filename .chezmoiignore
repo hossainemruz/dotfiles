@@ -10,6 +10,9 @@ icons/
 .opencode/
 .agent-task
 .gitignore
+.config/opencode/node_modules/
+.config/opencode/.gitignore
+.config/opencode/package.json
 
 {{ if eq .chezmoi.os "darwin" -}}
 # Linux-specific files
