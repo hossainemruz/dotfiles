@@ -1,3 +1,4 @@
 [tools]
+dagu = "latest"
 node = "latest"
 python = "3.10.11"
