@@ -155,9 +155,9 @@
     },
     "orchestrator": {
       "description": "Cost-conscious primary orchestrator for normal use and specialist handoffs",
-      "model": "openai/gpt-5.6-sol",
+      "model": "openai/gpt-5.6-terra",
       "mode": "primary",
-      "variant": "medium",
+      "variant": "high",
       "permission": {
         "question": "allow",
         "todowrite": "allow",
