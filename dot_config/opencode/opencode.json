@@ -230,11 +230,11 @@
     },
     "explore": {
       "description": "Read-only codebase evidence retrieval; no implementation recommendations",
-      "model": "deep",
+      "model": "deepseek/deepseek-v4-flash",
       "mode": "subagent",
-      "variant": "high",
+      "variant": "max",
       "hidden": true,
-      "steps": 15,
+      "steps": 25,
       "permission": {
         "edit": "deny",
         "bash": {
