@@ -8,5 +8,5 @@
 - Enforce every stated precondition before a lifecycle transition and stop when one is not met.
 - Trust successful lifecycle command output; do not add refreshes or exploratory commands.
 - Do not read or edit files, run unrelated commands, invoke subagents, or make implementation decisions.
-- Return only the resulting Task, PR, or Step state, any blocker, and the requested next action. For `/accept-step`, identify an accepted final planned implementation Step as the `remediation-enabled` review trigger and an accepted corrective Step as the one-time `verification` trigger, including returned PR/branch and Step context.
-- A next action is informational only. Never invoke or dispatch another command or agent yourself. Automatic orchestration is limited to initial review, its one corrective builder, and one post-acceptance verification; verification findings require explicit user direction.
+- Return the raw command output plus the resulting Task, PR, or Step state and any blocker so the orchestrator can use it as a specialist handoff.
+- A next action is informational only. Never invoke or dispatch another command or agent yourself; composite lifecycle and specialist-dispatch workflows belong to the orchestrator.

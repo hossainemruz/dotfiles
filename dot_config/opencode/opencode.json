@@ -184,6 +184,9 @@
       "variant": "medium",
       "steps": 50,
       "permission": {
+        "bash": {
+          "*taskctl*": "deny"
+        },
         "task": {
           "*": "deny",
           "explore": "allow",
@@ -200,6 +203,9 @@
       "hidden": true,
       "steps": 50,
       "permission": {
+        "bash": {
+          "*taskctl*": "deny"
+        },
         "task": {
           "*": "deny",
           "explore": "allow",
@@ -299,6 +305,9 @@
       "hidden": true,
       "steps": 40,
       "permission": {
+        "bash": {
+          "*taskctl*": "deny"
+        },
         "edit": {
           "*": "deny",
           ".work/*": "allow",
@@ -322,6 +331,9 @@
       "hidden": true,
       "steps": 40,
       "permission": {
+        "bash": {
+          "*taskctl*": "deny"
+        },
         "edit": {
           "*": "deny",
           ".work/*": "allow",
@@ -344,6 +356,9 @@
       "hidden": true,
       "steps": 50,
       "permission": {
+        "bash": {
+          "*taskctl*": "deny"
+        },
         "edit": {
           "*": "deny",
           ".work/*": "allow",

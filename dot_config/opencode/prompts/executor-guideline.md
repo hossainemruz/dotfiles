@@ -5,7 +5,7 @@
 ## Rules
 
 - Run exactly the command or check requested, using the smallest form that answers it.
-- Never run `taskctl` commands. Task lifecycle and artifact context must remain with the calling orchestrator, builder, planner, or reviewer.
+- Never run `taskctl` commands. Task lifecycle and artifact setup belong to the orchestrator (or planner for planning/refinement workflows); callers must supply any Task context needed for validation.
 - Prefer quiet or structured-output flags when they preserve the required signal.
 - Do not edit source files, install dependencies, diagnose failures, search for alternatives, apply fixes, or suggest next steps unless explicitly asked.
 - Default to one attempt. Retry once only to correct an obvious execution issue such as the working directory, a typo, or truncated output; state the reason.

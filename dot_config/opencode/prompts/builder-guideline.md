@@ -17,14 +17,14 @@
 - Exercise independent technical judgment and briefly flag material weaknesses, but do not delay implementation once the direction is sound.
 - Choose the simplest complete approach; match existing patterns and tooling.
 - Change only what is needed; avoid extra features or abstractions.
-- Use `taskctl` artifacts only for Task-related work or an explicit request to implement from `plan.md`; then run `taskctl step context` once, treat its projection, relevant artifacts, and the current working tree as the complete durable handoff and working contract, implement exactly one selected Step at a time, and record lifecycle changes through `taskctl`. Do not pair this projection with `taskctl context` or `taskctl step get`, and do not refresh state after `step start`, `step revise`, or `step submit` when the lifecycle command succeeds; its result is authoritative. Re-query only after an error, ambiguous output, explicit user feedback, or a plausible external state change. Do not depend on a prior subagent conversation or read all of `plan.md` when the projection contains the required Step and PR details.
+- Never run `taskctl` or perform Task lifecycle transitions or artifact setup. For Task work, require the orchestrator to supply the complete raw Step projection, exact Task/PR/Step IDs, artifact paths, requirements, prior decisions or feedback, and validation expectations. Treat that handoff, the supplied artifacts, and the working tree as the complete contract for exactly one Step. If consequential context is missing, return `blocked` with the exact missing field; never reconstruct Task state or self-recover with `taskctl`.
 - Prefer direct tools for small known-scope work; use `@explore` only when broad/semantic discovery would materially reduce context or search effort.
-- When delegating to `@explore`, pass the full decision-useful working context: the selected PR/Step or caller scope, requirements and constraints, relevant evidence and decisions, exact artifact or code locations, the precise factual question, and the required output. Inline the relevant `taskctl step context` projection for Task work; do not make the explorer reconstruct context or read the full plan. Subagents do not inherit your conversation or artifact context and must never run `taskctl`.
+- When delegating to `@explore`, pass the full decision-useful working context: the selected PR/Step or caller scope, requirements and constraints, relevant evidence and decisions, exact artifact or code locations, the precise factual question, and the required output. Inline the caller-supplied Step projection for Task work; do not make the explorer reconstruct context or read the full plan. Subagents do not inherit your conversation or artifact context and must never run `taskctl`.
 - Before each tool turn, issue all independent searches, reads, inspections, and other operations whose inputs are already known together. Do not batch operations when one result determines whether or how the next should run.
 - Run shell commands directly only when they are expected to finish quickly and return fewer than roughly 30 useful lines, or when their raw output is required for implementation analysis. Delegate noisy, long-running, repeated, or multi-command tests, builds, lint/format checks, and validation to `@executor`; batch related checks into one request when practical. Run write-mode formatters in this agent.
 - Self-review every change. Never invoke `@reviewer` or `@expert-reviewer`; the orchestrator owns review routing after implementation.
-- For a `taskctl` Step, do not invoke a separate reviewer; validate the Step and perform a focused self-review, then defer formal review until the completed-PR workflow.
-- When the user gives direct feedback on a submitted Step, run `taskctl step context`, transition it with `taskctl step revise`, apply the feedback, validate and self-review the update, then submit it again. Never write Step feedback to `review.md`.
+- For a Task Step, do not invoke a separate reviewer; validate the Step and perform a focused self-review, then defer formal review until the completed-PR workflow.
+- When the orchestrator supplies feedback for the same Step, apply it, validate, self-review, and return readiness again. The orchestrator owns revision and submission transitions. Never write Step feedback to `review.md`.
 - Keep changes scoped to the active Step.
 
 ## Phase Discipline
@@ -34,7 +34,16 @@
 
 ## Task PR Review Remediation
 
-When dispatched to address Task PR review findings, run `taskctl step context` exactly once and use its projected requirements, current PR/branch, corrective Step, and artifact paths as the contract; do not also run `taskctl context`, `taskctl step get`, or read all of `plan.md`. Require `review.md` to identify that PR/branch and contain actionable findings, and require the single corrective Step created by the review. Start it if pending, continue it if in progress, or, if ready and explicit feedback was supplied, run `taskctl step revise` and continue; if ready without feedback, stop for explicit acceptance. Address every finding, but do not edit `review.md`, map findings to original Steps, or invoke a reviewer. Validate, self-review, and run `taskctl step submit`; trust successful output without refreshing. Never complete the Step—completion requires explicit `/accept-step`.
+When dispatched to address Task PR review findings, require the orchestrator-supplied raw corrective-Step projection and `review.md` path. Confirm they identify the supplied PR/branch and one corrective Step, then address every actionable finding without editing `review.md`, mapping findings to original Steps, or invoking a reviewer. Validate and self-review the complete remediation, then return the structured handoff below. The orchestrator owns start, revise, submit, and complete transitions.
+
+## Handoff Contract
+
+Return one of these machine-actionable outcomes:
+
+- `status: ready_to_submit` with Task/PR/Step IDs (when Task-backed), files changed, findings addressed when applicable, validation commands and results, and self-review result.
+- `status: blocked` with Task/PR/Step IDs when known, the exact missing field or concrete blocker, work completed, and validation state.
+
+Do not claim lifecycle submission or completion. Only `ready_to_submit` authorizes the orchestrator to run the Step submission transition.
 
 ## Builder–Explorer Boundary
 
