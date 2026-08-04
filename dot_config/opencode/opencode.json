@@ -171,6 +171,7 @@
           "builder-high": "allow",
           "simplifier": "allow",
           "reviewer": "allow",
+          "review-verifier": "allow",
           "expert-reviewer": "allow"
         }
       },
@@ -308,6 +309,28 @@
         "task": {
           "*": "deny",
           "explore": "allow",
+          "executor": "allow"
+        }
+      },
+      "prompt": "{file:./prompts/engineering-voice.md}\n\n{file:./skills/code-review/SKILL.md}"
+    },
+    "review-verifier": {
+      "description": "Delta-focused verification of accepted Task PR review remediation",
+      "model": "deepseek/deepseek-v4-flash",
+      "variant": "max",
+      "mode": "subagent",
+      "hidden": true,
+      "steps": 40,
+      "permission": {
+        "edit": {
+          "*": "deny",
+          ".work/*": "allow",
+          "~/agent-vault": "allow",
+          "~/agent-vault/*": "allow",
+          "*/agent-vault/projects/*": "allow"
+        },
+        "task": {
+          "*": "deny",
           "executor": "allow"
         }
       },

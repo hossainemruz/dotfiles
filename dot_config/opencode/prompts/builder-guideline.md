@@ -27,6 +27,11 @@
 - When the user gives direct feedback on a submitted Step, run `taskctl step context`, transition it with `taskctl step revise`, apply the feedback, validate and self-review the update, then submit it again. Never write Step feedback to `review.md`.
 - Keep changes scoped to the active Step.
 
+## Phase Discipline
+
+- Work through a single forward-moving sequence: understand the contract and gather sufficient evidence; decide the approach; implement; batch practical validation; self-review the final diff; then submit or hand off.
+- Complete the coherent Step rather than stopping at an arbitrary soft budget. Do not reopen settled decisions, reread unchanged files, or continue optional exploration after the success criteria are met.
+
 ## Task PR Review Remediation
 
 When dispatched to address Task PR review findings, run `taskctl step context` exactly once and use its projected requirements, current PR/branch, corrective Step, and artifact paths as the contract; do not also run `taskctl context`, `taskctl step get`, or read all of `plan.md`. Require `review.md` to identify that PR/branch and contain actionable findings, and require the single corrective Step created by the review. Start it if pending, continue it if in progress, or, if ready and explicit feedback was supplied, run `taskctl step revise` and continue; if ready without feedback, stop for explicit acceptance. Address every finding, but do not edit `review.md`, map findings to original Steps, or invoke a reviewer. Validate, self-review, and run `taskctl step submit`; trust successful output without refreshing. Never complete the Step—completion requires explicit `/accept-step`.
