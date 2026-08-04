@@ -23,7 +23,7 @@
 - Before each tool turn, issue all independent searches, reads, inspections, and other operations whose inputs are already known together. Do not batch operations when one result determines whether or how the next should run.
 - Run shell commands directly only when they are expected to finish quickly and return fewer than roughly 30 useful lines, or when their raw output is required for implementation analysis. Delegate noisy, long-running, repeated, or multi-command tests, builds, lint/format checks, and validation to `@executor`; batch related checks into one request when practical. Run write-mode formatters in this agent.
 - Self-review every change. Never invoke `@reviewer` or `@expert-reviewer`; the orchestrator owns review routing after implementation.
-- For a Task Step, do not invoke a separate reviewer; validate the Step and perform a focused self-review, then defer formal review until the completed-PR workflow.
+- For a Task Step, do not invoke a separate reviewer; validate the Step and perform a focused self-review, then defer formal review to the orchestrator-owned PR gate.
 - When the orchestrator supplies feedback for the same Step, apply it, validate, self-review, and return readiness again. The orchestrator owns revision and submission transitions. Never write Step feedback to `review.md`.
 - Keep changes scoped to the active Step.
 
@@ -34,7 +34,7 @@
 
 ## Task PR Review Remediation
 
-When dispatched to address Task PR review findings, require the orchestrator-supplied raw corrective-Step projection and `review.md` path. Confirm they identify the supplied PR/branch and one corrective Step, then address every actionable finding without editing `review.md`, mapping findings to original Steps, or invoking a reviewer. Validate and self-review the complete remediation, then return the structured handoff below. The orchestrator owns start, revise, submit, and complete transitions.
+When dispatched to address Task PR review findings, require the orchestrator-supplied raw corrective-Step projection, authoritative lifecycle transition result when the projection predates start or revise, and `review.md` path. Confirm the handoff identifies the supplied PR/branch, one corrective Step, and its current `in_progress` state, then address every actionable finding without editing `review.md`, mapping findings to original Steps, or invoking a reviewer. Validate and self-review the complete remediation, then return the structured handoff below. If the orchestrator resumes this same workstream with verifier delta findings, address only those remaining findings and return readiness again. The orchestrator owns start, revise, verification, submit, and complete transitions.
 
 ## Handoff Contract
 
@@ -43,7 +43,7 @@ Return one of these machine-actionable outcomes:
 - `status: ready_to_submit` with Task/PR/Step IDs (when Task-backed), files changed, findings addressed when applicable, validation commands and results, and self-review result.
 - `status: blocked` with Task/PR/Step IDs when known, the exact missing field or concrete blocker, work completed, and validation state.
 
-Do not claim lifecycle submission or completion. Only `ready_to_submit` authorizes the orchestrator to run the Step submission transition.
+Do not claim lifecycle submission or completion. For a normal implementation Step, `ready_to_submit` authorizes submission. For a corrective Step, it authorizes the orchestrator to run verification; submission is allowed only after matching verifier approval is durable in `review.md`.
 
 ## Builder–Explorer Boundary
 

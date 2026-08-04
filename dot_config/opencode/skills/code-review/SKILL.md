@@ -22,15 +22,17 @@ Produce high-signal reviews focused on real risk. For a Task-scoped review, use 
 
 ## Task PR Workflow
 
-The caller must select one mode: `remediation-enabled` for an initial completed-PR review, or `verification` after explicit acceptance of its corrective Step.
+The caller must select one mode: `remediation-enabled` for the initial full-PR review gate, or `verification` for corrective remediation before Step submission.
 
-- Require the caller to supply the complete raw PR projection, exact Task/PR IDs and branch, agreed diff scope/base, requirements, validation expectations, and an existing/ensured `review.md` path. Verification also requires the accepted corrective-Step context. If any consequential field is missing, return `status: blocked` naming the exact missing field; never reconstruct it with `taskctl` or broad artifact reads.
+- In `remediation-enabled` mode, require the caller's complete raw PR projection, exact Task/PR IDs and branch, agreed diff scope/base, requirements, validation expectations, and an existing/ensured `review.md` path. Accept either a normal gate where all prior planned Steps are completed or skipped and exactly one explicitly accepted final planned implementation Step remains `ready_for_review`, or a branch-associated completed PR for an explicit compatibility review.
+- In `verification` mode, require the complete raw corrective-Step projection, authoritative start or revise result when that projection predates the transition, exact Task/PR/Step IDs and branch, the builder's `status: ready_to_submit` handoff, full remediation diff scope, directly affected context, validation expectations, and the original or latest findings in `review.md`. Together, this context must identify exactly one corrective Step currently `in_progress`.
+- If any consequential field is missing, return `status: blocked` naming the exact missing field; never reconstruct it with `taskctl` or broad artifact reads.
 - In `remediation-enabled` mode, review the current PR branch's full diff against its agreed base, including every Step in that PR; never review one Step or include other PRs.
-- In `verification` mode, inspect the original findings in `review.md`, the accepted corrective Step and remediation diff, directly affected context and dependencies, and targeted validation. Expand to the full PR only when remediation changes a shared boundary or evidence indicates a cross-cutting regression.
-- Replace the supplied `review.md` review content with the evidence-backed, mode-scoped review while preserving its template headings and identifying the PR and branch. Do not retain stale review prose.
-- Never edit repository source or begin remediation. Return validation, verdict, findings, PR/branch, and accepted corrective-Step context when applicable.
+- In `verification` mode, inspect the current findings in `review.md`, the in-progress corrective Step, builder readiness handoff and remediation diff, directly affected context and dependencies, and targeted validation. Expand to the full PR only when remediation changes a shared boundary or evidence indicates a cross-cutting regression. This is a remediation check, not a second full-PR review.
+- Replace or update the supplied `review.md` review content with the evidence-backed, mode-scoped result while preserving its template headings. Record the mode, Task/PR IDs, branch, corrective Step when applicable, and either durable approval or every remaining finding. Do not retain stale review prose.
+- Never edit repository source or begin remediation. Return validation, verdict, findings, PR/branch, and in-progress corrective-Step context when applicable.
 - In `remediation-enabled` mode, report actionable findings to the orchestrator; it alone decides and creates the single corrective Step. With no findings, approve and create no lifecycle state.
-- In `verification` mode, report remaining findings for explicit user direction. Never request or trigger automatic remediation; this mode ends the automatic review cycle.
+- In `verification` mode, report remaining findings to the orchestrator for automatic correction in the same Step and builder workstream. Never create another Step, submit or complete the corrective Step, or implement fixes. Approval authorizes the orchestrator to submit; remaining findings continue the builder-to-verifier loop.
 
 ## Review Passes
 
@@ -75,7 +77,7 @@ End with a machine-actionable block containing:
 - `status: review_complete` or `status: blocked`
 - `mode: remediation-enabled`, `verification`, or `ad-hoc`
 - `verdict: approved` or `actionable_findings` when complete
-- Task/PR IDs and branch when Task-backed
+- Task/PR IDs and branch when Task-backed; corrective Step ID in `verification` mode
 - `review_path` when Task-backed
 - `findings`: every finding ID and severity, or `[]`
 - validation performed and residual risk
@@ -86,4 +88,4 @@ The findings list must exactly account for the actionable findings written to `r
 
 - Every finding has evidence, clear impact, and justified severity.
 - Duplicate and weak comments are removed.
-- A remediation-enabled Task review covered the whole completed current PR. A verification review covered the remediation delta and affected context, expanding only when its risk or evidence required it.
+- A remediation-enabled Task review covered the whole current PR under one of its allowed gate states. A verification review durably identified the in-progress corrective Step and covered the remediation delta and affected context, expanding only when its risk or evidence required it.

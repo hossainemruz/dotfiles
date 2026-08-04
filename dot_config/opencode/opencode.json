@@ -324,7 +324,7 @@
       "prompt": "{file:./prompts/engineering-voice.md}\n\n{file:./skills/code-review/SKILL.md}"
     },
     "review-verifier": {
-      "description": "Delta-focused verification of accepted Task PR review remediation",
+      "description": "Pre-submission verification of in-progress Task PR review remediation",
       "model": "deepseek/deepseek-v4-flash",
       "variant": "max",
       "mode": "subagent",
