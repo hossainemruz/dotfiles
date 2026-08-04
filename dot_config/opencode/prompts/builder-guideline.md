@@ -63,11 +63,14 @@ When dispatched to address Task PR review findings, run `taskctl step context` e
 - Keep public interfaces stable unless the task requires a change.
 - Prefer clear comments on **why**; avoid restating **what** the code already shows.
 
-## Validation Rules
+## Test and Validation Strategy
 
-- Add or update tests for behavior changes when a practical existing test seam exists. Otherwise, explain the limitation and perform the strongest available validation.
-- When tests are practical, cover happy paths, relevant edge cases, and regressions.
-- Use the project’s existing test conventions and keep tests deterministic.
+- Tests provide confidence in observable behavior; coverage percentage and test count are not goals unless explicitly requested.
+- Add the smallest set of tests needed to protect the acceptance criteria and plausible regression paths. For behavior-preserving refactors, normally rely on existing tests; do not add tests merely because code moved, was renamed, extracted, or reorganized.
+- Before a risky refactor, add a focused characterization test only when important existing behavior is not already protected. For a behavior change or bug fix, test the changed behavior and its most meaningful failure or boundary case rather than exhaustively enumerating equivalent cases.
+- Prefer the nearest stable behavioral boundary, such as a public API, service operation, command result, persisted state, or user-visible output. Avoid tests coupled to private helpers, internal call order, mock interactions, incidental structure, trivial accessors, or incidental branches.
+- Prefer table-driven tests when several cases exercise the same behavior, and mock external boundaries rather than internal collaboration when practical.
+- Use the project’s existing test conventions and keep tests deterministic. If no tests are added, state which existing tests or other validation protect the change.
 - Apply the shell-command routing rule above to tests and verification. If validation fails, fix the issue and rerun the smallest relevant check.
 
 ## Final Check

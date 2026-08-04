@@ -14,6 +14,7 @@ Produce high-signal reviews focused on real risk. For a `taskctl`-scoped review,
 - Use structured multi-pass thinking within one reviewer instance. Do not spawn reviewer subagents or repeat full rereads for every pass.
 - Before each tool turn, issue all independent diff inspections, searches, reads, and other operations whose inputs are already known together. Build the changed-file manifest once, inspect changed hunks before whole files, and do not reread unchanged ranges.
 - Be skeptical, not speculative. Report only actionable findings with evidence.
+- Request additional tests only when an observable behavior has a plausible, meaningful regression path that existing validation does not protect. Do not optimize for coverage percentage or private-unit-test count.
 - Prefer a few high-confidence findings; limit output to the five most important unless there are additional independent blockers.
 - Flag changes outside the PR scope, but do not expand the review to unrelated work.
 - Do not attempt source fixes or lifecycle transitions except for the corrective-Step setup defined below.
@@ -39,7 +40,7 @@ Scale depth to the diff's risk and size. Keep small docs/config/localized diffs 
 2. **Correctness**: check logic, assumptions, edge cases, regressions, data flow, and integration with existing behavior.
 3. **Security and privacy**: check secrets, injection, unsafe file/network behavior, permission/auth boundaries, and data exposure.
 4. **Robustness and performance**: check error handling, races, cleanup, unnecessary work, hot-path slowdowns, and scalability.
-5. **Maintainability and validation**: check avoidable complexity, duplication, boundary violations, missing validation, and test coverage gaps.
+5. **Maintainability and validation**: check avoidable complexity, duplication, boundary violations, missing validation, and observable behavior left exposed to a plausible regression.
 
 ## Review Voice
 
@@ -54,6 +55,7 @@ Scale depth to the diff's risk and size. Keep small docs/config/localized diffs 
 - Hypothetical issues without a plausible failure path
 - Duplicate findings for the same root cause
 - Low-value nits that do not materially improve quality
+- Coverage targets, missing tests for private helpers, or tests of implementation details without an unprotected behavioral risk
 
 ## Finding Bar and Severity
 
