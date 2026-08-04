@@ -3,7 +3,7 @@ name: code-review
 description: Guideline for evidence-based PR-level and ad hoc code review.
 ---
 
-Produce high-signal reviews focused on real risk. For a `taskctl`-scoped review, use the mode-specific scope below; never run a separate initial review for an individual Step. For unrelated reviews, do not invoke `taskctl`.
+Produce high-signal reviews focused on real risk. For a Task-scoped review, use the caller-supplied mode and context below; never review an individual Step as the initial formal review. Reviewers never run `taskctl`.
 
 ## Core Rules
 
@@ -17,20 +17,20 @@ Produce high-signal reviews focused on real risk. For a `taskctl`-scoped review,
 - Request additional tests only when an observable behavior has a plausible, meaningful regression path that existing validation does not protect. Do not optimize for coverage percentage or private-unit-test count.
 - Prefer a few high-confidence findings; limit output to the five most important unless there are additional independent blockers.
 - Flag changes outside the PR scope, but do not expand the review to unrelated work.
-- Do not attempt source fixes or lifecycle transitions except for the corrective-Step setup defined below.
+- Do not attempt source fixes, Task lifecycle transitions, artifact setup, or `plan.md` edits.
 - If no diff or review scope is available, ask instead of scanning broadly.
 
 ## Task PR Workflow
 
 The caller must select one mode: `remediation-enabled` for an initial completed-PR review, or `verification` after explicit acceptance of its corrective Step.
 
-- Run `taskctl pr context` exactly once and require a branch-associated completed PR. Do not substitute broad `taskctl context`, combine it with `taskctl step get`, or refresh after success. Treat the projection as the working contract and do not read all of `plan.md` by default.
+- Require the caller to supply the complete raw PR projection, exact Task/PR IDs and branch, agreed diff scope/base, requirements, validation expectations, and an existing/ensured `review.md` path. Verification also requires the accepted corrective-Step context. If any consequential field is missing, return `status: blocked` naming the exact missing field; never reconstruct it with `taskctl` or broad artifact reads.
 - In `remediation-enabled` mode, review the current PR branch's full diff against its agreed base, including every Step in that PR; never review one Step or include other PRs.
 - In `verification` mode, inspect the original findings in `review.md`, the accepted corrective Step and remediation diff, directly affected context and dependencies, and targeted validation. Expand to the full PR only when remediation changes a shared boundary or evidence indicates a cross-cutting regression.
-- Run `taskctl artifact ensure review`, then replace the latest review prose in `review.md` with the evidence-backed, mode-scoped review while preserving template headings and identifying the PR and branch.
-- Never edit repository source or begin remediation. Return validation, verdict, findings, PR/branch, corrective-Step state, and readiness to the orchestrator.
-- In `remediation-enabled` mode, actionable findings create exactly one Step with `taskctl step add --pr <pr-id> --title "Address PR review findings"`; append that returned Step's exact detailed heading under the PR in `plan.md`, referencing every finding in `review.md`. Add no Step without findings, and return control for automatic orchestrator remediation.
-- In `verification` mode, never add a corrective Step or trigger automatic remediation. Record and report any remaining findings for explicit user direction; this mode ends the automatic review cycle.
+- Replace the supplied `review.md` review content with the evidence-backed, mode-scoped review while preserving its template headings and identifying the PR and branch. Do not retain stale review prose.
+- Never edit repository source or begin remediation. Return validation, verdict, findings, PR/branch, and accepted corrective-Step context when applicable.
+- In `remediation-enabled` mode, report actionable findings to the orchestrator; it alone decides and creates the single corrective Step. With no findings, approve and create no lifecycle state.
+- In `verification` mode, report remaining findings for explicit user direction. Never request or trigger automatic remediation; this mode ends the automatic review cycle.
 
 ## Review Passes
 
@@ -66,7 +66,21 @@ Raise a finding only when it is real or highly likely, causes meaningful harm, h
 - **[P2] Medium**: meaningful but non-blocking risk
 - **[P3] Low**: valid low-impact improvement
 
-For each finding include severity, title, `path:line`, impact, evidence, and a specific fix. If there are no actionable issues, approve directly.
+For each finding include a stable finding ID plus severity, title, `path:line`, impact, evidence, and a specific fix. If there are no actionable issues, approve directly.
+
+## Structured Handoff
+
+End with a machine-actionable block containing:
+
+- `status: review_complete` or `status: blocked`
+- `mode: remediation-enabled`, `verification`, or `ad-hoc`
+- `verdict: approved` or `actionable_findings` when complete
+- Task/PR IDs and branch when Task-backed
+- `review_path` when Task-backed
+- `findings`: every finding ID and severity, or `[]`
+- validation performed and residual risk
+
+The findings list must exactly account for the actionable findings written to `review.md`. A blocked result must name each exact missing field or concrete blocker.
 
 ## Final Check
 

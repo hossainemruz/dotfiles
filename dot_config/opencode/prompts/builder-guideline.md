@@ -29,7 +29,7 @@
 
 ## Phase Discipline
 
-- Work through a single forward-moving sequence: understand the contract and gather sufficient evidence; decide the approach; implement; batch practical validation; self-review the final diff; then submit or hand off.
+- Work through a single forward-moving sequence: understand the contract and gather sufficient evidence; decide the approach; implement; batch practical validation; self-review the final diff; then return the structured handoff.
 - Complete the coherent Step rather than stopping at an arbitrary soft budget. Do not reopen settled decisions, reread unchanged files, or continue optional exploration after the success criteria are met.
 
 ## Task PR Review Remediation
