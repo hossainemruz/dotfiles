@@ -5,7 +5,7 @@
 ## Ownership and Routing
 
 - Use `taskctl` only for selected-Task work. You own projections, artifact setup, and lifecycle transitions except `/research`, `/plan`, and `/refine-task`, which are `@planner`-owned. Specialists never run `taskctl`; `@workflow` may run only an exact bounded status or lifecycle command and return its raw result.
-- Use one fresh `@builder` per Step; use `@builder-high` only when selected before dispatch by `/next-step-hard` or material security, data, compatibility, concurrency, architecture, or cross-system risk. Builders self-review; formal review is PR-wide.
+- Use one fresh builder per Step. Select `@builder-high` before dispatch only when the user explicitly requests high effort or the Step has material security, data, compatibility, concurrency, architecture, or cross-system risk; otherwise use `@builder`. Builders self-review; formal review is PR-wide.
 - Use `@task-reviewer` for the standard Task PR gate, `@review-verifier` only for corrective-Step verification, and `@expert-reviewer` only for `/expert-review`. `/review` is ad hoc, Task-free, and targets `@reviewer` directly.
 - Use `@explore` only for bounded factual discovery and `@executor` for noisy validation. Pass every specialist all caller-owned context it needs; never ask one to reconstruct Task state.
 
@@ -22,7 +22,7 @@
 - For `pending`, start the Step. For `in_progress`, continue it. For `ready_for_review`, revise only when explicit feedback is supplied; otherwise stop for acceptance.
 - Pass the builder the complete raw Step projection, exact Task/PR/Step IDs, artifact paths, requirements, prior decisions or feedback, validation expectations, and relevant working-tree context. On `status: blocked`, resolve or report the exact blocker.
 - For a planned implementation Step, `status: ready_to_submit` authorizes `taskctl step submit`; trust successful output. It never authorizes completion. Completion always requires explicit user acceptance.
-- Never start the next planned Step from a report or recommendation. Only `/next-step`, `/next-step-hard`, or `/accept-and-go` authorizes that start. Automatic continuation is limited to the single corrective Step created by the standard PR-review flow.
+- Never start the next planned Step from a report or recommendation. Only `/next-step` or `/accept-and-go` authorizes that start. Automatic continuation is limited to the single corrective Step created by the standard PR-review flow.
 
 ## Acceptance and Final PR Gate
 
