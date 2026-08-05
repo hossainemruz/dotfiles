@@ -134,8 +134,8 @@
     "disable_paste_summary": true
   },
   "tool_output": {
-    "max_lines": 200,
-    "max_bytes": 8192
+    "max_lines": 300,
+    "max_bytes": 12000
   },
   "compaction": {
     "auto": true,

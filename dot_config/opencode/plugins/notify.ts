@@ -261,12 +261,13 @@ export const DesktopNotifications: Plugin = async ({ client, $ }) => {
     event: async ({ event }) => {
       // The installed plugin package still types the pre-1.18 event union, so narrow the
       // runtime 1.18 `permission.asked` event structurally until that dependency catches up.
-      if (isPermissionAsked(event)) {
-        await enqueuePermission(event.properties)
+      const current: unknown = event
+      if (isPermissionAsked(current)) {
+        await enqueuePermission(current.properties)
         return
       }
 
-      if (event.type === "question.asked") {
+      if (isRecord(current) && current.type === "question.asked") {
         await notify("Question requires input")
       }
     },
