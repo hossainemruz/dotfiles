@@ -13,6 +13,21 @@ type PermissionRequest = {
   metadata?: Record<string, unknown>
 }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null
+}
+
+function isPermissionAsked(event: unknown): event is {
+  type: "permission.asked"
+  properties: PermissionRequest
+} {
+  if (!isRecord(event) || event.type !== "permission.asked" || !isRecord(event.properties)) {
+    return false
+  }
+
+  return typeof event.properties.id === "string" && typeof event.properties.sessionID === "string"
+}
+
 const appleScript = String.raw`
 on run argv
   set dialogTitle to item 1 of argv
@@ -244,21 +259,14 @@ export const DesktopNotifications: Plugin = async ({ client, $ }) => {
 
   return {
     event: async ({ event }) => {
-      const current = event as unknown as {
-        type: string
-        properties?: PermissionRequest
-      }
-
-      if (
-        (current.type === "permission.asked" || current.type === "permission.updated") &&
-        current.properties?.id &&
-        current.properties.sessionID
-      ) {
-        await enqueuePermission(current.properties)
+      // The installed plugin package still types the pre-1.18 event union, so narrow the
+      // runtime 1.18 `permission.asked` event structurally until that dependency catches up.
+      if (isPermissionAsked(event)) {
+        await enqueuePermission(event.properties)
         return
       }
 
-      if (current.type === "question.asked") {
+      if (event.type === "question.asked") {
         await notify("Question requires input")
       }
     },

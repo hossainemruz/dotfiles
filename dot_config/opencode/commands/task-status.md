@@ -4,4 +4,4 @@ agent: workflow
 subtask: true
 ---
 
-Run `taskctl status` and concisely report Task/PR/Step progress, current work, artifacts, skip reasons, vault Git state, and the appropriate next command among `/next-step`, `/accept-step`, `/review-pr`, and `/address-review`. Distinguish the deferred final-Step `remediation-enabled` review, automatic corrective builder remediation, and pre-submission verification. Remaining verification findings return automatically to the same corrective builder workstream; a ready corrective Step requires matching durable verification approval before `/accept-step`. Do not modify files or lifecycle state.
+Run `taskctl status` and concisely report Task/PR/Step progress, current work, artifacts, skip reasons, vault Git state, and applicable next commands among `/next-step`, `/next-step-hard`, `/accept-step`, `/accept-and-go`, `/review-pr`, and `/address-review`. Distinguish normal implementation, the final PR gate, and corrective remediation without restating their protocols. Do not modify files or lifecycle state.

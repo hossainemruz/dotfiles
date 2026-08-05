@@ -1,6 +1,6 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "autoupdate": true,
+  "autoupdate": "notify",
   "enabled_providers": [
     "deepseek",
     "openai"
@@ -12,9 +12,6 @@
       }
     }
   },
-  "instructions": [
-    "./prompts/markdown-style.md"
-  ],
   "lsp": true,
   "mcp": {
     "fff": {
@@ -132,13 +129,13 @@
     }
   },
   "model": "openai/gpt-5.6-terra",
-  "default_agent": "orchestrator",
+  "default_agent": "general",
   "experimental": {
     "disable_paste_summary": true
   },
   "tool_output": {
-    "max_lines": 300,
-    "max_bytes": 12000
+    "max_lines": 200,
+    "max_bytes": 8192
   },
   "compaction": {
     "auto": true,
@@ -153,8 +150,31 @@
     "build": {
       "disable": true
     },
+    "general": {
+      "description": "Lean default primary agent for ordinary advice, investigation, and implementation",
+      "model": "openai/gpt-5.6-terra",
+      "mode": "primary",
+      "variant": "high",
+      "permission": {
+        "question": "allow",
+        "todowrite": "allow",
+        "bash": {
+          "*taskctl*": "deny"
+        },
+        "task": {
+          "*": "deny",
+          "explore": "allow",
+          "executor": "allow",
+          "builder": "allow",
+          "builder-high": "allow",
+          "simplifier": "allow",
+          "reviewer": "allow"
+        }
+      },
+      "prompt": "{file:./prompts/engineering-voice.md}\n\n{file:./prompts/general-guideline.md}\n\n{file:./prompts/tool-routing.md}\n\n{file:./prompts/markdown-style.md}"
+    },
     "orchestrator": {
-      "description": "Cost-conscious primary orchestrator for normal use and specialist handoffs",
+      "description": "Task-focused primary control plane for taskctl lifecycle, review, and remediation",
       "model": "openai/gpt-5.6-terra",
       "mode": "primary",
       "variant": "high",
@@ -170,12 +190,12 @@
           "builder": "allow",
           "builder-high": "allow",
           "simplifier": "allow",
-          "reviewer": "allow",
+          "task-reviewer": "allow",
           "review-verifier": "allow",
           "expert-reviewer": "allow"
         }
       },
-      "prompt": "{file:./prompts/engineering-voice.md}\n\n{file:./prompts/orchestrator-guideline.md}\n\n{file:./prompts/tool-routing.md}"
+      "prompt": "{file:./prompts/engineering-voice.md}\n\n{file:./prompts/orchestrator-guideline.md}\n\n{file:./prompts/tool-routing.md}\n\n{file:./prompts/markdown-style.md}"
     },
     "builder": {
       "description": "Default implementation agent for well-scoped non-trivial coding",
@@ -193,7 +213,7 @@
           "executor": "allow"
         }
       },
-      "prompt": "{file:./prompts/engineering-voice.md}\n\n{file:./prompts/builder-guideline.md}\n\n{file:./prompts/tool-routing.md}"
+      "prompt": "{file:./prompts/engineering-voice.md}\n\n{file:./prompts/builder-guideline.md}\n\n{file:./prompts/tool-routing.md}\n\n{file:./prompts/markdown-style.md}"
     },
     "builder-high": {
       "description": "High-effort implementation agent for security, data, compatibility, concurrency, architectural, or cross-system risk",
@@ -212,7 +232,7 @@
           "executor": "allow"
         }
       },
-      "prompt": "{file:./prompts/engineering-voice.md}\n\n{file:./prompts/builder-guideline.md}\n\n{file:./prompts/tool-routing.md}"
+      "prompt": "{file:./prompts/engineering-voice.md}\n\n{file:./prompts/builder-guideline.md}\n\n{file:./prompts/tool-routing.md}\n\n{file:./prompts/markdown-style.md}"
     },
     "planner": {
       "description": "Research and structured implementation planning subagent",
@@ -233,7 +253,7 @@
           "executor": "allow"
         }
       },
-      "prompt": "{file:./prompts/engineering-voice.md}\n\n{file:./skills/planning/SKILL.md}"
+      "prompt": "{file:./prompts/engineering-voice.md}\n\n{file:./skills/planning/SKILL.md}\n\n{file:./prompts/markdown-style.md}"
     },
     "explore": {
       "description": "Read-only codebase evidence retrieval; no implementation recommendations",
@@ -258,7 +278,18 @@
       "hidden": true,
       "steps": 4,
       "permission": {
+        "read": "deny",
         "edit": "deny",
+        "glob": "deny",
+        "grep": "deny",
+        "list": "deny",
+        "lsp": "deny",
+        "webfetch": "deny",
+        "websearch": "deny",
+        "question": "deny",
+        "skill": "deny",
+        "todowrite": "deny",
+        "fff_*": "deny",
         "bash": {
           "*taskctl*": "deny"
         },
@@ -275,6 +306,16 @@
       "permission": {
         "read": "deny",
         "edit": "deny",
+        "glob": "deny",
+        "grep": "deny",
+        "list": "deny",
+        "lsp": "deny",
+        "webfetch": "deny",
+        "websearch": "deny",
+        "question": "deny",
+        "skill": "deny",
+        "todowrite": "deny",
+        "fff_*": "deny",
         "bash": {
           "*": "deny",
           "taskctl *": "allow"
@@ -295,10 +336,30 @@
           "executor": "allow"
         }
       },
-      "prompt": "{file:./skills/simplify/SKILL.md}"
+      "prompt": "{file:./skills/simplify/SKILL.md}\n\n{file:./prompts/markdown-style.md}"
     },
     "reviewer": {
-      "description": "Automated risk-adaptive multi-pass code review agent",
+      "description": "Ad hoc source-read-only review of caller-scoped or working-tree changes",
+      "model": "openai/gpt-5.6-sol",
+      "variant": "high",
+      "mode": "subagent",
+      "hidden": true,
+      "steps": 40,
+      "permission": {
+        "bash": {
+          "*taskctl*": "deny"
+        },
+        "edit": "deny",
+        "task": {
+          "*": "deny",
+          "explore": "allow",
+          "executor": "allow"
+        }
+      },
+      "prompt": "{file:./prompts/engineering-voice.md}\n\n{file:./skills/code-review/SKILL.md}"
+    },
+    "task-reviewer": {
+      "description": "Full-PR Task review that records remediation-enabled findings in review.md",
       "model": "openai/gpt-5.6-sol",
       "variant": "high",
       "mode": "subagent",
@@ -321,7 +382,7 @@
           "executor": "allow"
         }
       },
-      "prompt": "{file:./prompts/engineering-voice.md}\n\n{file:./skills/code-review/SKILL.md}"
+      "prompt": "{file:./prompts/engineering-voice.md}\n\n{file:./skills/code-review/SKILL.md}\n\n{file:./prompts/task-review-guideline.md}\n\n{file:./prompts/markdown-style.md}"
     },
     "review-verifier": {
       "description": "Pre-submission verification of in-progress Task PR review remediation",
@@ -346,10 +407,10 @@
           "executor": "allow"
         }
       },
-      "prompt": "{file:./prompts/engineering-voice.md}\n\n{file:./skills/code-review/SKILL.md}"
+      "prompt": "{file:./prompts/review-verifier-guideline.md}\n\n{file:./prompts/markdown-style.md}"
     },
     "expert-reviewer": {
-      "description": "In-depth PR-level review with premium model",
+      "description": "Expert-depth source-read-only review for Task PRs or ad hoc scopes",
       "model": "openai/gpt-5.6-sol",
       "variant": "xhigh",
       "mode": "subagent",
@@ -372,7 +433,7 @@
           "executor": "allow"
         }
       },
-      "prompt": "{file:./prompts/engineering-voice.md}\n\n{file:./prompts/expert-reviewer-guideline.md}"
+      "prompt": "{file:./skills/code-review/SKILL.md}\n\n{file:./prompts/task-review-guideline.md}\n\n{file:./prompts/expert-reviewer-guideline.md}\n\n{file:./prompts/markdown-style.md}"
     }
   }
 }

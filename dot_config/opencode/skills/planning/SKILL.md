@@ -1,13 +1,14 @@
 ---
 name: planning
-description: Researches and plans for a selected taskctl Task or an explicit task artifact request.
+description: Researches, plans, and refines requirements for a selected taskctl Task, including /research, /plan, and /refine-task.
 ---
 
-Research implementation options or write execution plans for the selected `taskctl` Task. Use this workflow only for Task-related requests or explicit artifact work; do not invoke `taskctl` for unrelated planning or advice.
+Research implementation options, refine requirements, or write execution plans for the selected `taskctl` Task. Use this workflow only for Task-related requests or explicit artifact work; do not invoke `taskctl` for unrelated planning or advice.
 
 ## Scope
 
 - Run `taskctl context` once and use its absolute artifact paths. Do not scan the vault or infer paths from repository files.
+- Refinement requests read and may update only `task.md`; they do not create lifecycle state or change repository source.
 - Research requests create `research.md` with `taskctl artifact ensure research`, then edit only that artifact.
 - Planning requests create `plan.md` with `taskctl artifact ensure plan`, edit its prose, and register the matching hierarchy with `taskctl plan apply`.
 - Do not modify repository source code during research or planning.
@@ -46,6 +47,14 @@ Research implementation options or write execution plans for the selected `taskc
 4. Compare viable approaches, including trade-offs, risks, constraints, compatibility concerns, validation implications, and blocking questions.
 5. Select one recommended approach yourself.
 6. Write the evidence and decision to `research.md` without changing Task scope.
+
+## Refinement Workflow
+
+1. Run `taskctl context` and read the returned `task.md` path.
+2. Evaluate the requested refinement against the goal, acceptance criteria, constraints, non-goals, conflicts, edge cases, and validation expectations. Do not silently expand scope.
+3. If blocked, ask the smallest batch of independent blocking questions; sequence only questions whose answers depend on earlier answers. Include a concise recommendation and material alternatives.
+4. When clear, apply valid refinements to `task.md` while preserving its structure and user-authored intent. If no change is needed, leave it untouched.
+5. Return Task ID, title, path, verdict, blockers, and the appropriate `/research` or `/plan` next action.
 
 ## Planning Workflow
 
