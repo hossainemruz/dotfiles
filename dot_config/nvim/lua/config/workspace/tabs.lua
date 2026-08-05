@@ -1,10 +1,6 @@
 local M = {}
 
 local role_order = { "nvim", "agent", "terminal" }
-local hunk_terminal_config = {
-  count = 1,
-  cmd = { "hunk", "diff", "--watch" },
-}
 
 local workspace = {
   tabs = {},
@@ -142,14 +138,8 @@ local function create_help_buffer(kind)
       "",
       "Workspace tabs:",
       "  Alt-n  Neovim",
-      "  Alt-a  Agent + Hunk",
+      "  Alt-a  Agent",
       "  Alt-t  Terminal",
-    }
-  elseif kind == "hunk" then
-    lines = {
-      "Hunk watcher is not running.",
-      "",
-      "Focus the agent tab again to retry.",
     }
   else
     lines = {
@@ -462,18 +452,6 @@ local function cancel_neotree_requests()
   end
 end
 
-local function terminal_job_id(terminal)
-  if not terminal or not terminal:buf_valid() then
-    return nil
-  end
-  local ok, job_id = pcall(function()
-    return vim.b[terminal.buf].terminal_job_id
-  end)
-  if ok and type(job_id) == "number" and job_id > 0 then
-    return job_id
-  end
-end
-
 local function job_is_running(job_id)
   if type(job_id) ~= "number" or job_id <= 0 then
     return false
@@ -482,120 +460,38 @@ local function job_is_running(job_id)
   return ok and result[1] == -1
 end
 
-local function terminal_is_running(terminal)
-  return job_is_running(terminal_job_id(terminal))
-end
-
-local function stop_terminal_job(terminal)
-  local job_id = terminal_job_id(terminal)
-  if job_is_running(job_id) then
-    pcall(vim.fn.jobstop, job_id)
-  end
-end
-
-local function detach_terminal_window(terminal)
-  if terminal and terminal.win and not terminal:valid() then
-    terminal.win = nil
-  end
-end
-
-local function close_terminal(terminal)
-  if not terminal then
-    return
-  end
-  stop_terminal_job(terminal)
-  detach_terminal_window(terminal)
-  if terminal:buf_valid() then
-    pcall(terminal.close, terminal)
-  end
-end
-
-local function get_hunk_terminal(create)
-  local opts = {
-    count = hunk_terminal_config.count,
-    cwd = workspace.cwd,
-    interactive = false,
-    auto_close = false,
-    auto_insert = false,
-    start_insert = false,
-    win = {
-      position = "current",
-      bo = {
-        bufhidden = "hide",
-      },
-      wo = {
-        winbar = "hunk",
-      },
-    },
-  }
-  if create ~= nil then
-    opts.create = create
-  end
-  return Snacks.terminal.get(hunk_terminal_config.cmd, opts)
-end
-
-local function resize_agent_panes()
+local function agent_pane_is_valid()
   local tabpage = workspace.tabs.agent
-  if not window_in_tabpage(workspace.agent_win, tabpage) or not window_in_tabpage(workspace.hunk_win, tabpage) then
-    return
-  end
-  local total_width = vim.api.nvim_win_get_width(workspace.agent_win)
-    + vim.api.nvim_win_get_width(workspace.hunk_win)
-    + 1
-  local agent_width = math.max(vim.o.winminwidth, math.floor(total_width * 0.5))
-  if vim.api.nvim_win_get_width(workspace.agent_win) ~= agent_width then
-    pcall(vim.api.nvim_win_set_width, workspace.agent_win, agent_width)
-  end
-end
-
-local function agent_layout_is_valid()
-  local tabpage = workspace.tabs.agent
-  if
-    not valid_tabpage(tabpage)
-    or not window_in_tabpage(workspace.agent_win, tabpage)
-    or not window_in_tabpage(workspace.hunk_win, tabpage)
-    or workspace.agent_win == workspace.hunk_win
-  then
+  if not valid_tabpage(tabpage) or not window_in_tabpage(workspace.agent_win, tabpage) then
     return false
   end
 
   local wins = vim.api.nvim_tabpage_list_wins(tabpage)
-  if #wins ~= 2 then
+  if #wins ~= 1 then
     return false
   end
 
   local agent_config = vim.api.nvim_win_get_config(workspace.agent_win)
-  local hunk_config = vim.api.nvim_win_get_config(workspace.hunk_win)
-  if agent_config.relative ~= "" or hunk_config.relative ~= "" then
-    return false
-  end
-
-  local agent_position = vim.api.nvim_win_get_position(workspace.agent_win)
-  local hunk_position = vim.api.nvim_win_get_position(workspace.hunk_win)
-  return agent_position[1] == hunk_position[1] and agent_position[2] < hunk_position[2]
+  return agent_config.relative == ""
 end
 
-local function ensure_agent_layout()
+local function ensure_agent_pane()
   local tabpage = workspace.tabs.agent
   if not valid_tabpage(tabpage) then
     return false
   end
 
   local wins = vim.api.nvim_tabpage_list_wins(tabpage)
-  if agent_layout_is_valid() then
-    resize_agent_panes()
+  if agent_pane_is_valid() then
     return false
   end
 
   if workspace.agent_manager then
     workspace.agent_manager.detach_window()
   end
-  if workspace.hunk_terminal then
-    workspace.hunk_terminal.win = nil
-  end
 
   vim.api.nvim_set_current_tabpage(tabpage)
-  local base = wins[1]
+  local base = window_in_tabpage(workspace.agent_win, tabpage) and workspace.agent_win or wins[1]
   if not base then
     vim.cmd("enew")
     base = vim.api.nvim_get_current_win()
@@ -610,73 +506,6 @@ local function ensure_agent_layout()
   workspace.agent_win = base
   show_help(workspace.agent_win, "agent")
   vim.api.nvim_set_current_win(workspace.agent_win)
-  vim.cmd("rightbelow vnew")
-  workspace.hunk_win = vim.api.nvim_get_current_win()
-  show_help(workspace.hunk_win, "hunk")
-  resize_agent_panes()
-  return true
-end
-
-local function register_hunk_terminal(terminal)
-  if not terminal or not terminal:buf_valid() or vim.b[terminal.buf].workspace_hunk_registered then
-    return
-  end
-  vim.b[terminal.buf].workspace_hunk_registered = true
-  vim.api.nvim_create_autocmd("TermClose", {
-    group = workspace.augroup,
-    buffer = terminal.buf,
-    once = true,
-    callback = function()
-      vim.schedule(function()
-        if workspace.cleaning or workspace.exiting or workspace.hunk_terminal ~= terminal then
-          return
-        end
-        terminal.win = nil
-        workspace.hunk_terminal = nil
-        if window_in_tabpage(workspace.hunk_win, workspace.tabs.agent) then
-          show_help(workspace.hunk_win, "hunk")
-        end
-      end)
-    end,
-  })
-end
-
-local function start_hunk_watcher()
-  local tabpage = workspace.tabs.agent
-  if not valid_tabpage(tabpage) or not window_in_tabpage(workspace.hunk_win, tabpage) then
-    return false
-  end
-  vim.api.nvim_set_current_tabpage(tabpage)
-  vim.api.nvim_set_current_win(workspace.hunk_win)
-
-  local watcher = workspace.hunk_terminal
-  if watcher and not terminal_is_running(watcher) then
-    close_terminal(watcher)
-    watcher = nil
-  end
-  watcher = watcher or get_hunk_terminal(false)
-  if watcher and not terminal_is_running(watcher) then
-    close_terminal(watcher)
-    watcher = nil
-  end
-  if not watcher then
-    watcher = get_hunk_terminal()
-  else
-    detach_terminal_window(watcher)
-    watcher:show()
-  end
-
-  if not watcher or not terminal_is_running(watcher) or not window_shows_buffer(watcher.win, tabpage, watcher.buf) then
-    if watcher then
-      close_terminal(watcher)
-    end
-    show_help(workspace.hunk_win, "hunk")
-    return false
-  end
-
-  workspace.hunk_terminal = watcher
-  workspace.hunk_win = watcher.win
-  register_hunk_terminal(watcher)
   return true
 end
 
@@ -848,12 +677,11 @@ local function ensure_workspace(initial)
   end
 
   if agent_was_missing then
-    local tabpage, win = create_tab_after(workspace.tabs.nvim, "agent")
+    local tabpage = create_tab_after(workspace.tabs.nvim, "agent")
     workspace.tabs.agent = tabpage
-    workspace.agent_win = win
-    workspace.hunk_win = nil
+    workspace.agent_win = nil
   end
-  local agent_layout_rebuilt = ensure_agent_layout()
+  local agent_pane_rebuilt = ensure_agent_pane()
 
   if terminal_was_missing then
     local tabpage, win = create_tab_after(workspace.tabs.agent, "terminal")
@@ -880,14 +708,6 @@ local function ensure_workspace(initial)
     end
   end
 
-  if
-    not workspace.hunk_terminal
-    or not terminal_is_running(workspace.hunk_terminal)
-    or not window_shows_buffer(workspace.hunk_terminal.win, workspace.tabs.agent, workspace.hunk_terminal.buf)
-  then
-    start_hunk_watcher()
-  end
-
   for _, role in ipairs(role_order) do
     set_tab_role(workspace.tabs[role], role)
   end
@@ -895,7 +715,7 @@ local function ensure_workspace(initial)
 
   workspace.ready = true
   workspace.initializing = false
-  if workspace.agent_manager and (initial or agent_was_missing or agent_layout_rebuilt) then
+  if workspace.agent_manager and (initial or agent_was_missing or agent_pane_rebuilt) then
     workspace.agent_manager.ensure_visible({ default = initial and "opencode" or nil })
   end
 
@@ -985,13 +805,6 @@ local function focus_role(role)
     end
     vim.api.nvim_set_current_tabpage(tabpage)
     if role == "agent" then
-      if
-        not workspace.hunk_terminal
-        or not terminal_is_running(workspace.hunk_terminal)
-        or not window_shows_buffer(workspace.hunk_terminal.win, tabpage, workspace.hunk_terminal.buf)
-      then
-        start_hunk_watcher()
-      end
       if not workspace.agent_manager or not workspace.agent_manager.focus() then
         vim.api.nvim_set_current_win(workspace.agent_win)
       end
@@ -1025,10 +838,6 @@ function M.cleanup(opts)
     pcall(vim.api.nvim_del_augroup_by_id, workspace.augroup)
     workspace.augroup = nil
   end
-  if workspace.hunk_terminal then
-    close_terminal(workspace.hunk_terminal)
-    workspace.hunk_terminal = nil
-  end
   stop_shell()
 
   local nvim_tabpage = workspace.tabs.nvim
@@ -1051,37 +860,10 @@ function M.setup(opts)
     group = workspace.augroup,
     callback = M.schedule_repair,
   })
-  vim.api.nvim_create_autocmd({ "VimResized", "WinResized" }, {
-    group = workspace.augroup,
-    callback = function()
-      vim.schedule(function()
-        if agent_layout_is_valid() then
-          resize_agent_panes()
-        else
-          M.schedule_repair()
-        end
-      end)
-    end,
-  })
-  vim.api.nvim_create_autocmd("WinScrolled", {
-    group = workspace.augroup,
-    callback = function(args)
-      local changes = args.data or vim.v.event.all or {}
-      local size_changed = (changes.width or 0) ~= 0 or (changes.height or 0) ~= 0
-      if current_tabpage() ~= workspace.tabs.agent or not size_changed then
-        return
-      end
-      if agent_layout_is_valid() then
-        vim.schedule(resize_agent_panes)
-      else
-        M.schedule_repair()
-      end
-    end,
-  })
   vim.api.nvim_create_autocmd({ "TabEnter", "WinEnter" }, {
     group = workspace.augroup,
     callback = function()
-      if current_tabpage() == workspace.tabs.agent and not agent_layout_is_valid() then
+      if current_tabpage() == workspace.tabs.agent and not agent_pane_is_valid() then
         M.schedule_repair()
       end
     end,
