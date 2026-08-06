@@ -466,13 +466,15 @@ local function agent_pane_is_valid()
     return false
   end
 
-  local wins = vim.api.nvim_tabpage_list_wins(tabpage)
-  if #wins ~= 1 then
-    return false
+  local normal_windows = 0
+  for _, win in ipairs(vim.api.nvim_tabpage_list_wins(tabpage)) do
+    if vim.api.nvim_win_get_config(win).relative == "" then
+      normal_windows = normal_windows + 1
+    end
   end
 
   local agent_config = vim.api.nvim_win_get_config(workspace.agent_win)
-  return agent_config.relative == ""
+  return normal_windows == 1 and agent_config.relative == ""
 end
 
 local function ensure_agent_pane()
@@ -856,9 +858,27 @@ function M.setup(opts)
   workspace.agent_manager = opts.agent_manager
   workspace.cleanup = opts.cleanup
   workspace.augroup = vim.api.nvim_create_augroup("workspace_tabs", { clear = true })
-  vim.api.nvim_create_autocmd({ "TabClosed", "WinClosed", "WinNew" }, {
+  vim.api.nvim_create_autocmd("TabClosed", {
     group = workspace.augroup,
     callback = M.schedule_repair,
+  })
+  vim.api.nvim_create_autocmd("WinNew", {
+    group = workspace.augroup,
+    callback = function(args)
+      local win = tonumber(args.match) or vim.api.nvim_get_current_win()
+      if vim.api.nvim_win_is_valid(win) and vim.api.nvim_win_get_config(win).relative == "" then
+        M.schedule_repair()
+      end
+    end,
+  })
+  vim.api.nvim_create_autocmd("WinClosed", {
+    group = workspace.augroup,
+    callback = function(args)
+      local win = tonumber(args.match)
+      if win == workspace.nvim_win or win == workspace.agent_win or win == workspace.shell_win then
+        M.schedule_repair()
+      end
+    end,
   })
   vim.api.nvim_create_autocmd({ "TabEnter", "WinEnter" }, {
     group = workspace.augroup,
