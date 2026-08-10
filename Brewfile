@@ -13,6 +13,7 @@ brew "mise"
 brew "neovim"
 brew "starship"
 brew "watch"
+brew "zsh-autosuggestions"
 brew "zsh-syntax-highlighting"
 
 # AI developer CLIs.
