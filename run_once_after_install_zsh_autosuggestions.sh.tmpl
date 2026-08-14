@@ -1,9 +1,0 @@
-{{ if and (eq .chezmoi.os "linux") (or (eq .chezmoi.osRelease.id "arch") (eq .chezmoi.osRelease.idLike "arch")) -}}
-#!/bin/bash
-
-set -euo pipefail
-
-if ! pacman -Q zsh-autosuggestions >/dev/null 2>&1; then
-  sudo pacman -S --needed --noconfirm zsh-autosuggestions
-fi
-{{ end }}

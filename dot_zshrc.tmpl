@@ -66,39 +66,10 @@ __set_ghostty_title() {
 autoload -Uz add-zsh-hook
 add-zsh-hook precmd __set_ghostty_title
 
-# Aliases.
-alias gg='lazygit'
-alias j='autojump'
-alias yz='yazi'
-alias dot='chezmoi'
-alias gcm='git checkout main && git fetch --all && git reset --hard origin/main'
-alias gs='git switch'
-alias gomodup='go get -u ./... && go mod tidy'
-
-if command -v zeditor >/dev/null 2>&1; then
-  alias zed='zeditor'
+# Personal aliases shared with Bash.
+if [[ -r "$HOME/.config/shell/aliases" ]]; then
+  source "$HOME/.config/shell/aliases"
 fi
-
-# kubectl helpers.
-alias ctx='kubectx'
-alias k='kubectl'
-alias kd='kubectl describe'
-alias kdel='kubectl delete'
-alias ke='kubectl exec -it'
-alias kg='kubectl get'
-alias kl='kubectl logs'
-alias klf='kubectl logs -f'
-alias kns='kubens'
-alias kw='watch -n 1'
-alias ky='kubectl get -oyaml'
-alias kpf='kubectl port-forward'
-
-# Plannotator commands.
-alias pa='plannotator annotate'
-alias review='plannotator review'
-alias review-plan='plannotator annotate .agents/tasks/plan.md'
-alias review-task='plannotator annotate .agents/tasks/task.md'
-alias review-feedback='plannotator annotate .agents/tasks/review.md'
 
 # Set KUBECONFIG based on active Zellij tab.
 if [[ -n "${ZELLIJ:-}" ]] && command -v zellij >/dev/null 2>&1 && command -v jq >/dev/null 2>&1; then
@@ -167,6 +138,24 @@ HISTFILE="$HOME/.zsh_history"
 HISTSIZE=10000
 SAVEHIST=10000
 setopt append_history share_history hist_ignore_dups
+
+# Load Omarchy's aliases and functions that are compatible with Zsh.
+if [[ -r "$HOME/.local/share/omarchy/default/bash/aliases" ]]; then
+  if command -v zoxide >/dev/null 2>&1; then
+    eval "$(zoxide init zsh)"
+  fi
+  source "$HOME/.local/share/omarchy/default/bash/aliases"
+fi
+
+# Personal aliases shared with Bash.
+if [[ -r "$HOME/.config/shell/aliases" ]]; then
+  source "$HOME/.config/shell/aliases"
+fi
+
+# Prompt.
+if command -v starship >/dev/null 2>&1; then
+  eval "$(starship init zsh)"
+fi
 
 # Show Fish-style inline suggestions based on command history.
 if [[ -r /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ]]; then

@@ -1,0 +1,32 @@
+# Personal aliases shared by Bash and Zsh.
+alias gg='lazygit'
+alias j='autojump'
+alias yz='yazi'
+alias dot='chezmoi'
+if command -v zeditor >/dev/null 2>&1; then
+  alias zed='zeditor'
+fi
+alias gcm='git checkout main && git fetch --all && git reset --hard origin/main'
+alias gs='git switch'
+alias gomodup='go get -u ./... && go mod tidy'
+
+# kubectl helpers.
+alias ctx='kubectx'
+alias k='kubectl'
+alias kd='kubectl describe'
+alias kdel='kubectl delete'
+alias ke='kubectl exec -it'
+alias kg='kubectl get'
+alias kl='kubectl logs'
+alias klf='kubectl logs -f'
+alias kns='kubens'
+alias kw='watch -n 1'
+alias ky='kubectl get -oyaml'
+alias kpf='kubectl port-forward'
+
+# Plannotator commands.
+alias pa='plannotator annotate'
+alias review='plannotator review'
+alias review-plan='plannotator annotate .agents/tasks/plan.md'
+alias review-task='plannotator annotate .agents/tasks/task.md'
+alias review-feedback='plannotator annotate .agents/tasks/review.md'
