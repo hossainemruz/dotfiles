@@ -31,7 +31,6 @@ run_once_install_webapps.sh
 .hammerspoon/
 Library/LaunchAgents/com.hossainemruz.dagu.plist
 .zprofile
-.zshrc
 activate_dagu_launchd.sh
 run_once_before_install_homebrew.sh
 {{ end -}}

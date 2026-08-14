@@ -158,4 +158,20 @@ fi
 if command -v brew >/dev/null 2>&1 && [[ -r "$(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]]; then
   source "$(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 fi
+{{ else if eq .chezmoi.os "linux" -}}
+# If not running interactively, don't do anything.
+[[ -o interactive ]] || return
+
+# Persist command history so autosuggestions remain useful across sessions.
+HISTFILE="$HOME/.zsh_history"
+HISTSIZE=10000
+SAVEHIST=10000
+setopt append_history share_history hist_ignore_dups
+
+# Show Fish-style inline suggestions based on command history.
+if [[ -r /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ]]; then
+  source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+elif [[ -r /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]]; then
+  source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+fi
 {{ end }}

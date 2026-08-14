@@ -4,15 +4,14 @@
 # Directories are created only if they don't exist (using mkdir -p)
 # Hierarchy:
 # $HOME
-# ├── work
-# │   ├── projects
-# ├── personal
-# │   ├── projects
+# ├── Projects
+# │   ├── personal
+#     |-- qdrant
 
 # Define the relative paths for the hierarchy under $HOME
 declare -a paths=(
-  "work/projects"
-  "personal/projects"
+  "Projects/personal"
+  "Projects/qdrant"
 )
 
 # Create each path in the hierarchy
