@@ -1,25 +1,9 @@
--- Windows-style ALT+TAB for Hyprland: cycle every window on every workspace,
--- most recently used first. Hold ALT, tap TAB to move down the list, release
--- ALT to jump to the highlighted window. ALT+SHIFT+TAB moves back up, ESCAPE
--- cancels.
---
--- Load it from ~/.config/hypr/bindings.lua:
---
---   dofile(os.getenv("HOME") .. "/.config/omarchy/plugins/io.github.pablo-merino.altswitch/altswitch.lua")
---
--- This half owns all the state and all the keys. The list is drawn by the
--- companion shell plugin, which renders what it is told and nothing else.
---
--- Two details that make it behave like Windows rather than like `cyclenext`:
---   * The list is snapshotted when the switch starts and then frozen, so the
---     order cannot shuffle underneath you while you are tabbing through it.
---   * Selection is virtual. Focus moves once, on commit. Focusing on every tap
---     would drag you across workspaces on the way past.
+-- Cross-workspace window switcher ordered by most recently used. Hold SUPER,
+-- tap J or K to move through the list, and release SUPER to focus the selected
+-- window. SUPER+ESCAPE cancels.
 
 local altswitch = { windows = {}, index = 1, active = false }
 
--- Single-quote a string for the shell. Omarchy's config helpers provide this,
--- but this file also has to work without them.
 local function shell_quote(value)
 	return "'" .. tostring(value):gsub("'", "'\\''") .. "'"
 end
@@ -32,8 +16,6 @@ local function altswitch_send(method, argument)
 	hl.exec_cmd(command)
 end
 
--- Minimal JSON string escaping. Window titles are arbitrary text and routinely
--- contain quotes and backslashes.
 local function altswitch_json_string(value)
 	local escaped = tostring(value or ""):gsub("\\", "\\\\"):gsub('"', '\\"'):gsub("[%c]", function(control)
 		return string.format("\\u%04x", control:byte())
@@ -52,11 +34,7 @@ local function altswitch_payload()
 		)
 	end
 
-	return string.format(
-		'{"windows":[%s],"index":%d}',
-		table.concat(rows, ","),
-		altswitch.index - 1 -- the plugin indexes from zero
-	)
+	return string.format('{"windows":[%s],"index":%d}', table.concat(rows, ","), altswitch.index - 1)
 end
 
 local function altswitch_teardown()
@@ -67,22 +45,13 @@ end
 
 local function altswitch_commit()
 	if not altswitch.active then
-		return -- nothing in flight; the Alt release fires on every switch-less tap
+		return
 	end
 
-	-- Read the address before tearing down. Teardown drops the snapshot, and the
-	-- window handles do not survive it: reading `.address` afterwards throws
-	-- inside the key callback, which silently loses the switch.
 	local target = altswitch.windows[altswitch.index]
 	local address = target and target.address
-
 	altswitch_teardown()
 
-	-- Dispatched out of process on purpose. Focusing directly from inside the key
-	-- callback updates Hyprland's idea of the active window but does not settle
-	-- until the next input event, so the switch looks like it did nothing until
-	-- you tap a key again. Going through hyprctl runs the same dispatcher from
-	-- outside the input callback, where it takes effect at once.
 	if address then
 		local focus = string.format('hl.dsp.focus({ window = "address:%s" })', address)
 		hl.exec_cmd("hyprctl dispatch " .. shell_quote(focus))
@@ -105,7 +74,6 @@ local function altswitch_snapshot()
 end
 
 local function altswitch_step(delta)
-	-- Already switching: just move the cursor, wrapping at both ends.
 	if altswitch.active then
 		altswitch.index = (altswitch.index - 1 + delta) % #altswitch.windows + 1
 		altswitch_send("select", tostring(altswitch.index - 1))
@@ -117,20 +85,14 @@ local function altswitch_step(delta)
 		return
 	end
 
-	-- Entry 1 is the window you are already on, so one tap has to land on entry 2
-	-- and one back-tap has to wrap to the oldest.
 	altswitch.index = delta % #altswitch.windows + 1
 	altswitch.active = true
 	altswitch_send("show", altswitch_payload())
 end
 
--- Self-heal hook for the panel. If the ALT release is ever missed, the panel
--- gives up on its own after a few seconds and calls this, so the two halves
--- cannot disagree about whether a switch is still in progress.
+-- The panel calls this if a modifier-release event is missed.
 _G.__altswitch_cancel = altswitch_teardown
 
--- Omarchy binds ALT+TAB four times by default (cyclenext and bring_to_top, in
--- both directions), so both chords are cleared before rebinding.
 hl.unbind("SUPER + J")
 hl.unbind("SUPER + K")
 hl.bind("SUPER + J", function()
@@ -139,19 +101,14 @@ end, { description = "Switch window" })
 hl.bind("SUPER + K", function()
 	altswitch_step(-1)
 end, { description = "Switch window (reverse)" })
-hl.bind("ALT + ESCAPE", altswitch_teardown, { non_consuming = true, description = "Cancel window switch" })
+hl.bind("SUPER + ESCAPE", altswitch_teardown, { non_consuming = true, description = "Cancel window switch" })
 
--- Committing on ALT release cannot be a keybind. A release bind on a modifier
--- only fires when that modifier is tapped on its own; pressing TAB in between
--- cancels it, which is exactly what every switch does. So the raw key stream is
--- read instead, where the release always shows up.
---
--- 64 is Alt_L and 108 is Alt_R. This runs for every keystroke on the system, so
--- it stays down to two integer compares and a boolean unless a switch is up.
-local ALT_KEYCODES = { [64] = true, [108] = true }
+-- A modifier release bind does not fire after another key is pressed, so read
+-- the raw event stream. These are the XKB keycodes for Super_L and Super_R.
+local SUPER_KEYCODES = { [133] = true, [134] = true }
 
 hl.on("input.keyboard.key", function(keycode, _, state)
-	if state == 0 and altswitch.active and ALT_KEYCODES[keycode] then
+	if state == 0 and altswitch.active and SUPER_KEYCODES[keycode] then
 		altswitch_commit()
 	end
 end)
