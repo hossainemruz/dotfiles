@@ -1,18 +1,12 @@
-{{ if eq .chezmoi.os "linux" -}}
-# Dynamic theme colors
-config-file = ?"~/.config/omarchy/current/theme/ghostty.conf"
-{{ else -}}
-# Omarchy theme files are Linux-only.
-theme = Catppuccin Mocha
-{{ end }}
-
+# Theme
+theme = Ayu
 # Font
 font-family = "JetBrainsMono Nerd Font"
 font-style = Regular
 font-size = 14
 
 # Window
-window-theme = ghostty
+window-theme = auto
 window-padding-x = 4
 window-padding-y = 4
 confirm-close-surface=false
