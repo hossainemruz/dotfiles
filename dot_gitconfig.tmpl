@@ -1,13 +1,9 @@
-{{- $email:= .personal.email -}}
-{{- $gitSigningKey:= .personal.gitSigningKey -}}
-{{- if eq .profile "work" -}}
-  {{- $email = .work.email -}}
-  {{- $gitSigningKey = .work.gitSigningKey -}}
-{{- end -}}
 [user]
-	signingkey = {{ $gitSigningKey }}
+	signingkey = {{ .personal.gitSigningKey }}
 	name = Emruz Hossain
-	email = {{ $email }}
+	email = {{ .personal.email }}
+[core]
+	sshCommand = ssh -i {{ .personal.sshIdentityFile }} -o IdentitiesOnly=yes
 [commit]
 	gpgsign = true
 [tag]
@@ -17,8 +13,8 @@
 [url "ssh://git@github.com/"]
    insteadOf = https://github.com/
 
-[includeIf "gitdir:~/Projects/personal/"]
-   path = ~/Projects/personal/.gitconfig
+[includeIf "gitdir:~/Projects/qdrant/"]
+   path = ~/.config/git/qdrant
 
 [color "diff"]
 	meta = yellow

@@ -1,0 +1,5 @@
+[user]
+	signingkey = {{ .work.gitSigningKey }}
+	email = {{ .work.email }}
+[core]
+	sshCommand = ssh -i {{ .work.sshIdentityFile }} -o IdentitiesOnly=yes

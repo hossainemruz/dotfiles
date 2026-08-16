@@ -1,6 +1,4 @@
 [data]
-profile="work"
-
 [data.personal]
 gitSigningKey="<REDUCTED>"
 email="hossainemruz@gmail.com"
@@ -10,4 +8,3 @@ sshIdentityFile="<REDUCTED>"
 gitSigningKey="<REDUCTED>"
 email="emruz.hossain@qdrant.com"
 sshIdentityFile="<REDUCTED>"
-
