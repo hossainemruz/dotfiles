@@ -1,11 +1,6 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "autoupdate": "notify",
-  "enabled_providers": [
-    "deepseek",
-    "openai",
-    "opencode-free"
-  ],
   "provider": {
     "openai": {
       "options": {
