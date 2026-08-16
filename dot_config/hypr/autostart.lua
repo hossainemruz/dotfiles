@@ -1,3 +1,80 @@
--- Start the hyprscrolling plugin and then launch personal session apps.
-o.exec_on_start("hyprpm reload")
-o.exec_on_start("~/.config/hypr/autostart.sh")
+local SECONDARY_MONITOR = "HDMI-A-1"
+local MONITOR_TIMEOUT_MS = 30000
+
+-- Retain timers until they fire so they are not garbage-collected early.
+local pending_timers = {}
+
+local function after(timeout, callback)
+	local timer
+	timer = hl.timer(function()
+		pending_timers[timer] = nil
+		callback()
+	end, { timeout = timeout, type = "oneshot" })
+	pending_timers[timer] = true
+	return timer
+end
+
+local function launch(command, workspace)
+	local rules = workspace and { workspace = workspace, silent = true } or nil
+	hl.exec_cmd(command, rules)
+end
+
+local function launch_profile_apps()
+	launch("slack", "3")
+	after(1000, function()
+		launch('omarchy-launch-webapp "https://qdrant.atlassian.net/jira/software/c/projects/CRC/boards/201" --profile-directory=Work')
+		after(1000, function()
+			launch('omarchy-launch-webapp "https://app.todoist.com" --profile-directory=Work')
+		end)
+	end)
+end
+
+local function launch_profile_apps_when_monitor_is_ready()
+	if hl.get_monitor(SECONDARY_MONITOR) then
+		launch_profile_apps()
+		return
+	end
+
+	local launched = false
+	local monitor_subscription
+	local timeout_timer
+
+	local function finish_waiting()
+		if launched then
+			return
+		end
+		launched = true
+
+		if monitor_subscription then
+			monitor_subscription:remove()
+		end
+		if timeout_timer then
+			timeout_timer:set_enabled(false)
+			pending_timers[timeout_timer] = nil
+		end
+
+		launch_profile_apps()
+	end
+
+	monitor_subscription = hl.on("monitor.added", function(monitor)
+		if monitor.name == SECONDARY_MONITOR then
+			finish_waiting()
+		end
+	end)
+
+	timeout_timer = after(MONITOR_TIMEOUT_MS, function()
+		print("Second monitor not detected after 30 seconds; continuing anyway.")
+		finish_waiting()
+	end)
+end
+
+hl.on("hyprland.start", function()
+	-- Give the session time to settle before launching apps.
+	after(2000, function()
+		launch("omarchy-launch-browser", "1")
+		launch("megasync", "1")
+		launch("ghostty", "2")
+		launch("flatpak run com.github.wwmm.easyeffects", "special:easyeffects")
+		launch_profile_apps_when_monitor_is_ready()
+	end)
+end)
