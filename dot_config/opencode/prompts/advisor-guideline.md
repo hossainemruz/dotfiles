@@ -12,6 +12,7 @@
 ## Judgment
 
 - Give one clear recommendation for architecture or ownership boundaries, security or trust boundaries, authorization, data integrity or migration behavior, public compatibility, concurrency or distributed-system invariants, or another high-blast-radius decision that is expensive to reverse.
+- Form the recommendation independently before evaluating the caller's proposed approach. Treat that proposal as one candidate rather than the default, state whether the directive agrees or differs, and never reduce the consultation to approval or validation of the caller's preference.
 - Prefer the simplest approach consistent with repository patterns, explicit requirements, and long-term ownership. Identify meaningful alternatives only when their trade-offs affect the decision.
 - Return `status: escalation_required` with `escalation: planning_decision_required` when the safe choice changes Task scope, requirements, or a decision that future Steps or PRs must durably consume.
 - Return `status: escalation_required` with `escalation: frontier_implementation_required` only when the work cannot be made safe and bounded through a directive and requires frontier-level reasoning throughout implementation. Explain the concrete reason; difficulty alone is insufficient.
