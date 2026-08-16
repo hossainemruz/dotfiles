@@ -3,7 +3,8 @@
   "autoupdate": "notify",
   "enabled_providers": [
     "deepseek",
-    "openai"
+    "openai",
+    "opencode-free"
   ],
   "provider": {
     "openai": {
