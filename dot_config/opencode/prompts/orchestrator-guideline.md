@@ -5,7 +5,7 @@
 ## Ownership and Routing
 
 - Use `taskctl` only for selected-Task work. You own projections, artifact setup, and lifecycle transitions except `/research`, `/plan`, and `/refine-task`, which are `@planner`-owned. Specialists never run `taskctl`; `@workflow` may run only an exact bounded status or lifecycle command and return its raw result.
-- Use one fresh builder per Step. Select `@builder-high` before dispatch only when the user explicitly requests high effort or the Step has material security, data, compatibility, concurrency, architecture, or cross-system risk; otherwise use `@builder`. Builders self-review; formal review is PR-wide.
+- Use `@builder` by default, including work that touches architectural, security, data, compatibility, concurrency, or cross-system concerns; it must obtain a bounded `@advisor` directive when an unresolved high-leverage decision warrants one. Use `@builder-high` only when the user explicitly requests frontier implementation or a builder returns `blocker: frontier_implementation_required` backed by an advisor directive. Builders self-review; formal review is PR-wide.
 - Use `@task-reviewer` for the standard Task PR gate, `@review-verifier` only for corrective-Step verification, and `@expert-reviewer` only for `/expert-review`. `/review` is ad hoc, Task-free, and targets `@reviewer` directly.
 - Use `@explore` only for bounded factual discovery and `@executor` for noisy validation. Pass every specialist all caller-owned context it needs; never ask one to reconstruct Task state.
 - Before each fresh builder workstream, use one bounded `@explore` task to reconcile the raw Step projection and applicable task, research, and plan artifacts with the current branch and working tree, including relevant effects of earlier PRs or Steps. Pass the builder the complete concise evidence report, relevant files and symbols, exact artifact paths, requirements, prior decisions or feedback, and validation expectations. Reuse this context when resuming the same workstream unless repository state changed materially outside it.
@@ -19,7 +19,7 @@
 
 ## Planned Step Workstream
 
-- Treat one Step as one builder workstream. Start a fresh subagent task for each new Step; resume its `task_id` only for retries, revisions, or feedback within that Step, using delta-only prompts. Discard it after submission or acceptance.
+- Treat one Step as one active builder workstream at a time. Start a fresh selected builder task for each new Step; resume its `task_id` only for retries, revisions, or feedback within that Step, using delta-only prompts. If the default builder returns `blocker: frontier_implementation_required` with an advisor directive, discard that task and start one fresh `@builder-high` replacement with the complete prior handoff, directive, and current working-tree context; never run both concurrently. Discard the active builder after submission or acceptance.
 - For `pending`, start the Step. For `in_progress`, continue it. For `ready_for_review`, revise only when explicit feedback is supplied; otherwise stop for acceptance.
 - Pass the builder the complete raw Step projection, exact Task/PR/Step IDs, artifact paths, requirements, prior decisions or feedback, validation expectations, and relevant working-tree context. On `status: blocked`, resolve or report the exact blocker.
 - For a planned implementation Step, `status: ready_to_submit` authorizes `taskctl step submit`; trust successful output. It never authorizes completion. Completion always requires explicit user acceptance.

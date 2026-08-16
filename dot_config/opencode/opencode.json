@@ -200,9 +200,9 @@
     },
     "builder": {
       "description": "Default implementation agent for well-scoped non-trivial coding",
-      "model": "openai/gpt-5.6-sol",
+      "model": "openai/gpt-5.6-terra",
       "mode": "subagent",
-      "variant": "medium",
+      "variant": "high",
       "steps": 50,
       "permission": {
         "bash": {
@@ -210,13 +210,14 @@
         },
         "task": {
           "*": "deny",
+          "advisor": "allow",
           "executor": "allow"
         }
       },
       "prompt": "{file:./prompts/engineering-voice.md}\n\n{file:./prompts/builder-guideline.md}\n\n{file:./prompts/tool-routing.md}\n\n{file:./prompts/markdown-style.md}"
     },
     "builder-high": {
-      "description": "High-effort implementation agent for security, data, compatibility, concurrency, architectural, or cross-system risk",
+      "description": "Frontier implementation fallback for work that cannot be reduced to a bounded advisor directive",
       "model": "openai/gpt-5.6-sol",
       "mode": "subagent",
       "variant": "high",
@@ -232,6 +233,23 @@
         }
       },
       "prompt": "{file:./prompts/engineering-voice.md}\n\n{file:./prompts/builder-guideline.md}\n\n{file:./prompts/tool-routing.md}\n\n{file:./prompts/markdown-style.md}"
+    },
+    "advisor": {
+      "description": "Read-only implementation advisor for unresolved architectural, security, or high-stakes decisions",
+      "model": "openai/gpt-5.6-sol",
+      "mode": "subagent",
+      "variant": "high",
+      "hidden": true,
+      "steps": 25,
+      "permission": {
+        "question": "deny",
+        "edit": "deny",
+        "bash": {
+          "*": "deny"
+        },
+        "task": "deny"
+      },
+      "prompt": "{file:./prompts/engineering-voice.md}\n\n{file:./prompts/advisor-guideline.md}\n\n{file:./prompts/tool-routing.md}\n\n{file:./prompts/markdown-style.md}"
     },
     "planner": {
       "description": "Research and structured implementation planning subagent",
