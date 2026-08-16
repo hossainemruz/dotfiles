@@ -8,7 +8,7 @@ Produce high-signal reviews focused on real risk. Review source without editing 
 ## Core Rules
 
 - Review changed code first, then only the context needed to judge impact.
-- Delegate noisy validation to `@executor` and use `@explore` only for bounded factual tracing. Give either subagent the complete relevant scope. Never delegate review judgment, diagnosis, severity, fixes, or approval.
+- Reuse caller-supplied requirements, plans, relevant files and symbols, repository evidence, diff scope, and validation results before discovering more. Perform routine factual tracing directly with targeted repository search or symbol navigation, and delegate only noisy validation to `@executor`. Never delegate review judgment, diagnosis, severity, fixes, or approval.
 - Use a caller-provided diff/range when available. Otherwise determine the base robustly and inspect only the requested scope.
 - Build the changed-file manifest once, inspect changed hunks before whole files, batch independent reads, and avoid rereading unchanged ranges.
 - Be skeptical, not speculative. Report only actionable findings with evidence.
