@@ -82,33 +82,6 @@ if [[ -n "${ZELLIJ:-}" ]] && command -v zellij >/dev/null 2>&1 && command -v jq 
   unset _tab_name
 fi
 
-__format_utc_hour_for_tz() {
-  local tz="$1"
-  local utc_ref="$2"
-
-  if date --date="UTC ${utc_ref}" +"%I:%M %p" >/dev/null 2>&1; then
-    TZ="$tz" date --date="UTC ${utc_ref}" +"%I:%M %p"
-  else
-    local today
-    today=$(TZ=UTC date +"%Y-%m-%d")
-    TZ="$tz" date -j -f "%Y-%m-%d %H:%M %Z" "$today ${utc_ref} UTC" +"%I:%M %p"
-  fi
-}
-
-# Function to print time table of selected zones.
-timetable() {
-  printf "%-10s %-10s %-10s\n" "UTC" "Berlin" "Dhaka"
-  printf "%-10s %-10s %-10s\n" "----------" "----------" "----------"
-
-  for h in {0..23}; do
-    utc_ref=$(printf "%02d:00" "$h")
-    utc_time=$(__format_utc_hour_for_tz UTC "$utc_ref")
-    berlin_time=$(__format_utc_hour_for_tz Europe/Berlin "$utc_ref")
-    dhaka_time=$(__format_utc_hour_for_tz Asia/Dhaka "$utc_ref")
-
-    printf "%-10s %-10s %-10s\n" "$utc_time" "$berlin_time" "$dhaka_time"
-  done
-}
 
 # Added by LM Studio CLI (lms).
 if [[ -d "$HOME/.lmstudio/bin" ]]; then
@@ -164,3 +137,13 @@ elif [[ -r /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]]; then
   source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 fi
 {{ end }}
+
+# uv's `keyring-provider = subprocess` picks the first `keyring` on PATH. The Arch
+# `python-keyring` at /usr/bin/keyring lacks the Google Artifact Registry backend, so
+# `~/.local/bin` (the `uv tool install keyring --with
+# keyrings.google-artifactregistry-auth` one) has to come first.
+case ":$PATH:" in
+  *":$HOME/.local/bin:"*) PATH="$HOME/.local/bin:${PATH//:$HOME\/.local\/bin/}" ;;
+  *) PATH="$HOME/.local/bin:$PATH" ;;
+esac
+export PATH
