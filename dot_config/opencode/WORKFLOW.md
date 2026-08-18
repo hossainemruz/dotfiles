@@ -11,14 +11,13 @@ This document records the intended OpenCode workflow that will replace the curre
 - Keep lifecycle state and durable workflow records behind a small MCP interface.
 - Make Orchestrator the only agent with access to the Devcroft MCP.
 - Keep specialist agents stateless and supply them with explicit context and output contracts.
-- Prefer reusable model-capability agents over agents permanently tied to one role.
+- Give each agent a semantic role, role-specific instructions, and the narrowest permissions it needs.
 
 ## Terminology
 
 - **Task:** The complete user objective, requirements, research, plan, and durable architectural decisions.
 - **Subtask:** An independently implementable and reviewable portion of a Task. A Subtask will normally correspond to one source-control PR, but the workflow does not model the external PR directly.
-- **Role:** The temporary responsibility assigned to an agent invocation, such as Planner, Advisor, Builder, or Expert Reviewer.
-- **Agent profile:** A reusable model, reasoning variant, and permission envelope. Role-specific instructions are supplied at invocation time through a skill or explicit contract.
+- **Agent:** A semantic workflow role with a selected model, reasoning variant, instructions, and permission envelope.
 
 `Subtask` is preferred over `Step` because Subtasks can have dependencies without implying that every item is a strictly sequential operation.
 
@@ -38,33 +37,32 @@ Orchestrator is the workflow control plane and sole Devcroft MCP client. It owns
 
 ### Specialists
 
-Planner, Explore, Advisor, Builder, Reviewer, and Executor never mutate workflow state or call the Devcroft MCP. Each specialist receives a complete bounded context packet and returns a structured result to Orchestrator.
+Planner, Explorer, Advisor, Builder, Reviewer, Expert Reviewer, and Executor never mutate workflow state or call the Devcroft MCP. Each specialist receives a complete bounded context packet and returns a structured result to Orchestrator.
 
 Specialists should not delegate to one another. In particular, Builder returns an `advisor_required` result when it encounters an unresolved architectural decision; Orchestrator decides whether to invoke Advisor.
 
-## Agent Profiles
+## Agents
 
-Agent names represent reusable model and capability profiles. A single profile may serve multiple roles only when those roles share a compatible permission envelope.
+Agent names describe their semantic workflow responsibilities. This keeps routing, prompts, permissions, and reports understandable without requiring the caller to reinterpret a model-oriented name on every invocation.
 
-| Agent profile | Permissions | Intended roles |
-| --- | --- | --- |
-| `sol-xhigh` | Read-only repository inspection | Planner |
-| `sol-high` | Read-only repository inspection | Advisor, Expert Reviewer |
-| `sol-high-write` | Repository editing and validation | High-risk Builder |
-| `ds4-pro-max` | Read-only repository inspection | Default Reviewer |
-| `ds4-flash-max` | Read-only repository inspection | Explore |
-| `terra-high-write` | Repository editing and validation | Default Builder |
-| `luna-medium-exec` | Exact command execution only | Executor |
+| Agent | Model and variant | Permissions | Responsibility |
+| --- | --- | --- | --- |
+| `orchestrator` | DeepSeek v4 Pro high | Devcroft MCP, user interaction, and specialist dispatch | Own the workflow, lifecycle, context handoffs, and escalation decisions. |
+| `planner` | GPT-5.6 Sol xhigh | Read-only repository inspection | Research and decompose a complete Task into reviewable Subtasks. |
+| `explorer` | DeepSeek v4 Flash max | Read-only repository inspection | Retrieve bounded repository evidence without making implementation decisions. |
+| `advisor` | GPT-5.6 Sol high | Read-only repository inspection | Resolve one precise, high-leverage implementation decision. |
+| `builder` | GPT-5.6 Terra high | Repository editing and validation delegation | Implement or remediate one bounded Subtask. |
+| `reviewer` | DeepSeek v4 Pro max | Read-only repository inspection | Perform the default independent review. |
+| `expert-reviewer` | GPT-5.6 Sol high | Read-only repository inspection | Perform risk-triggered or explicitly requested expert review. |
+| `executor` | GPT-5.6 Luna medium | Exact command execution only | Run tests, builds, and other bounded validation commands. |
 
-The read-only `sol-high` profile must not be reused as a Builder. Giving one profile enough permissions for implementation would leave Advisor and Expert Reviewer protected only by prompting rather than enforced permissions.
-
-Role behavior should live in role skills or explicit invocation contracts. For example, Orchestrator may invoke `sol-high` with either the Advisor contract or the code-review skill.
+`builder` is preferred over `worker` because its responsibility is specifically implementation and remediation rather than arbitrary background work. Semantic agents may use shared prompt fragments and skills, but each agent retains a role-specific prompt and least-privilege permission set.
 
 ## Planning
 
 Sol xhigh is the dedicated Planner. Planning is expected to occur only once or twice per day and covers the complete Task decomposition, making this a deliberate use of the strongest reasoning tier.
 
-Before invoking Planner, Orchestrator should use Explore to gather relevant repository evidence. Planner receives clarified requirements and that evidence in one complete handoff and should normally return research and the multi-Subtask plan together.
+Before invoking Planner, Orchestrator should use Explorer to gather relevant repository evidence. Planner receives clarified requirements and that evidence in one complete handoff and should normally return research and the multi-Subtask plan together.
 
 Planner does not question the user directly. If requirements remain blocked, Planner returns the smallest set of blocking questions to Orchestrator. Orchestrator asks the user and resumes the same planning workstream with the answers.
 
@@ -106,9 +104,9 @@ Durable decisions are appended to the Task through `devcroft_update_task`; they 
 
 ## Implementation
 
-Terra high is the default Builder. Sol high with write permissions is reserved for implementation that cannot be made safe and bounded through planning or an Advisor directive.
+Terra high is the Builder. High-risk implementation should first be bounded through planning or an Advisor directive rather than switching the Builder role to a broadly privileged Sol agent.
 
-Before dispatching Builder, Orchestrator obtains the Subtask context and asks Explore to reconcile it with the current repository. This is a focused freshness check and relevant-file discovery pass, not a repetition of the original Task research.
+Before dispatching Builder, Orchestrator obtains the Subtask context and asks Explorer to reconcile it with the current repository. This is a focused freshness check and relevant-file discovery pass, not a repetition of the original Task research.
 
 Builder receives requirements, plan context, repository evidence, applicable advisor directives, scope limits, and validation expectations. It returns changed files, implementation summary, requested validation, residual risks, and any blocker or advisor request.
 
@@ -190,7 +188,7 @@ sequenceDiagram
     participant Orchestrator
     participant MCP as Devcroft MCP
     participant Planner
-    participant Explore
+    participant Explorer
     participant Advisor
     participant Builder
     participant Executor
@@ -204,8 +202,8 @@ sequenceDiagram
         Orchestrator->>MCP: devcroft_update_task(requirements)
     end
 
-    Orchestrator->>Explore: Gather planning evidence
-    Explore-->>Orchestrator: Repository evidence
+    Orchestrator->>Explorer: Gather planning evidence
+    Explorer-->>Orchestrator: Repository evidence
     Orchestrator->>Planner: Requirements and evidence
     Planner-->>Orchestrator: Research and multi-Subtask plan
     Orchestrator->>MCP: devcroft_update_task(research)
@@ -214,8 +212,8 @@ sequenceDiagram
     User->>Orchestrator: Implement Subtask
     Orchestrator->>MCP: devcroft_get_context(Subtask)
     Orchestrator->>MCP: devcroft_update_subtask_state(in_progress)
-    Orchestrator->>Explore: Reconcile context with repository
-    Explore-->>Orchestrator: Relevant files, symbols, and current evidence
+    Orchestrator->>Explorer: Reconcile context with repository
+    Explorer-->>Orchestrator: Relevant files, symbols, and current evidence
 
     alt Unresolved high-leverage decision
         Orchestrator->>Advisor: Decision packet
@@ -261,7 +259,7 @@ The migration should also:
 
 - Remove the workflow subagent used only for bounded `taskctl` execution.
 - Prevent Planner and review agents from writing lifecycle artifacts directly.
-- Move role-specific behavior into reusable skills or invocation contracts.
+- Give each semantic agent a role-specific prompt, shared prompt fragments where useful, and least-privilege permissions.
 - Route every specialist invocation through Orchestrator.
 - Deny `devcroft_*` globally and allow it only for Orchestrator.
 - Keep the existing workflow operational until the Devcroft MCP interface and replacement prompts are ready.
