@@ -11,6 +11,7 @@ local browser = "omarchy-launch-browser"
 -- Disable Omarchy's display-scale bindings.
 hl.unbind("SUPER + SLASH")
 hl.unbind("SUPER + ALT + SLASH")
+hl.unbind("SUPER + S")
 
 bind("ALT + B", "Bluetooth", terminal .. ' --title="bluetui" -e bluetui')
 bind("SUPER + RETURN", "Terminal", terminal)
