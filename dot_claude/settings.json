@@ -34,10 +34,8 @@
       "Bash(realpath:*)",
       "Bash(date)",
       "Bash(make:*)",
-      "Bash(npm run:*)",
       "Bash(npm test:*)",
       "Bash(npm ci)",
-      "Bash(npx:*)",
       "Bash(pnpm:*)",
       "Bash(yarn:*)",
       "Bash(cargo:*)",
@@ -96,5 +94,33 @@
     "gopls-lsp@claude-plugins-official": true
   },
   "effortLevel": "xhigh",
-  "theme": "dark"
+  "theme": "dark",
+  "autoMode": {
+    "environment": [
+      "### Org-wide",
+      "**Organization**: Qdrant (github.com/qdrant org — from this repo's remote qdrant/qdrant-cloud-internal-api)",
+      "**Cloud provider(s)**: None configured",
+      "**Repository visibility**: internal (qdrant/qdrant-cloud-internal-api, via gh)",
+      "**Internal sharing / snippet hosting**: None configured — treat public paste/gist services as outside the trust boundary",
+      "**Secrets management**: None configured",
+      "**Default / protected branches**: Default branch `main`; protected branches (via gh): `CBI-260-add-recovery-code-mfa-method`, `CBI-260-public-api-bump`, `CBI-342-billing-internal-api-protos`, `OPS-1955`, `add-mode-to-eligible-regional-cluster-request`, `add-pending-age-fields`, `cbi-499-sync-public-api-0.170.0`, `main`, `node-liveness-field`, `orb-customer-id-credit-contracts`, `update-platform-api`; rulesets: none listed",
+      "**CI/CD deploy targets**: None configured",
+      "**Network posture**: None configured",
+      "**Source control**: The trusted repo (qdrant/qdrant-cloud-internal-api) and its remote(s) only — as scoped by the Trusted repo and Repository visibility entries above",
+      "**Trusted internal domains**: None configured",
+      "**Trusted cloud buckets**: None configured",
+      "**Key internal services**: None configured",
+      "**Internal package registry**: us-npm.pkg.dev (config-derived — not a confirmed upload destination; uploads of local data still require confirmation)",
+      "**Sensitive data locations & audiences**: any file or store holding personal data, confidential business data, credentials, regulated data, or similarly sensitive material; preserve exact handles when known and share only with audiences cleared at the [named+specifics] bar",
+      "**Data retention / declassification**: None configured",
+      "**Sensitive remote targets**: any namespace, host, or container whose name carries `prod` or `production` as a whole word or name segment (hyphen/underscore/dot-delimited — e.g. matches `prod-db`, not `producer`)",
+      "**Protected deployment namespaces / environments**: None configured — fall back to the Sensitive remote targets heuristic",
+      "**Protected IaC scopes**: IAM, RBAC, networking, quota, and node-pool resources; anything whose name or tag carries `prod` or `production` as a whole word or name segment",
+      "### User-specific",
+      "**Primary use of Claude Code**: software development (protobuf API definitions and generated code for Qdrant Cloud Internal API)",
+      "**Trusted repo**: /home/emruz/Projects/qdrant/internal-api (qdrant/qdrant-cloud-internal-api, remote github.com:qdrant/qdrant-cloud-internal-api.git) — internal visibility; confidential material fine here, but content ported or first read from outside this session's repo is not its own work, and secrets/sensitive personal or entrusted data are never cleared into it by visibility alone",
+      "**Org-specific CLIs**: None configured",
+      "routine under ~/Projects/qdrant/internal-api/ prefix: build/lint/generate work via Buf and Make targets (bootstrap, build-go, clean, format, generate, help, lint, update-public-api)"
+    ]
+  }
 }

@@ -12,6 +12,7 @@ local browser = "omarchy-launch-browser"
 hl.unbind("SUPER + SLASH")
 hl.unbind("SUPER + ALT + SLASH")
 hl.unbind("SUPER + S")
+hl.unbind("SUPER + P")
 
 bind("ALT + B", "Bluetooth", terminal .. ' --title="bluetui" -e bluetui')
 bind("SUPER + RETURN", "Terminal", terminal)
