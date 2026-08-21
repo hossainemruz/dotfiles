@@ -15,7 +15,9 @@ local function after(timeout, callback)
 end
 
 local function launch(command, workspace)
-	local rules = workspace and { workspace = workspace, silent = true } or nil
+	-- NOTE: Only workspace/pin are accepted as exec rules on Hyprland 0.56.
+	-- Unknown keys like "silent" cause exec_cmd to drop the command silently.
+	local rules = workspace and { workspace = workspace } or nil
 	hl.exec_cmd(command, rules)
 end
 
@@ -74,6 +76,7 @@ hl.on("hyprland.start", function()
 		launch("omarchy-launch-browser", "1")
 		launch("megasync", "1")
 		launch("ghostty", "2")
+		launch("/home/emruz/.local/share/devcroft/devcroft", "2")
 		launch("flatpak run com.github.wwmm.easyeffects", "special:easyeffects")
 		launch_profile_apps_when_monitor_is_ready()
 	end)
