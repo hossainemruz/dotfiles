@@ -149,9 +149,9 @@
     },
     "general": {
       "description": "Lean default primary agent for ordinary advice, investigation, and implementation",
-      "model": "openai/gpt-5.6-sol",
+      "model": "openai/gpt-5.6-terra",
       "mode": "primary",
-      "variant": "medium",
+      "variant": "high",
       "permission": {
         "question": "allow",
         "todowrite": "allow",
@@ -161,6 +161,7 @@
         "task": {
           "*": "deny",
           "explore": "allow",
+          "advisor": "allow",
           "executor": "allow",
           "builder": "allow",
           "simplifier": "allow",
