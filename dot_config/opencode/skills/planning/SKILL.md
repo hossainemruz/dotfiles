@@ -1,94 +1,47 @@
 ---
 name: planning
-description: Researches, plans, and refines requirements for a selected taskctl Task, including /research, /plan, and /refine-task.
+description: Researches and decomposes a complete Task into ordered, independently reviewable Subtasks from an Orchestrator-supplied context packet.
 ---
 
-Research implementation options, refine requirements, or write execution plans for the selected `taskctl` Task. Use this workflow only for Task-related requests or explicit artifact work; do not invoke `taskctl` for unrelated planning or advice.
+# Task Planning
 
-## Scope
+Research implementation options and return an executable multi-Subtask plan. Remain stateless and read-only: never run `taskctl`, edit source or workflow artifacts, mutate lifecycle state, question the user directly, or delegate work.
 
-- Run `taskctl context` once and use its absolute artifact paths. Do not scan the vault or infer paths from repository files.
-- Refinement requests read and may update only `task.md`; they do not create lifecycle state or change repository source.
-- Research requests create `research.md` with `taskctl artifact ensure research`, then edit only that artifact.
-- Planning requests create `plan.md` with `taskctl artifact ensure plan`, edit its prose, and register the matching hierarchy with `taskctl plan apply`.
-- Do not modify repository source code during research or planning.
-- Do not create formal plans for advisory, exploratory, or review-only requests.
-- Research only when uncertainty, multiple plausible approaches, architecture risk, or unknown codebase patterns justify it.
-- Preserve artifact structure and user-authored content. Never edit `task.yaml` or content between the `taskctl:progress` markers in `plan.md`.
+## Required Context
 
-## Sources of Truth
+- Require executable requirements, acceptance criteria, constraints, non-goals, relevant repository evidence, accepted Subtask outcomes, durable decisions, and any existing pending plan suffix.
+- For replanning, require the immutable completed prefix and active Subtask contract so only the pending suffix changes.
+- Return `status: questions_required` with the smallest independent set of blocking questions when requirements remain ambiguous. Do not ask those questions yourself.
+- Return `status: blocked` with exact missing context when the handoff is incomplete; never reconstruct Task state or read workflow artifacts not supplied by Orchestrator.
 
-- The latest user instruction sets immediate scope.
-- `task.yaml` is canonical lifecycle state and may be changed only by `taskctl`.
-- `task.md` is the binding requirements contract: goal, scope, acceptance criteria, constraints, non-goals, and edge cases.
-- `research.md` is implementation evidence: options, trade-offs, risks, and the selected approach. It cannot override `task.md`.
-- `plan.md` contains detailed implementation guidance; its generated progress block is not agent-authored state.
-- Ask only clarification questions that block correctness or scope.
+## Research and Judgment
 
-## Efficiency
+- Inspect the repository only as needed to verify supplied evidence, current patterns, likely files or symbols, integration boundaries, and validation options.
+- Lead with one recommended approach and concrete evidence. Include the strongest rejected alternative only when its trade-off remains relevant.
+- Identify security, compatibility, migration, data-integrity, concurrency, ownership, and expensive-to-reverse decisions that require an Advisor directive before implementation.
+- Push back through the result when decomposition creates avoidable coupling, excessive PR overhead, or poor review boundaries.
 
-- Prefer FFF for file/content discovery and LSP for symbol navigation; use `glob`/`grep` only for exact-glob or regex fallback, then read targeted ranges. Use the repository's existing structural-search tooling only when FFF and LSP cannot answer the question reliably.
-- Use `@explore` only for focused codebase evidence or pattern lookup that would cost more in the main context. Pass the full planning context needed for its bounded factual question; never require it to run `taskctl` or reconstruct omitted Task context.
-- Use `@executor` only for command-heavy, non-mutating validation needed for research or planning. Pass exact non-taskctl commands and run all `taskctl` commands directly.
-- Stop once the recommendation or plan is supported by concrete evidence.
+## Plan Construction
 
-## Planning Judgment
+- Decompose the complete Task into ordered, cohesive Subtasks that are independently implementable, reviewable, and normally suitable for one source-control PR.
+- Give each Subtask a stable Task-local `PR-NNN` compatibility ID and one corresponding globally unique `STEP-NNN` backend ID. The Step is a temporary taskctl mapping, not a separate user-facing work item.
+- Preserve IDs for unchanged pending work. Never revise the active Subtask or completed prefix.
+- Isolate public API, schema, migration, authorization, concurrency, or compatibility-affecting changes when practical.
+- Map every Subtask to requirement IDs and dependencies. State objective, concrete changes, likely files or symbols, existing evidence, scope limits, acceptance criteria, risks, Advisor questions, validation, review focus, and completion condition.
+- Describe validation as observable behavior. Request new tests only for an identified behavior or plausible regression that existing validation does not protect.
+- Mark whether each Subtask can run only after its predecessor or could be independently eligible once dependencies are complete; the persisted plan remains ordered.
 
-- Lead with a clear recommendation rather than presenting equally weighted options.
-- Say which approach you would choose and what evidence makes it preferable.
-- Name the strongest rejected alternative and the conditions under which it would become preferable.
-- Push back when the requested decomposition creates avoidable coupling, excessive PR overhead, or poor review boundaries.
+## Output Contract
 
-## Research Workflow
+Return exactly these top-level fields, using `none` or `[]` where applicable:
 
-1. Run `taskctl context`; read its `task` artifact and existing `research` artifact when present.
-2. Run `taskctl artifact ensure research` before writing when the artifact is absent. Use the path printed by the command; do not render templates manually.
-3. Identify relevant files, components, existing patterns, and similar implementations with targeted searches and reads.
-4. Compare viable approaches, including trade-offs, risks, constraints, compatibility concerns, validation implications, and blocking questions.
-5. Select one recommended approach yourself.
-6. Write the evidence and decision to `research.md` without changing Task scope.
+- `status: plan_ready|questions_required|blocked`
+- `blocking_questions`
+- `missing_context`
+- `research`: recommendation, evidence, alternatives, risks, assumptions, and Advisor decisions needed
+- `requirements_snapshot`: stable requirement IDs and concise text
+- `subtasks`: ordered objects containing `subtask_id`, `backend_step_id`, `title`, `objective`, `requirement_ids`, `dependencies`, `concrete_changes`, `likely_files_or_symbols`, `evidence`, `scope_limits`, `acceptance_criteria`, `risks`, `advisor_questions`, `validation`, `review_focus`, and `completion_condition`
+- `pending_suffix_change`: `none|confirmed|revised`
+- `plan_risks`
 
-## Refinement Workflow
-
-1. Run `taskctl context` and read the returned `task.md` path.
-2. Evaluate the requested refinement against the goal, acceptance criteria, constraints, non-goals, conflicts, edge cases, and validation expectations. Do not silently expand scope.
-3. If blocked, ask the smallest batch of independent blocking questions; sequence only questions whose answers depend on earlier answers. Include a concise recommendation and material alternatives.
-4. When clear, apply valid refinements to `task.md` while preserving its structure and user-authored intent. If no change is needed, leave it untouched.
-5. Return Task ID, title, path, verdict, blockers, and the appropriate `/research` or `/plan` next action.
-
-## Planning Workflow
-
-1. Run `taskctl context`; read `task.md` and optional `research.md` from the returned paths.
-2. If `research.md` is absent, perform the focused codebase investigation needed to make the plan reliable within this planning run. Do not block the normal `/plan` workflow merely because a separate research artifact is missing.
-3. Run `taskctl artifact ensure plan` and preserve its template structure.
-4. Add a concise Requirements Snapshot with stable IDs (`R1`, `R2`, ...), while preserving any existing acceptance-criterion IDs.
-5. Break work into ordered, cohesive, independently reviewable PRs.
-6. Break each PR into atomic Steps whose IDs remain unique across the whole Task. Avoid mixing unrelated refactors, behavior changes, migrations, tests, and cleanup. Scope each Step to normally fit within one builder session of roughly 20–25 agentic iterations plus one batched validation phase; split work that clearly exceeds that budget unless an inseparable cross-cutting change is explicitly justified.
-7. Use the exact headings below. PR IDs are Task-local; Step IDs are unique across the entire Task.
-   - `### PR-NNN: Title`
-   - `#### STEP-NNN: Title`
-8. For each PR include its objective, requirement IDs, dependencies, review scope, expected areas, scope limits, risks, validation, and completion condition. For each Step include its purpose, requirement IDs, concrete changes, actionable acceptance or completion criteria, likely files or symbols, relevant existing behavior or evidence, non-goals or scope limits, expected validation, prior implementation decisions, unresolved questions that materially affect the work, and review notes when applicable and known. Do not invent details or require broad research when the work is already clear.
-   - Describe validation in terms of observable behavior and name existing tests that already provide confidence when known. Prescribe new tests only for an identified behavior or plausible regression that is not protected; never require comprehensive unit tests or coverage targets unless the Task explicitly does.
-9. Reuse IDs for unchanged draft work and keep initial IDs sequential. While the Task remains `draft`, the hierarchy may be replaced when the requested plan refresh requires it. Do not put mutable status fields in detailed prose.
-10. After writing `plan.md`, send a JSON object containing the identical PR and Step IDs, titles, order, and parentage to `taskctl plan apply` over standard input. Do not create a plan JSON file in the repository.
-11. If execution has started, do not attempt bulk replacement. Preserve the registered hierarchy; use `taskctl pr add` or `taskctl step add` only for newly approved work, then append the detailed heading using the returned ID. Never skip or reopen work without explicit user direction.
-12. If `taskctl` rejects the hierarchy or projection update, report the error and repair the plan/JSON mismatch rather than editing `task.yaml`.
-
-## Lifecycle Rules
-
-- Planning does not start a PR or Step.
-- `taskctl` derives Task and PR status from Step state.
-- Do not manually mark work Pending, In Progress, Ready for Review, or Completed in `plan.md`; lifecycle commands maintain the generated progress block.
-- Public API, schema, migration, or compatibility-affecting changes should be isolated when practical.
-
-## Final Check
-
-For research:
-- The recommendation is grounded in codebase evidence and Task requirements.
-- Alternatives, risks, and open questions are clear.
-
-For planning:
-- The plan is ordered, actionable, scoped, and self-contained.
-- Every PR and Step maps to requirements and has concrete validation.
-- IDs, titles, ordering, and parentage match the JSON accepted by `taskctl plan apply`.
-- Scope limits, risks, dependencies, and completion conditions are explicit.
+Do not claim persistence or lifecycle changes.

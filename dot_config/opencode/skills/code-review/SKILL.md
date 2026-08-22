@@ -3,12 +3,12 @@ name: code-review
 description: Evidence-based PR review and code review for a working-tree diff, caller-scoped changes, or review findings.
 ---
 
-Produce high-signal reviews focused on real risk. Review source without editing it, and never run `taskctl` or perform lifecycle work.
+Produce high-signal reviews focused on real risk. Review source without editing it, and never run `taskctl`, mutate workflow state, persist review artifacts, question the user, or delegate work.
 
 ## Core Rules
 
 - Review changed code first, then only the context needed to judge impact.
-- Reuse caller-supplied requirements, plans, relevant files and symbols, repository evidence, diff scope, and validation results before discovering more. Perform routine factual tracing directly with targeted repository search or symbol navigation, and delegate only noisy validation to `@executor`. Never delegate review judgment, diagnosis, severity, fixes, or approval.
+- Reuse caller-supplied requirements, plans, relevant files and symbols, repository evidence, diff scope, and validation results before discovering more. Perform only the targeted factual tracing needed to judge the supplied diff. Return insufficient confidence rather than delegating or inventing missing validation.
 - Use a caller-provided diff/range when available. Otherwise determine the base robustly and inspect only the requested scope.
 - Build the changed-file manifest once, inspect changed hunks before whole files, batch independent reads, and avoid rereading unchanged ranges.
 - Be skeptical, not speculative. Report only actionable findings with evidence.
@@ -44,11 +44,11 @@ Raise a finding only when it is real or highly likely, causes meaningful harm, h
 - **[P2] Medium**: meaningful but non-blocking risk
 - **[P3] Low**: valid low-impact improvement
 
-For each finding include a stable ID, severity, title, `path:line`, impact, evidence, and a specific fix. Sort by severity. If there are no actionable issues, approve directly.
+For each finding include a stable ID, severity, `blocking: true|false`, title, `path:line`, impact, evidence, rationale, and specific remediation guidance. Sort by severity. Blocking status depends on whether the finding must be resolved for the requested behavior to be safe and correct, not severity alone. Approve when no blocking findings remain; valid non-blocking suggestions may accompany approval.
 
 ## Structured Handoff
 
-End with `status: review_complete|blocked`, the caller-selected mode (default `ad-hoc`), `verdict: approved|actionable_findings` when complete, `findings` with every ID and severity or `[]`, validation, and residual risk. A blocked result names each exact missing field or concrete blocker.
+End with `status: review_complete|blocked`, the caller-selected mode (default `ad-hoc`), `verdict: approved|changes_requested` when complete, `findings` with every ID, severity, and blocking status or `[]`, validation assessment, residual risk, and missing context. Use `changes_requested` only when at least one finding is blocking. A blocked result names each exact missing field or concrete blocker.
 
 ## Final Check
 

@@ -1,28 +1,33 @@
-# Task PR Review
+# Workflow Review Guidelines
 
-Use this delta only for a caller-authorized `remediation-enabled` full-PR review. Never run `taskctl`, edit source or `plan.md`, create lifecycle state, or implement findings.
+Apply this contract when the caller selects `mode: workflow`. For `mode: ad-hoc`, use the code-review skill's ordinary scoped-review contract instead.
 
-## Required Context
+## Required Workflow Context
 
-- Require the complete raw PR projection, exact Task/PR IDs and branch, agreed diff base/scope, requirements, validation expectations, and ensured `review.md` path.
-- Accept either the normal gate—every earlier planned Step completed or skipped and exactly one explicitly accepted final planned implementation Step still `ready_for_review`—or a branch-associated completed PR.
-- If a consequential field is missing, return `status: blocked` with each exact missing field. Never reconstruct Task state or read all of `plan.md`.
+- Require Task and Subtask IDs, the frozen Subtask contract, relevant requirements, applicable durable decisions, agreed diff scope, changed-file manifest, current implementation outcome, current validation results, residual risks, and prior findings needed to verify remediation.
+- Treat caller-supplied context as authoritative workflow scope. Return `status: blocked` with every exact missing field rather than running `taskctl`, reading workflow artifacts, or reconstructing Task history.
+- Remain source-read-only and stateless. Never run `taskctl`, edit source, persist review results, mutate lifecycle state, question the user, implement findings, or delegate work.
 
-## Scope and Artifact
+## Review Behavior
 
-- Review the branch's full diff against the agreed base, covering every Step in this PR and no other PR. Optional focus may prioritize analysis but cannot omit relevant changed code. Findings apply to the integrated PR, not to an originating Step.
-- Preserve the supplied `review.md` template headings, replace stale review prose, and record mode `remediation-enabled`, Task/PR IDs, branch, verdict, and every actionable finding. Do not retain review history or add sections.
-- Return control after writing and reporting the review. On findings, the orchestrator alone may create the single corrective Step; on approval, create no state.
+- Review the complete Subtask diff against the agreed base. Optional focus may prioritize analysis but cannot omit relevant changed code.
+- Judge the integrated implementation rather than attributing findings to backend Steps.
+- Verify prior blocking findings against the current diff and validation, but independently assess whether material changes introduced new problems.
+- Return `status: expert_review_required` instead of a verdict when the evidence is insufficient or the change reveals security, authorization, concurrency, migration, compatibility, data-integrity, public-interface, or architectural-seam risk that requires expert scrutiny.
+- Approval means no blocking findings remain and validation is sufficient. Non-blocking suggestions may accompany approval but must not prolong remediation.
 
-## Structured Handoff
+## Workflow Output
 
-End with:
+End with exactly these fields, using `none` or `[]` where applicable:
 
-- `status: review_complete|blocked`
-- `mode: remediation-enabled`
-- `verdict: approved|actionable_findings` when complete
-- Task/PR IDs, branch, and `review_path`
-- `findings`: every finding ID and severity, or `[]`
-- validation performed and residual risk
+- `status: review_complete|expert_review_required|blocked`
+- `mode: workflow`
+- `review_kind: standard|expert`
+- `verdict: approved|changes_requested|none`
+- `task_id` and `subtask_id`
+- `findings`: stable ID, severity, `blocking: true|false`, title, `path:line`, impact, evidence, rationale, and remediation guidance
+- `validation_assessment`
+- `residual_risks`
+- `missing_context`
 
-The handoff findings must exactly match `review.md`. A blocked result names every exact missing field or concrete blocker.
+Do not claim persistence, lifecycle changes, human acceptance, or completion.
