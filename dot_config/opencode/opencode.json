@@ -268,7 +268,9 @@
         },
         "edit": "deny",
         "bash": {
-          "*": "deny"
+          "*": "deny",
+          "git diff": "allow",
+          "git diff *": "allow"
         },
         "task": "deny"
       },
@@ -290,7 +292,9 @@
         },
         "edit": "deny",
         "bash": {
-          "*": "deny"
+          "*": "deny",
+          "git diff": "allow",
+          "git diff *": "allow"
         },
         "task": "deny"
       },
