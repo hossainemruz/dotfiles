@@ -1,7 +1,7 @@
 ---
-description: Implement Task PR review findings, verify them, and submit the corrective Step.
+description: Resume review remediation or apply human-requested Subtask changes.
 agent: orchestrator
 subtask: false
 ---
 
-Execute the canonical corrective-Step remediation and verifier-before-submit loop. `$ARGUMENTS` is bounded feedback and cannot omit current findings. This command may start or revise the one corrective Step and submit it only after matching durable verifier approval; it never creates another Step or completes the corrective Step.
+Resume the current Subtask through the canonical remediation loop. Treat `$ARGUMENTS` as explicit human feedback when supplied; otherwise use the current durable blocking findings. Return the Subtask to `in_progress` when necessary, clear automated approval, route concrete local work to `@remediator` and broader or decision-requiring work to `@builder`, validate through `@executor`, and require another standard or expert review. Stop at logical `ready_for_human_review` or `blocked`; never complete the Subtask.

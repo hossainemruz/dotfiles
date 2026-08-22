@@ -2,7 +2,17 @@
 
 ## Status
 
-This document records the intended OpenCode workflow that will replace the current `taskctl`-based workflow. It is a design reference rather than a description of the current configuration.
+This document records the intended OpenCode workflow and the Devcroft MCP interface that will replace temporary taskctl-backed persistence. The current OpenCode configuration implements the semantic agent roles and lifecycle convention through the bridge below; MCP-specific guarantees remain a design reference until the server exists.
+
+### Temporary taskctl bridge
+
+Until the Devcroft MCP is available, Orchestrator is the only `taskctl` caller and workflow-artifact writer. Specialists remain stateless, receive the same bounded context packets intended for MCP operation, and return structured results to Orchestrator. This preserves the control-plane boundary so migration replaces the persistence adapter rather than redesigning agent interactions.
+
+- A Task maps to a taskctl Task and a Subtask maps to a taskctl PR. New plans create one implementation Step per PR as a backend compatibility detail.
+- `workflow-bridge.json` beside the Task artifacts stores only fields taskctl cannot represent: blockers, review attempts, automated approval, future impact, and accepted outcomes.
+- Automated review and remediation occur before explicit human acceptance. Remediation revises the same implementation Step; the bridge does not create corrective Steps.
+- taskctl remains canonical for its hierarchy and represented lifecycle state. Orchestrator never edits `task.yaml`, and specialists never receive taskctl commands or write access to workflow artifacts.
+- The bridge cannot provide MCP-grade atomic writes, strict schema decoding, transition validation, or safe pending-suffix replacement. Orchestrator blocks and requests human intervention rather than guessing when these limitations matter.
 
 ## Goals
 
@@ -338,13 +348,14 @@ sequenceDiagram
 
 ## Migration Notes
 
-Replacing `taskctl` requires more than adding the MCP server. The current Orchestrator, Planner, workflow, review, command, and skill instructions contain `taskctl` ownership and artifact rules that must be removed or rewritten.
+Replacing the temporary bridge requires more than adding the MCP server. Orchestrator's bridge prompt, command wording, and bridge-record persistence must be removed or rewritten while preserving the semantic specialist contracts.
 
 The migration should also:
 
-- Remove the workflow subagent used only for bounded `taskctl` execution.
-- Prevent Planner and review agents from writing lifecycle artifacts directly.
-- Give each semantic agent a role-specific prompt, shared prompt fragments where useful, and least-privilege permissions.
-- Route every specialist invocation through Orchestrator.
+- Remove `taskctl` access from Orchestrator and delete the temporary bridge prompt and record.
+- Replace Orchestrator's logical-operation adapter with the corresponding `devcroft_*` tools.
+- Migrate any active blocker, review-attempt, approval, future-impact, and accepted-outcome bridge fields into canonical MCP records.
+- Preserve each semantic agent's role-specific prompt, shared prompt fragments, and least-privilege permissions.
+- Preserve routing of every workflow specialist invocation through Orchestrator.
 - Deny `devcroft_*` globally and allow it only for Orchestrator.
-- Keep the existing workflow operational until the Devcroft MCP interface and replacement prompts are ready.
+- Keep the bridge operational until the Devcroft MCP interface, state migration, and replacement Orchestrator prompt are ready.

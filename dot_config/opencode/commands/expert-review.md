@@ -1,7 +1,7 @@
 ---
-description: Perform a premium review; Task findings create one pending corrective Step but are not implemented.
+description: Perform expert review for the current Subtask or an explicit ad hoc scope.
 agent: orchestrator
 subtask: false
 ---
 
-Dispatch `@expert-reviewer` for review only. `$ARGUMENTS` is optional concrete ad hoc scope or Task full-PR focus; focus cannot omit relevant changed code. For a Task-backed review, require the canonical completed-PR gate and `remediation-enabled` artifact workflow. Actionable Task findings authorize creation and documentation of exactly one pending corrective Step, then stop and direct the user to `/address-review`. For ad hoc scope, report findings and stop. Never dispatch a builder or edit source; if no usable ad hoc scope exists, ask rather than invoking `taskctl` or scanning broadly.
+Dispatch `@expert-reviewer`. For the current Task Subtask, require current implementation and validation context, use `mode: workflow`, persist the result yourself, and route blocking findings to `@builder` unless explicitly mechanical. `$ARGUMENTS` may prioritize but never narrow relevant changed code. For an explicit ad hoc scope, use `mode: ad-hoc`, do not invoke taskctl or mutate workflow state, and report findings only. Never infer human acceptance.

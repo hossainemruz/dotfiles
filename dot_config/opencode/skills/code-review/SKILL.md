@@ -15,7 +15,7 @@ Produce high-signal reviews focused on real risk. Review source without editing 
 - Request additional tests only when an observable behavior has a plausible, meaningful regression path that existing validation does not protect. Do not optimize for coverage percentage or private-unit-test count.
 - Prefer a few high-confidence findings; limit output to the five most important unless there are additional independent blockers.
 - Flag changes outside the PR scope, but do not expand the review to unrelated work.
-- If no diff or review scope is available, ask instead of scanning broadly.
+- If no diff or review scope is available, return `status: blocked` with the missing scope instead of scanning broadly or questioning the user.
 
 ## Review Passes
 

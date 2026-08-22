@@ -178,7 +178,7 @@
         "question": "allow",
         "todowrite": "allow",
         "bash": {
-          "taskctl *": "allow"
+          "*taskctl*": "allow"
         },
         "task": {
           "*": "deny",
@@ -199,8 +199,22 @@
       "model": "openai/gpt-5.6-terra",
       "mode": "subagent",
       "variant": "high",
+      "hidden": true,
       "steps": 50,
       "permission": {
+        "question": "deny",
+        "read": {
+          ".work/*": "deny",
+          "~/agent-vault": "deny",
+          "~/agent-vault/*": "deny",
+          "*/agent-vault/projects/*": "deny"
+        },
+        "edit": {
+          ".work/*": "deny",
+          "~/agent-vault": "deny",
+          "~/agent-vault/*": "deny",
+          "*/agent-vault/projects/*": "deny"
+        },
         "bash": {
           "*taskctl*": "deny"
         },
@@ -216,6 +230,19 @@
       "hidden": true,
       "steps": 35,
       "permission": {
+        "question": "deny",
+        "read": {
+          ".work/*": "deny",
+          "~/agent-vault": "deny",
+          "~/agent-vault/*": "deny",
+          "*/agent-vault/projects/*": "deny"
+        },
+        "edit": {
+          ".work/*": "deny",
+          "~/agent-vault": "deny",
+          "~/agent-vault/*": "deny",
+          "*/agent-vault/projects/*": "deny"
+        },
         "bash": {
           "*taskctl*": "deny"
         },
@@ -232,6 +259,12 @@
       "steps": 25,
       "permission": {
         "question": "deny",
+        "read": {
+          ".work/*": "deny",
+          "~/agent-vault": "deny",
+          "~/agent-vault/*": "deny",
+          "*/agent-vault/projects/*": "deny"
+        },
         "edit": "deny",
         "bash": {
           "*": "deny"
@@ -245,15 +278,22 @@
       "model": "openai/gpt-5.6-sol",
       "mode": "subagent",
       "variant": "xhigh",
+      "hidden": true,
       "permission": {
         "question": "deny",
+        "read": {
+          ".work/*": "deny",
+          "~/agent-vault": "deny",
+          "~/agent-vault/*": "deny",
+          "*/agent-vault/projects/*": "deny"
+        },
         "edit": "deny",
         "bash": {
-          "*taskctl*": "deny"
+          "*": "deny"
         },
         "task": "deny"
       },
-      "prompt": "{file:./prompts/engineering-voice.md}\n\n{file:./skills/planning/SKILL.md}\n\n{file:./prompts/markdown-style.md}"
+      "prompt": "{file:./prompts/engineering-voice.md}\n\n{file:./skills/planning/SKILL.md}\n\n{file:./prompts/tool-routing.md}\n\n{file:./prompts/markdown-style.md}"
     },
     "explore": {
       "description": "Read-only codebase evidence retrieval; no implementation recommendations",
@@ -263,9 +303,16 @@
       "hidden": true,
       "steps": 25,
       "permission": {
+        "question": "deny",
+        "read": {
+          ".work/*": "deny",
+          "~/agent-vault": "deny",
+          "~/agent-vault/*": "deny",
+          "*/agent-vault/projects/*": "deny"
+        },
         "edit": "deny",
         "bash": {
-          "*taskctl*": "deny"
+          "*": "deny"
         },
         "task": "deny"
       },
@@ -320,29 +367,43 @@
       "hidden": true,
       "steps": 40,
       "permission": {
+        "question": "deny",
+        "read": {
+          ".work/*": "deny",
+          "~/agent-vault": "deny",
+          "~/agent-vault/*": "deny",
+          "*/agent-vault/projects/*": "deny"
+        },
         "bash": {
-          "*taskctl*": "deny"
+          "*": "deny"
         },
         "edit": "deny",
         "task": "deny"
       },
-      "prompt": "{file:./prompts/engineering-voice.md}\n\n{file:./skills/code-review/SKILL.md}\n\n{file:./prompts/task-review-guideline.md}\n\n{file:./prompts/markdown-style.md}"
+      "prompt": "{file:./prompts/engineering-voice.md}\n\n{file:./skills/code-review/SKILL.md}\n\n{file:./prompts/task-review-guideline.md}\n\n{file:./prompts/tool-routing.md}\n\n{file:./prompts/markdown-style.md}"
     },
     "expert-reviewer": {
-      "description": "Expert-depth source-read-only review for Task PRs or ad hoc scopes",
+      "description": "Expert-depth source-read-only review for workflow Subtasks or ad hoc scopes",
       "model": "openai/gpt-5.6-sol",
       "variant": "high",
       "mode": "subagent",
       "hidden": true,
       "steps": 50,
       "permission": {
+        "question": "deny",
+        "read": {
+          ".work/*": "deny",
+          "~/agent-vault": "deny",
+          "~/agent-vault/*": "deny",
+          "*/agent-vault/projects/*": "deny"
+        },
         "bash": {
-          "*taskctl*": "deny"
+          "*": "deny"
         },
         "edit": "deny",
         "task": "deny"
       },
-      "prompt": "{file:./skills/code-review/SKILL.md}\n\n{file:./prompts/task-review-guideline.md}\n\n{file:./prompts/expert-reviewer-guideline.md}\n\n{file:./prompts/markdown-style.md}"
+      "prompt": "{file:./prompts/engineering-voice.md}\n\n{file:./skills/code-review/SKILL.md}\n\n{file:./prompts/task-review-guideline.md}\n\n{file:./prompts/expert-reviewer-guideline.md}\n\n{file:./prompts/tool-routing.md}\n\n{file:./prompts/markdown-style.md}"
     }
   }
 }

@@ -1,7 +1,7 @@
 ---
-description: Show selected Task status and next action.
-agent: workflow
-subtask: true
+description: Show selected Task status and the one permitted next action.
+agent: orchestrator
+subtask: false
 ---
 
-Run `taskctl status` and concisely report Task/PR/Step progress, current work, artifacts, skip reasons, vault Git state, and applicable next commands among `/next-step`, `/accept-step`, `/accept-and-go`, `/review-pr`, and `/address-review`. Distinguish normal implementation, the final PR gate, and corrective remediation without restating their protocols. Do not modify files or lifecycle state.
+Obtain the temporary bridge's narrow summary projection without mutating files or lifecycle state. Report Task and Subtask progress, the active blocker if any, review-attempt budget, current automated approval and validation, pending replanning, and the one applicable next command among `/plan`, `/next-subtask`, `/address-review`, `/accept-subtask`, and `/accept-and-go`. Do not dispatch a specialist.

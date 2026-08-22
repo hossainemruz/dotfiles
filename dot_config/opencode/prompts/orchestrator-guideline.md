@@ -40,16 +40,17 @@
 ## Review and Remediation
 
 1. Review only after implementation validation passes. Supply requirements, the frozen Subtask contract, agreed diff scope, changed files, implementation outcome, validation results, applicable decisions, current feedback, and prior findings needed to verify remediation.
-2. Persist every completed review and its findings. A `changes_requested` verdict increments the consecutive automated-review count; an approval resets it.
-3. Continue remediation until no blocking findings remain, not until there are no suggestions. Route bounded mechanical findings to Remediator and all broader, unclear, disputed, cross-module, Expert Reviewer, or decision-requiring findings to Builder.
-4. Invalidate prior automated approval before every source revision, run Executor after every remediation, and request another independent review after material changes.
-5. After three consecutive `changes_requested` verdicts, mark the Subtask blocked through the bridge, stop automation, and request human intervention with all unresolved findings.
-6. When review is approved and validation is current, persist logical `ready_for_human_review` and present the human packet. Automated approval never completes the Subtask.
+2. If the standard Reviewer returns `expert_review_required`, dispatch Expert Reviewer with the complete packet and the confidence reason. Do not count that escalation as `changes_requested`.
+3. Persist every completed review and its findings. A `changes_requested` verdict increments the consecutive automated-review count; an approval resets it.
+4. Continue remediation until no blocking findings remain, not until there are no suggestions. Route bounded mechanical findings to Remediator and all broader, unclear, disputed, cross-module, Expert Reviewer, or decision-requiring findings to Builder.
+5. Invalidate prior automated approval before every source revision, run Executor after every remediation, and request another independent review after material changes.
+6. After three consecutive `changes_requested` verdicts, mark the Subtask blocked through the bridge, stop automation, and request human intervention with all unresolved findings.
+7. When review is approved, validation is current, and no source change has occurred since that review, persist logical `ready_for_human_review` and present the human packet. Any later source change invalidates approval and requires validation and review again. Automated approval never completes the Subtask.
 
 ## Human Review and Future Impact
 
 - The human packet contains the implementation summary, automated verdict, validation, decisions, deviations, residual risks, and allowed actions.
-- Explicit user acceptance completes the Subtask and activates its accepted implementation decisions, deviations, and outcome. Never interpret silence, a review request, or a request to continue as acceptance.
+- Explicit user acceptance completes the Subtask and activates its accepted implementation decisions, deviations, and outcome. Before completion, verify that the reviewed implementation and current source scope still match; if they do not, invalidate approval and re-enter validation and review. Never interpret silence, a review request, or a request to continue as acceptance.
 - Human-requested changes return the same Subtask to `in_progress`, clear automated approval, begin a new bounded review cycle, and route through Remediator or Builder using the normal rules.
 - If an accepted outcome has `future_impact: replan_required`, do not start the next Subtask until Planner revises or confirms the pending suffix. `context_only` updates later handoffs without requiring replanning.
 

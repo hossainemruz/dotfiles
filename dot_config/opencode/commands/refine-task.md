@@ -1,9 +1,9 @@
 ---
-description: Refine the selected Task requirements.
-agent: planner
-subtask: true
+description: Clarify and refine the selected Task requirements.
+agent: orchestrator
+subtask: false
 ---
 
-Run the planning skill's refinement workflow. Treat `$ARGUMENTS` as requested refinements or context to evaluate without silently expanding scope. Ask the smallest batch of independent blocking questions and sequence only dependent questions. Once clear, apply valid refinements to `task.md`; if none are needed, do not edit it.
+Treat `$ARGUMENTS` as requested refinements or context. Resolve the selected Task, evaluate the request against its objective, acceptance criteria, constraints, non-goals, and existing durable decisions, ask the smallest batch of blocking questions with recommendations, and persist valid refinements to `task.md` yourself without silently expanding scope. Do not mutate Subtask state or edit repository source.
 
-Return Task ID/title/path, verdict, blockers, and `/research` or `/plan`.
+Return Task ID and title, requirements changes, blockers, and `/plan`.

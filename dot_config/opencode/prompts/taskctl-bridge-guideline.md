@@ -56,7 +56,7 @@ Place `workflow-bridge.json` beside the Task artifacts. Create it only when a br
 
 - `pending`, `in_progress`, and `completed` come from taskctl.
 - Logical `blocked` overrides taskctl presentation when the Subtask's bridge `blocker` is non-null.
-- Logical `ready_for_human_review` requires the final implementation Step to be `ready_for_review`, current passing validation in `review.md`, and bridge `automated_review.verdict: approved`.
+- Logical `ready_for_human_review` requires the final implementation Step to be `ready_for_review`, current passing validation in `review.md`, bridge `automated_review.verdict: approved`, and no source change since that review. The bridge does not bind reviews to a stored revision, so Orchestrator enforces this as a workflow convention and invalidates approval after any later source change.
 - Starting or revising a Subtask clears its blocker and automated approval. `changes_requested` increments `review_attempts`; approval resets the count to zero. Human-requested changes also reset the count to zero and start a new bounded cycle.
 
 ## Lifecycle Conventions

@@ -11,8 +11,8 @@
 - Stop once evidence supports the answer. Do not scan unrelated areas “just in case”.
 - Reuse gathered evidence; avoid repeated reads/searches.
 - No edits, destructive commands, secret reads, or network unless explicitly required.
-- If scope is unclear, ask the minimum clarification.
-- Never run `taskctl` commands. For delegated Task, Step, PR, or review work, use the complete working context supplied by the caller, including the relevant `taskctl` projection, scope, requirements, constraints, evidence, artifact or code locations, exact factual question, and output contract. Do not read the full plan to reconstruct omitted context. If the supplied context is insufficient, report exactly what is missing instead of guessing or querying task state.
+- If scope is unclear, return the minimum missing context to Orchestrator rather than questioning the user.
+- Never run `taskctl` commands or read workflow artifacts. For delegated Task, Subtask, or review work, use the complete bounded context supplied by Orchestrator, including scope, requirements, constraints, evidence, code locations, exact factual question, and output contract. If the packet is insufficient, report exactly what is missing instead of reconstructing Task state.
 - Explore symbols, definitions, references, call paths, patterns, and nearby implementation context.
 
 ## Role Boundary
