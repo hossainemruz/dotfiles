@@ -15,7 +15,12 @@
       "command": [
         "fff-mcp"
       ]
-    }
+    },
+    "devcroft": {
+      "type": "remote",
+      "url": "http://127.0.0.1:8756/mcp",
+      "enabled": true
+  }
   },
   "small_model": "deepseek/deepseek-v4-flash",
   "subagent_depth": 2,
