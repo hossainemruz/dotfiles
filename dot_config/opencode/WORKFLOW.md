@@ -2,17 +2,16 @@
 
 ## Status
 
-This document records the intended OpenCode workflow and the Devcroft MCP interface that will replace temporary taskctl-backed persistence. The current OpenCode configuration implements the semantic agent roles and lifecycle convention through the bridge below; MCP-specific guarantees remain a design reference until the server exists.
+This document records the active OpenCode workflow and Devcroft MCP interface. Devcroft is the canonical persistence and lifecycle boundary; the former taskctl bridge is retired and must not be used as a fallback.
 
-### Temporary taskctl bridge
+### Active Devcroft integration
 
-Until the Devcroft MCP is available, Orchestrator is the only `taskctl` caller and workflow-artifact writer. Specialists remain stateless, receive the same bounded context packets intended for MCP operation, and return structured results to Orchestrator. This preserves the control-plane boundary so migration replaces the persistence adapter rather than redesigning agent interactions.
+Orchestrator is the sole Devcroft MCP client. Specialists remain stateless, receive bounded context packets from Orchestrator, and return structured results without direct workflow access.
 
-- A Task maps to a taskctl Task and a Subtask maps to a taskctl PR. New plans create one implementation Step per PR as a backend compatibility detail.
-- `workflow-bridge.json` beside the Task artifacts stores only fields taskctl cannot represent: blockers, review attempts, automated approval, future impact, and accepted outcomes.
-- Automated review and remediation occur before explicit human acceptance. Remediation revises the same implementation Step; the bridge does not create corrective Steps.
-- taskctl remains canonical for its hierarchy and represented lifecycle state. Orchestrator never edits `task.yaml`, and specialists never receive taskctl commands or write access to workflow artifacts.
-- The bridge cannot provide MCP-grade atomic writes, strict schema decoding, transition validation, or safe pending-suffix replacement. Orchestrator blocks and requests human intervention rather than guessing when these limitations matter.
+- Devcroft stores Tasks, ordered Subtasks, requirements, research, durable decisions, implementation outcomes, validation, reviews, blockers, feedback, and lifecycle state.
+- Automated review and remediation occur before explicit human acceptance.
+- The MCP validates transitions, review budgets, and pending-suffix replacement. Orchestrator follows returned allowed actions and never bypasses a rejected transition.
+- `taskctl`, `workflow-bridge.json`, and legacy workflow artifacts are not canonical and are not read or written by workflow agents.
 
 ## Goals
 
@@ -44,7 +43,7 @@ Orchestrator is the workflow control plane and sole Devcroft MCP client. It owns
 - Model and role selection.
 - Sol usage and escalation decisions.
 - Complete specialist handoffs.
-- Persistence of research, plans, durable advisor decisions, and reviews.
+- Persistence of requirements, research, plans, durable advisor decisions, outcomes, validation, and reviews.
 - Reporting workflow state, validation, findings, and blockers to the user.
 
 ### Specialists
@@ -115,7 +114,7 @@ A durable decision contains:
 - Affected Subtasks.
 - A rejected alternative when the distinction remains relevant.
 
-Durable advisor decisions are appended to the Task through `devcroft_update_task` and become active immediately. Builder- or Remediator-reported implementation decisions and deviations become active cross-Subtask context only after the user accepts that Subtask. Unaccepted implementation outcomes must not constrain later work.
+Durable advisor decisions are appended to the Task through `devcroft_update_task` with Task-scoped activation and become active immediately. Builder-reported implementation decisions are appended with outcome-scoped activation using the prospective outcome ID, then referenced by `devcroft_record_review`; they and recorded deviations become active cross-Subtask context only after the user accepts that Subtask. Unaccepted implementation outcomes must not constrain later work.
 
 ## Implementation
 
@@ -123,9 +122,9 @@ Terra high is the Builder. High-risk implementation should first be bounded thro
 
 Before dispatching Builder, Orchestrator obtains the Subtask context and asks Explorer to reconcile it with the current repository. This is a focused freshness check and relevant-file discovery pass, not a repetition of the original Task research.
 
-Builder receives requirements, plan context, repository evidence, applicable advisor directives, scope limits, and validation expectations. It returns changed files, implementation summary, requested validation, residual risks, any blocker or advisor request, durable implementation decisions, deviations from the plan, and `future_impact: none|context_only|replan_required`.
+Builder receives requirements, plan context, repository evidence, applicable advisor directives, scope limits, and validation expectations. It returns changed files, implementation summary, requested validation, residual risks, any blocker or advisor request, implementation decisions, deviations from the plan, and `future_impact: none|context_only|replan_required` for Orchestrator routing.
 
-When an accepted outcome has `future_impact: replan_required`, the next pending Subtask cannot start until Planner revises the pending suffix or confirms it remains valid through `devcroft_apply_plan`.
+When an implementation result has `future_impact: replan_required`, Orchestrator must have Planner revise or confirm the pending suffix through `devcroft_apply_plan` before the current Subtask is completed. Cross-Subtask invariants that must apply immediately are persisted as durable decisions.
 
 Executor runs exact validation commands after implementation and after remediation. It returns commands, exit codes, and relevant output without making architectural or lifecycle decisions.
 
@@ -167,12 +166,14 @@ The MCP is a persistence and workflow-validation module. It stores canonical rec
 
 | Internal tool | OpenCode tool | Responsibility |
 | --- | --- | --- |
-| `create_task` | `devcroft_create_task` | Create a draft Task from the initial request. |
+| `create_task` | `devcroft_create_task` | Create a draft Task from the initial request and repository keys. |
+| `list_repositories` | `devcroft_list_repositories` | List valid repository keys for Task association and plan records. |
+| `list_tasks` | `devcroft_list_tasks` | List compact Task candidates, optionally filtered by repository or status. |
 | `get_context` | `devcroft_get_context` | Return bounded Task or Subtask context for a requested scope. |
-| `update_task` | `devcroft_update_task` | Update clarified requirements, research, or durable decisions. |
+| `update_task` | `devcroft_update_task` | Replace requirements or research, update repository associations, append a durable decision, or cancel the Task. |
 | `apply_plan` | `devcroft_apply_plan` | Establish the initial ordered plan or atomically revise only its pending Subtask suffix. |
 | `update_subtask_state` | `devcroft_update_subtask_state` | Start, block, submit for human review, return for human feedback, reopen, or complete a Subtask. |
-| `record_review` | `devcroft_record_review` | Store the reviewed implementation outcome, standard or expert verdict, and findings; track attempts; and enforce the remediation budget. |
+| `record_review` | `devcroft_record_review` | Store the reviewed implementation outcome, validation, verdict, and findings; track attempts; and enforce the remediation budget. |
 
 The MCP implementation validates legal state transitions even though they share one `update_subtask_state` tool. Separate `start_subtask` and `accept_subtask` tools are unnecessary.
 
@@ -253,7 +254,7 @@ Agent review remains an activity rather than a persistent lifecycle state. Task 
 
 Subtasks are ordered, and only the first eligible pending Subtask may enter `in_progress`. Starting a Subtask freezes its contract. Human feedback and review findings guide revisions without silently replacing that contract.
 
-`ready_for_human_review` requires current automated approval and validation. Human acceptance moves the Subtask directly to `completed`; human changes return it to `in_progress`. Completing a Subtask activates its accepted implementation decisions and deviations. If its future impact requires replanning, the next Subtask remains ineligible until the pending plan suffix is revised or confirmed.
+`ready_for_human_review` requires current automated approval and validation. Human acceptance moves the Subtask directly to `completed`; human changes return it to `in_progress`. Completing a Subtask activates its accepted implementation decisions and deviations. Any required pending-plan revision must be persisted before completion so that obligation cannot be lost between sessions.
 
 ## Workflow
 
@@ -271,7 +272,8 @@ sequenceDiagram
     participant Reviewer
 
     User->>Orchestrator: Create Task
-    Orchestrator->>MCP: devcroft_create_task(initial request)
+    Orchestrator->>MCP: devcroft_list_repositories
+    Orchestrator->>MCP: devcroft_create_task(initial request, repository keys)
     loop Until requirements are executable
         Orchestrator->>User: Blocking questions and recommendation
         User-->>Orchestrator: Clarification
@@ -308,6 +310,9 @@ sequenceDiagram
         Orchestrator->>MCP: devcroft_get_context(review)
         Orchestrator->>Reviewer: Review context, current outcome, and validation
         Reviewer-->>Orchestrator: Verdict and findings
+        opt Implementation decisions
+            Orchestrator->>MCP: devcroft_update_task(decision, outcome activation)
+        end
         Orchestrator->>MCP: devcroft_record_review(outcome and review)
         alt Changes requested and budget remains
             alt Findings are bounded and mechanical
@@ -328,6 +333,11 @@ sequenceDiagram
             Orchestrator->>User: Present human review packet
             alt User accepts
                 User-->>Orchestrator: Accept
+                opt Pending work is affected
+                    Orchestrator->>Planner: Confirm or revise pending suffix
+                    Planner-->>Orchestrator: Updated pending plan
+                    Orchestrator->>MCP: devcroft_apply_plan(pending suffix)
+                end
                 Orchestrator->>MCP: devcroft_update_subtask_state(completed)
             else User requests changes
                 User-->>Orchestrator: Feedback
@@ -346,16 +356,15 @@ sequenceDiagram
     end
 ```
 
-## Migration Notes
+## Legacy Bridge Retirement
 
-Replacing the temporary bridge requires more than adding the MCP server. Orchestrator's bridge prompt, command wording, and bridge-record persistence must be removed or rewritten while preserving the semantic specialist contracts.
+The OpenCode workflow now uses Devcroft directly. The Orchestrator prompt and commands must reference only `devcroft_*` tools, while specialists remain stateless and MCP-denied.
 
-The migration should also:
+The integration requires:
 
-- Remove `taskctl` access from Orchestrator and delete the temporary bridge prompt and record.
-- Replace Orchestrator's logical-operation adapter with the corresponding `devcroft_*` tools.
-- Migrate any active blocker, review-attempt, approval, future-impact, and accepted-outcome bridge fields into canonical MCP records.
+- Deny `taskctl` access and remove the temporary bridge prompt from active configuration.
+- Use the corresponding `devcroft_*` tool for every workflow read or mutation.
+- Migrate any still-active legacy Task data into Devcroft before deleting its external artifacts; this is an explicit data-migration operation, not an agent fallback path.
 - Preserve each semantic agent's role-specific prompt, shared prompt fragments, and least-privilege permissions.
 - Preserve routing of every workflow specialist invocation through Orchestrator.
 - Deny `devcroft_*` globally and allow it only for Orchestrator.
-- Keep the bridge operational until the Devcroft MCP interface, state migration, and replacement Orchestrator prompt are ready.

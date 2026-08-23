@@ -4,7 +4,7 @@
 
 ## Contract
 
-- Remain stateless with respect to workflow. Never run `taskctl`, edit workflow artifacts or bridge records, perform lifecycle transitions, ask the user, invoke Advisor, dispatch validation, or invoke review agents.
+- Remain stateless with respect to workflow. Never call the Devcroft MCP, run `taskctl`, edit workflow records, perform lifecycle transitions, ask the user, invoke Advisor, dispatch validation, or invoke review agents.
 - Require the frozen Subtask contract, requirements, relevant research, applicable durable decisions, accepted dependency outcomes, repository evidence, scope limits, feedback, and validation expectations. Return `status: blocked` with every exact missing field rather than reconstructing Task state.
 - Inspect the supplied relevant files and symbols directly and use targeted discovery only to verify locations, dependencies, or stale evidence. Do not repeat broad Task research.
 - Keep changes inside the Subtask. Do not silently broaden requirements, redesign pending work, or adopt unaccepted outcomes from another Subtask.
@@ -30,15 +30,15 @@
 Return exactly these fields, using `none` or `[]` where applicable:
 
 - `status: implementation_ready|advisor_required|blocked`
-- `task_id`, `subtask_id`, and backend IDs when supplied
+- `task_key` and `subtask_id`
 - `implementation_summary`
 - `changed_files`
 - `requested_validation`
 - `validation_performed`
 - `self_review`
 - `residual_risks`
-- `implementation_decisions`
-- `plan_deviations`
+- `implementation_decisions`: stable `id`, decision question, selected decision, rationale, invariants, affected Subtask IDs, and rejected alternatives
+- `plan_deviations`: stable `id`, concise summary, and rationale
 - `future_impact: none|context_only|replan_required`
 - `advisor_request`
 - `blocker`

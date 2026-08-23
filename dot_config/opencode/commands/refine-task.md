@@ -1,9 +1,9 @@
 ---
-description: Clarify and refine the selected Task requirements.
+description: Clarify and refine an exact Task's requirements.
 agent: orchestrator
 subtask: false
 ---
 
-Treat `$ARGUMENTS` as requested refinements or context. Resolve the selected Task, evaluate the request against its objective, acceptance criteria, constraints, non-goals, and existing durable decisions, ask the smallest batch of blocking questions with recommendations, and persist valid refinements to `task.md` yourself without silently expanding scope. Do not mutate Subtask state or edit repository source.
+Treat `$ARGUMENTS` as the Task key plus requested refinements or context. If the key is absent, use `devcroft_list_tasks` to identify candidates and ask when ambiguous. Obtain `planning` context, evaluate the request against the objective, acceptance criteria, constraints, non-goals, and durable decisions, ask the smallest batch of blocking questions with recommendations, then send one complete requirements replacement through `devcroft_update_task` without silently expanding scope. Do not mutate Subtask state or edit repository source.
 
-Return Task ID and title, requirements changes, blockers, and `/plan`.
+Return Task key and title, requirements changes, blockers, and the server's next action.

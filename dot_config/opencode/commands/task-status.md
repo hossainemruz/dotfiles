@@ -1,7 +1,7 @@
 ---
-description: Show selected Task status and the one permitted next action.
+description: Show an exact Task's status and the one permitted next action.
 agent: orchestrator
 subtask: false
 ---
 
-Obtain the temporary bridge's narrow summary projection without mutating files or lifecycle state. Report Task and Subtask progress, the active blocker if any, review-attempt budget, current automated approval and validation, pending replanning, and the one applicable next command among `/plan`, `/next-subtask`, `/address-review`, `/accept-subtask`, and `/accept-and-go`. Do not dispatch a specialist.
+Treat `$ARGUMENTS` as the Task key. If absent, use `devcroft_list_tasks` to identify candidates and ask when ambiguous. Obtain the exact Task's `summary` context without mutating lifecycle state. Report Task and Subtask progress, the active blocker if any, review-attempt budget, current automated approval and validation, pending replanning, and the server's one permitted next action. Do not dispatch a specialist.

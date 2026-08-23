@@ -1,9 +1,9 @@
 ---
-description: Create and clarify a Task through the temporary workflow bridge.
+description: Create and clarify a Task through Devcroft.
 agent: orchestrator
 subtask: false
 ---
 
-Treat `$ARGUMENTS` as the initial Task title and request. Execute the canonical Task-creation and requirements-clarification workflow: create the Task through the temporary taskctl bridge, ask only blocking questions with recommendations, and persist executable requirements in `task.md`. Do not plan or edit repository source unless the user explicitly continues with planning.
+Treat `$ARGUMENTS` as the complete initial Task request. Resolve valid repository keys with `devcroft_list_repositories`, create the draft with `devcroft_create_task`, ask only blocking questions with recommendations, and replace the Task's requirements through `devcroft_update_task` once they are executable. Do not plan or edit repository source unless the user explicitly continues with planning.
 
-Return the Task ID, clarified objective, unresolved blockers, and `/plan` as the next action when requirements are executable.
+Return the Task key, clarified objective, repository associations, unresolved blockers, and `/plan` as the next action when requirements are executable.

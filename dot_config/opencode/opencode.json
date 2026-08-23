@@ -20,11 +20,12 @@
       "type": "remote",
       "url": "http://127.0.0.1:8756/mcp",
       "enabled": true
-  }
+    }
   },
   "small_model": "deepseek/deepseek-v4-flash",
   "subagent_depth": 2,
   "permission": {
+    "devcroft_*": "deny",
     "todowrite": "deny",
     "read": {
       "~/.ssh/*": "deny",
@@ -176,15 +177,16 @@
       "prompt": "{file:./prompts/engineering-voice.md}\n\n{file:./prompts/general-guideline.md}\n\n{file:./prompts/tool-routing.md}\n\n{file:./prompts/markdown-style.md}"
     },
     "orchestrator": {
-      "description": "Task-focused primary control plane for planning, implementation, review, acceptance, and the temporary taskctl bridge",
+      "description": "Task-focused primary control plane for planning, implementation, review, acceptance, and Devcroft workflow persistence",
       "model": "deepseek/deepseek-v4-pro",
       "mode": "primary",
       "variant": "high",
       "permission": {
+        "devcroft_*": "allow",
         "question": "allow",
         "todowrite": "allow",
         "bash": {
-          "*taskctl*": "allow"
+          "*taskctl*": "deny"
         },
         "task": {
           "*": "deny",
@@ -198,7 +200,7 @@
           "expert-reviewer": "allow"
         }
       },
-      "prompt": "{file:./prompts/engineering-voice.md}\n\n{file:./prompts/orchestrator-guideline.md}\n\n{file:./prompts/taskctl-bridge-guideline.md}\n\n{file:./prompts/tool-routing.md}\n\n{file:./prompts/markdown-style.md}"
+      "prompt": "{file:./prompts/engineering-voice.md}\n\n{file:./prompts/orchestrator-guideline.md}\n\n{file:./prompts/devcroft-guideline.md}\n\n{file:./prompts/tool-routing.md}\n\n{file:./prompts/markdown-style.md}"
     },
     "builder": {
       "description": "Default implementation agent for well-scoped non-trivial coding",

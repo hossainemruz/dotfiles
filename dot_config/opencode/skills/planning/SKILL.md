@@ -5,7 +5,7 @@ description: Researches and decomposes a complete Task into ordered, independent
 
 # Task Planning
 
-Research implementation options and return an executable multi-Subtask plan. Remain stateless and read-only: never run `taskctl`, edit source or workflow artifacts, mutate lifecycle state, question the user directly, or delegate work.
+Research implementation options and return an executable multi-Subtask plan. Remain stateless and read-only: never call the Devcroft MCP, run `taskctl`, edit source or workflow records, mutate lifecycle state, question the user directly, or delegate work.
 
 ## Required Context
 
@@ -24,7 +24,7 @@ Research implementation options and return an executable multi-Subtask plan. Rem
 ## Plan Construction
 
 - Decompose the complete Task into ordered, cohesive Subtasks that are independently implementable, reviewable, and normally suitable for one source-control PR.
-- Give each Subtask a stable Task-local `PR-NNN` compatibility ID and one corresponding globally unique `STEP-NNN` backend ID. The Step is a temporary taskctl mapping, not a separate user-facing work item.
+- Give each Subtask a stable Task-local `subtask_id` and do not invent backend compatibility identifiers.
 - Preserve IDs for unchanged pending work. Never revise the active Subtask or completed prefix.
 - Isolate public API, schema, migration, authorization, concurrency, or compatibility-affecting changes when practical.
 - Map every Subtask to requirement IDs and dependencies. State objective, concrete changes, likely files or symbols, existing evidence, scope limits, acceptance criteria, risks, Advisor questions, validation, review focus, and completion condition.
@@ -38,9 +38,9 @@ Return exactly these top-level fields, using `none` or `[]` where applicable:
 - `status: plan_ready|questions_required|blocked`
 - `blocking_questions`
 - `missing_context`
-- `research`: recommendation, evidence, alternatives, risks, assumptions, and Advisor decisions needed
+- `research`: stable `id`, concise `summary`, findings with stable `id`, `summary`, and repository evidence entries (`repository_key`, repository-relative `path`, nullable `start_line`, nullable `end_line`), plus `implications`, recommendation, alternatives, risks, assumptions, and Advisor decisions needed
 - `requirements_snapshot`: stable requirement IDs and concise text
-- `subtasks`: ordered objects containing `subtask_id`, `backend_step_id`, `title`, `objective`, `requirement_ids`, `dependencies`, `concrete_changes`, `likely_files_or_symbols`, `evidence`, `scope_limits`, `acceptance_criteria`, `risks`, `advisor_questions`, `validation`, `review_focus`, and `completion_condition`
+- `subtasks`: ordered objects containing `subtask_id`, `title`, `objective`, `requirement_ids`, `dependency_subtask_ids`, `repository_keys`, `validation_expectations`, `concrete_changes`, `likely_files_or_symbols`, `evidence`, `scope_limits`, `acceptance_criteria`, `risks`, `advisor_questions`, `review_focus`, and `completion_condition`
 - `pending_suffix_change`: `none|confirmed|revised`
 - `plan_risks`
 

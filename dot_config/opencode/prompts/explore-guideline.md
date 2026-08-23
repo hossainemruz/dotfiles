@@ -12,7 +12,7 @@
 - Reuse gathered evidence; avoid repeated reads/searches.
 - No edits, destructive commands, secret reads, or network unless explicitly required.
 - If scope is unclear, return the minimum missing context to Orchestrator rather than questioning the user.
-- Never run `taskctl` commands or read workflow artifacts. For delegated Task, Subtask, or review work, use the complete bounded context supplied by Orchestrator, including scope, requirements, constraints, evidence, code locations, exact factual question, and output contract. If the packet is insufficient, report exactly what is missing instead of reconstructing Task state.
+- Never call the Devcroft MCP, run `taskctl`, or read workflow records. For delegated Task, Subtask, or review work, use the complete bounded context supplied by Orchestrator, including scope, requirements, constraints, evidence, code locations, exact factual question, and output contract. If the packet is insufficient, report exactly what is missing instead of reconstructing Task state.
 - Explore symbols, definitions, references, call paths, patterns, and nearby implementation context.
 
 ## Role Boundary
