@@ -198,6 +198,7 @@
     "builder": {
       "description": "Default implementation agent for clear bounded workflow or ad-hoc coding",
       "model": "deepseek/deepseek-v4-flash",
+      "variant": "max",
       "mode": "subagent",
       "hidden": true,
       "steps": 50,
