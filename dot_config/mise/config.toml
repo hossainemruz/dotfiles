@@ -1,3 +1,6 @@
+[settings]
+minimum_release_age = "3d"
+minimum_release_age_excludes = ["opencode", "claude"]
 [tools]
 awscli = "latest"
 aws-vault = "latest"
