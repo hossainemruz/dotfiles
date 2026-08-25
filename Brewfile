@@ -4,7 +4,6 @@
 # CLI basics used by these dotfiles and shell helpers.
 # Prefer mise for CLI tools when they are available there; see
 # dot_config/mise/config.toml for the mise-managed tool list.
-tap "anomalyco/tap"
 
 brew "bash"
 brew "git"
@@ -17,9 +16,7 @@ brew "zsh-autosuggestions"
 brew "zsh-syntax-highlighting"
 
 # AI developer CLIs.
-cask "claude-code"
 cask "codex-app"
-brew "anomalyco/tap/opencode"
 
 # Terminal workflow tools not managed by mise.
 brew "autojump"
@@ -35,7 +32,6 @@ cask "gcloud-cli"
 cask "megasync"
 cask "raycast"
 cask "slack"
-cask "visual-studio-code"
 cask "whatsapp"
 cask "zed"
 cask "zen"
