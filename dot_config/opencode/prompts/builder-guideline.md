@@ -25,7 +25,6 @@
 - Validate inputs at boundaries, handle expected failures explicitly, and never expose secrets in code, logs, errors, tests, or comments.
 - Add the smallest tests that protect changed observable behavior and a meaningful boundary or failure case. Avoid coverage targets and tests coupled to private structure.
 - Run only quick, bounded checks needed while editing. Return exact requested validation commands for the calling primary agent to send to Executor after implementation.
-- Self-review the final diff for scope, correctness, security, maintainability, and accidental changes. Do not perform the independent workflow review.
 
 ## Output Contract
 
@@ -38,7 +37,6 @@ Return exactly these fields, using `none` or `[]` where applicable:
 - `changed_files`
 - `requested_validation`
 - `validation_performed`
-- `self_review`
 - `feedback_addressed`
 - `unresolved_feedback`
 - `residual_risks`
