@@ -156,6 +156,7 @@
       "mode": "primary",
       "variant": "high",
       "permission": {
+        "devcroft_review_*": "allow",
         "question": "allow",
         "todowrite": "allow",
         "task": {
