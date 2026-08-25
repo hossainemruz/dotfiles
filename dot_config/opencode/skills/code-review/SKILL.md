@@ -1,6 +1,6 @@
 ---
 name: code-review
-description: Evidence-based PR review and code review for a working-tree diff, caller-scoped changes, or review findings.
+description: Evidence-based correctness, security, and code-quality review for a working-tree diff, caller-scoped changes, or review findings.
 ---
 
 Produce high-signal reviews focused on real risk. Review source without editing it, and never call the Devcroft MCP, run `taskctl`, mutate workflow state, persist review records, question the user, or delegate work.
@@ -19,20 +19,20 @@ Produce high-signal reviews focused on real risk. Review source without editing 
 
 ## Review Passes
 
-Scale depth to the diff's risk and size. Keep small docs/config/localized diffs lightweight; inspect risky, broad, security-sensitive, or behavior-changing diffs more deeply.
+Scale depth to the diff's risk and size. Keep small docs/config/localized diffs lightweight; inspect risky, broad, security-sensitive, or behavior-changing diffs more deeply. After confirming scope, review in this priority order:
 
-1. **Scope**: confirm the diff matches the requested change and flag unrelated work.
-2. **Correctness**: check logic, assumptions, edge cases, regressions, data flow, and integration with existing behavior.
-3. **Security and privacy**: check secrets, injection, unsafe file/network behavior, permission/auth boundaries, and data exposure.
-4. **Robustness and performance**: check error handling, races, cleanup, unnecessary work, hot-path slowdowns, and scalability.
-5. **Maintainability and validation**: check avoidable complexity, duplication, boundary violations, missing validation, and observable behavior left exposed to a plausible regression.
+1. **Correctness**: check logic, requirements, assumptions, edge cases, regressions, error handling, races, cleanup, data flow, integration behavior, and whether validation protects meaningful observable behavior.
+2. **Security and privacy**: check secrets, injection, unsafe file or network behavior, authentication and authorization boundaries, permission handling, trust assumptions, and data exposure.
+3. **Code quality and simplification**: check unnecessary complexity, duplication, avoidable indirection, poor ownership boundaries, missed reuse of established helpers or types, redundant state or work, inefficient hot paths, and opportunities to make the changed code simpler without broadening behavior.
+
+Code-quality and simplification feedback must be high confidence and materially improve readability, maintainability, reuse, or efficiency. Do not request speculative refactors or churn after correctness and security are satisfied.
 
 ## Do Not Report
 
 - Style-only preferences without real risk
 - Hypothetical issues without a plausible failure path
 - Duplicate findings for the same root cause
-- Low-value nits that do not materially improve quality
+- Low-value nits or cosmetic simplification that do not materially improve quality
 - Coverage targets, missing tests for private helpers, or tests of implementation details without an unprotected behavioral risk
 
 ## Finding Bar and Severity

@@ -41,11 +41,11 @@
 
 ## Persistence Rules
 
-- Persist executable requirements before planning, then persist Planner research and apply the ordered plan.
+- Persist executable requirements before planning. Only after explicit planning authorization, persist Planner research and apply the ordered plan.
 - Persist a durable Advisor decision only when it affects multiple Subtasks, establishes an invariant, changes or supplements the plan, selects a meaningful architectural alternative, or is likely to be reconsidered.
 - Record every completed automated review, including approval. Do not mutate source after approval without rerunning validation and review.
 - Explicit human acceptance is the only authority to transition a Subtask from `ready_for_human_review` to `completed`.
-- If implementation changes invalidate pending work, revise or confirm the pending plan suffix before completing the current Subtask so the durable workflow cannot lose that obligation.
+- If implementation changes invalidate pending work, stop and request explicit replanning authorization. After authorization, revise or confirm the pending plan suffix before completing the current Subtask so the durable workflow cannot lose that obligation.
 - Do not store chat transcripts, full diffs, raw command output, absolute paths, environment values, credentials, or secrets in MCP records.
 
 ## Error Handling

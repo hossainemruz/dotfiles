@@ -1,6 +1,6 @@
 ---
 description: Review caller-scoped or current working-tree changes.
-agent: orchestrator
+agent: general
 subtask: false
 ---
 

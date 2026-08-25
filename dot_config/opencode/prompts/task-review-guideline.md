@@ -11,6 +11,7 @@ Apply this contract when the caller selects `mode: workflow`. For `mode: ad-hoc`
 ## Review Behavior
 
 - Review the complete Subtask diff against the agreed base. Optional focus may prioritize analysis but cannot omit relevant changed code.
+- After confirming scope, review in order: correctness, security and privacy, then code quality and simplification. Code-quality feedback should identify high-confidence opportunities for reuse, lower complexity, clearer ownership, or less redundant work without turning preferences into findings.
 - Judge the integrated implementation rather than attributing findings to backend Steps.
 - Verify prior blocking findings against the current diff and validation, but independently assess whether material changes introduced new problems.
 - Return `status: expert_review_required` instead of a verdict when the evidence is insufficient or the change reveals security, authorization, concurrency, migration, compatibility, data-integrity, public-interface, or architectural-seam risk that requires expert scrutiny.

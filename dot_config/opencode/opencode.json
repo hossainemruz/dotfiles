@@ -154,7 +154,7 @@
       "disable": true
     },
     "general": {
-      "description": "Lean default primary agent for ordinary advice, investigation, and implementation",
+      "description": "Default primary agent for unplanned advice, investigation, review, and ad-hoc implementation",
       "model": "openai/gpt-5.6-terra",
       "mode": "primary",
       "variant": "high",
@@ -170,15 +170,16 @@
           "advisor": "allow",
           "executor": "allow",
           "builder": "allow",
-          "simplifier": "allow",
-          "reviewer": "allow"
+          "builder-high": "allow",
+          "reviewer": "allow",
+          "expert-reviewer": "allow"
         }
       },
-      "prompt": "{file:./prompts/engineering-voice.md}\n\n{file:./prompts/general-guideline.md}\n\n{file:./prompts/tool-routing.md}\n\n{file:./prompts/markdown-style.md}"
+      "prompt": "{file:./prompts/engineering-voice.md}\n\n{file:./prompts/general-guideline.md}\n\n{file:./prompts/context-handoff.md}\n\n{file:./prompts/tool-routing.md}\n\n{file:./prompts/markdown-style.md}"
     },
     "orchestrator": {
-      "description": "Task-focused primary control plane for planning, implementation, review, acceptance, and Devcroft workflow persistence",
-      "model": "deepseek/deepseek-v4-pro",
+      "description": "Primary control plane for explicit planning and planned Devcroft Task lifecycle",
+      "model": "openai/gpt-5.6-terra",
       "mode": "primary",
       "variant": "high",
       "permission": {
@@ -195,18 +196,17 @@
           "advisor": "allow",
           "executor": "allow",
           "builder": "allow",
-          "remediator": "allow",
+          "builder-high": "allow",
           "reviewer": "allow",
           "expert-reviewer": "allow"
         }
       },
-      "prompt": "{file:./prompts/engineering-voice.md}\n\n{file:./prompts/orchestrator-guideline.md}\n\n{file:./prompts/devcroft-guideline.md}\n\n{file:./prompts/tool-routing.md}\n\n{file:./prompts/markdown-style.md}"
+      "prompt": "{file:./prompts/engineering-voice.md}\n\n{file:./prompts/orchestrator-guideline.md}\n\n{file:./prompts/devcroft-guideline.md}\n\n{file:./prompts/context-handoff.md}\n\n{file:./prompts/tool-routing.md}\n\n{file:./prompts/markdown-style.md}"
     },
     "builder": {
-      "description": "Default implementation agent for well-scoped non-trivial coding",
-      "model": "openai/gpt-5.6-terra",
+      "description": "Default implementation agent for clear bounded workflow or ad-hoc coding",
+      "model": "deepseek/deepseek-v4-flash",
       "mode": "subagent",
-      "variant": "high",
       "hidden": true,
       "steps": 50,
       "permission": {
@@ -230,13 +230,13 @@
       },
       "prompt": "{file:./prompts/engineering-voice.md}\n\n{file:./prompts/builder-guideline.md}\n\n{file:./prompts/tool-routing.md}\n\n{file:./prompts/markdown-style.md}"
     },
-    "remediator": {
-      "description": "Bounded implementation agent for concrete review findings and human feedback",
-      "model": "openai/gpt-5.6-luna",
+    "builder-high": {
+      "description": "High-capability implementation agent for difficult, cross-cutting, or reasoning-intensive coding",
+      "model": "openai/gpt-5.6-terra",
       "mode": "subagent",
-      "variant": "high",
+      "variant": "xhigh",
       "hidden": true,
-      "steps": 35,
+      "steps": 50,
       "permission": {
         "question": "deny",
         "read": {
@@ -256,7 +256,7 @@
         },
         "task": "deny"
       },
-      "prompt": "{file:./prompts/engineering-voice.md}\n\n{file:./prompts/remediator-guideline.md}\n\n{file:./prompts/tool-routing.md}\n\n{file:./prompts/markdown-style.md}"
+      "prompt": "{file:./prompts/engineering-voice.md}\n\n{file:./prompts/builder-guideline.md}\n\n{file:./prompts/tool-routing.md}\n\n{file:./prompts/markdown-style.md}"
     },
     "advisor": {
       "description": "Read-only implementation advisor for unresolved architectural, security, or high-stakes decisions",
@@ -311,7 +311,6 @@
       "description": "Read-only codebase evidence retrieval; no implementation recommendations",
       "model": "deepseek/deepseek-v4-flash",
       "mode": "subagent",
-      "variant": "max",
       "hidden": true,
       "steps": 25,
       "permission": {
@@ -357,20 +356,6 @@
       },
       "prompt": "{file:./prompts/executor-guideline.md}"
     },
-    "simplifier": {
-      "description": "Review changed code for reuse, quality, and efficiency, then fix worthwhile issues",
-      "model": "openai/gpt-5.6-luna",
-      "variant": "max",
-      "mode": "subagent",
-      "hidden": true,
-      "permission": {
-        "task": {
-          "*": "deny",
-          "executor": "allow"
-        }
-      },
-      "prompt": "{file:./skills/simplify/SKILL.md}\n\n{file:./prompts/markdown-style.md}"
-    },
     "reviewer": {
       "description": "Default independent source-read-only reviewer for workflow and ad hoc changes",
       "model": "openai/gpt-5.6-terra",
@@ -387,7 +372,13 @@
           "*/agent-vault/projects/*": "deny"
         },
         "bash": {
-          "*": "deny"
+          "*": "deny",
+          "git diff": "allow",
+          "git diff *": "allow",
+          "git status --short": "allow",
+          "git status --short *": "allow",
+          "git log": "allow",
+          "git log *": "allow"
         },
         "edit": "deny",
         "task": "deny"
@@ -410,7 +401,13 @@
           "*/agent-vault/projects/*": "deny"
         },
         "bash": {
-          "*": "deny"
+          "*": "deny",
+          "git diff": "allow",
+          "git diff *": "allow",
+          "git status --short": "allow",
+          "git status --short *": "allow",
+          "git log": "allow",
+          "git log *": "allow"
         },
         "edit": "deny",
         "task": "deny"
