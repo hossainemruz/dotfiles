@@ -76,16 +76,13 @@
       "~/.config/opencode": "allow",
       "~/.config/opencode/*": "allow",
       "~/.config/waybar": "allow",
-      "~/.config/waybar/*": "allow",
-      "~/agent-vault": "allow",
-      "~/agent-vault/*": "allow"
+      "~/.config/waybar/*": "allow"
     },
     "skill": {
       "omarchy": "deny",
       "plannotator-*": "deny"
     },
     "bash": {
-      "*taskctl*": "deny",
       "curl *": "ask",
       "wget *": "ask",
       "ssh *": "ask",
@@ -161,9 +158,6 @@
       "permission": {
         "question": "allow",
         "todowrite": "allow",
-        "bash": {
-          "*taskctl*": "deny"
-        },
         "task": {
           "*": "deny",
           "explore": "allow",
@@ -186,9 +180,6 @@
         "devcroft_*": "allow",
         "question": "allow",
         "todowrite": "allow",
-        "bash": {
-          "*taskctl*": "deny"
-        },
         "task": {
           "*": "deny",
           "planner": "allow",
@@ -212,19 +203,10 @@
       "permission": {
         "question": "deny",
         "read": {
-          ".work/*": "deny",
-          "~/agent-vault": "deny",
-          "~/agent-vault/*": "deny",
-          "*/agent-vault/projects/*": "deny"
+          ".work/*": "deny"
         },
         "edit": {
-          ".work/*": "deny",
-          "~/agent-vault": "deny",
-          "~/agent-vault/*": "deny",
-          "*/agent-vault/projects/*": "deny"
-        },
-        "bash": {
-          "*taskctl*": "deny"
+          ".work/*": "deny"
         },
         "task": "deny"
       },
@@ -240,19 +222,10 @@
       "permission": {
         "question": "deny",
         "read": {
-          ".work/*": "deny",
-          "~/agent-vault": "deny",
-          "~/agent-vault/*": "deny",
-          "*/agent-vault/projects/*": "deny"
+          ".work/*": "deny"
         },
         "edit": {
-          ".work/*": "deny",
-          "~/agent-vault": "deny",
-          "~/agent-vault/*": "deny",
-          "*/agent-vault/projects/*": "deny"
-        },
-        "bash": {
-          "*taskctl*": "deny"
+          ".work/*": "deny"
         },
         "task": "deny"
       },
@@ -268,10 +241,7 @@
       "permission": {
         "question": "deny",
         "read": {
-          ".work/*": "deny",
-          "~/agent-vault": "deny",
-          "~/agent-vault/*": "deny",
-          "*/agent-vault/projects/*": "deny"
+          ".work/*": "deny"
         },
         "edit": "deny",
         "bash": {
@@ -292,10 +262,7 @@
       "permission": {
         "question": "deny",
         "read": {
-          ".work/*": "deny",
-          "~/agent-vault": "deny",
-          "~/agent-vault/*": "deny",
-          "*/agent-vault/projects/*": "deny"
+          ".work/*": "deny"
         },
         "edit": "deny",
         "bash": {
@@ -316,10 +283,7 @@
       "permission": {
         "question": "deny",
         "read": {
-          ".work/*": "deny",
-          "~/agent-vault": "deny",
-          "~/agent-vault/*": "deny",
-          "*/agent-vault/projects/*": "deny"
+          ".work/*": "deny"
         },
         "edit": "deny",
         "bash": {
@@ -349,9 +313,6 @@
         "skill": "deny",
         "todowrite": "deny",
         "fff_*": "deny",
-        "bash": {
-          "*taskctl*": "deny"
-        },
         "task": "deny"
       },
       "prompt": "{file:./prompts/executor-guideline.md}"
@@ -366,10 +327,7 @@
       "permission": {
         "question": "deny",
         "read": {
-          ".work/*": "deny",
-          "~/agent-vault": "deny",
-          "~/agent-vault/*": "deny",
-          "*/agent-vault/projects/*": "deny"
+          ".work/*": "deny"
         },
         "bash": {
           "*": "deny",
@@ -395,10 +353,7 @@
       "permission": {
         "question": "deny",
         "read": {
-          ".work/*": "deny",
-          "~/agent-vault": "deny",
-          "~/agent-vault/*": "deny",
-          "*/agent-vault/projects/*": "deny"
+          ".work/*": "deny"
         },
         "bash": {
           "*": "deny",

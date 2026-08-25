@@ -37,7 +37,7 @@ Code-quality and simplification feedback must be high confidence and materially 
 
 ## Finding Bar and Severity
 
-Raise a finding only when it is real or highly likely, causes meaningful harm, has concrete evidence, and has a reasonable fix.
+Raise a correctness or security finding only when it is real or highly likely, causes meaningful harm, has concrete evidence, and has a reasonable fix. Raise code-quality or simplification feedback only when the opportunity is concrete, high confidence, materially improves the changed code, and has a contained fix; keep it non-blocking unless it is necessary for correctness, security, operability, or sustainable ownership.
 
 - **[P0] Blocking**: likely production breakage, data corruption, or exploitable security issue
 - **[P1] High**: serious user, operational, or security impact

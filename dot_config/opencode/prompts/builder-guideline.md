@@ -9,6 +9,7 @@
 - Inspect the supplied relevant files and symbols directly and use targeted discovery only to verify locations, dependencies, or stale evidence. Do not repeat broad Task research.
 - Keep changes inside the supplied workflow contract or ad-hoc scope. Do not silently broaden requirements, redesign pending work, or adopt unaccepted outcomes from another Subtask.
 - Preserve identified pre-existing changes. Return `status: blocked` when overlapping dirty changes cannot be distinguished safely.
+- When resumed with review or human feedback, verify each supplied item against the current source, map revisions to stable finding IDs or feedback items, and return disputed or unresolved items instead of forcing a patch or widening scope.
 
 ## Decision Escalation
 
@@ -38,6 +39,8 @@ Return exactly these fields, using `none` or `[]` where applicable:
 - `requested_validation`
 - `validation_performed`
 - `self_review`
+- `feedback_addressed`
+- `unresolved_feedback`
 - `residual_risks`
 - `implementation_decisions`: stable `id`, decision question, selected decision, rationale, invariants, affected Subtask IDs, and rejected alternatives
 - `plan_deviations`: stable `id`, concise summary, and rationale

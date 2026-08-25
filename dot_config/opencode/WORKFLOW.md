@@ -6,10 +6,10 @@ This document records the active OpenCode workflow and Devcroft MCP interface. G
 
 ### Active Devcroft integration
 
-Orchestrator is the sole Devcroft MCP client. Specialists remain stateless, receive bounded context packets from Orchestrator, and return structured results without direct workflow access.
+Orchestrator is the sole Devcroft MCP client. Specialists remain independent of canonical workflow state, receive bounded context packets from Orchestrator, and return structured results without direct workflow access. Builder sessions may be retained within one implementation and review-feedback workstream.
 
 - Devcroft stores Tasks, ordered Subtasks, requirements, research, durable decisions, implementation outcomes, validation, reviews, blockers, feedback, and lifecycle state.
-- Automated review and remediation occur before explicit human acceptance.
+- Automated review and Builder feedback revisions occur before explicit human acceptance.
 - The MCP validates transitions, review budgets, and pending-suffix replacement. Orchestrator follows returned allowed actions and never bypasses a rejected transition.
 - `taskctl`, `workflow-bridge.json`, and legacy workflow artifacts are not canonical and are not read or written by workflow agents.
 
@@ -19,10 +19,10 @@ Orchestrator is the sole Devcroft MCP client. Specialists remain stateless, rece
 - Keep planning explicit and, when authorized, plan an entire Task as multiple independently reviewable Subtasks.
 - Keep lifecycle state and durable workflow records behind a small MCP interface.
 - Make Orchestrator the only agent with access to the Devcroft MCP.
-- Keep specialist agents stateless and supply them with explicit context and output contracts.
+- Keep specialists outside canonical workflow state, retain only the implementation Builder session for feedback continuity, and supply explicit context and output contracts.
 - Give each agent a semantic role, role-specific instructions, and the narrowest permissions it needs.
 - Return compact scope-specific context and explicit next actions instead of complete Task history.
-- Bound automated remediation so persistent disagreement returns to the user rather than looping indefinitely.
+- Bound automated feedback cycles so persistent disagreement returns to the user rather than looping indefinitely.
 
 ## Terminology
 
@@ -36,7 +36,7 @@ Orchestrator is the sole Devcroft MCP client. Specialists remain stateless, rece
 
 ### General
 
-General is the default primary agent for unplanned advice, investigation, review, and ad-hoc implementation. It may perform trivial low-risk changes directly or delegate bounded work through Explorer, Advisor, Builder, Builder-high, Executor, Reviewer, Expert Reviewer, and Simplifier. General never calls Devcroft, invokes Planner, reads workflow records, or coordinates Task lifecycle state.
+General is the default primary agent for unplanned advice, investigation, review, and ad-hoc implementation. It may perform trivial low-risk changes directly or delegate bounded work through Explorer, Advisor, Builder, Builder-high, Executor, Reviewer, and Expert Reviewer. General never calls Devcroft, invokes Planner, reads workflow records, or coordinates Task lifecycle state.
 
 ### Orchestrator
 
@@ -52,19 +52,19 @@ Orchestrator is the workflow control plane and sole Devcroft MCP client. It owns
 
 ### Specialists
 
-Planner, Explorer, Advisor, Builder, Builder-high, Remediator, Reviewer, Expert Reviewer, Executor, and Simplifier never mutate workflow state or call the Devcroft MCP. Each specialist receives a complete bounded context packet and returns a structured result to the calling primary agent.
+Planner, Explorer, Advisor, Builder, Builder-high, Reviewer, Expert Reviewer, and Executor never mutate workflow state or call the Devcroft MCP. Each specialist receives a complete bounded context packet and returns a structured result to the calling primary agent.
 
 Specialists should not delegate to one another. In particular, Builder returns an `advisor_required` result when it encounters an unresolved architectural decision; the calling primary agent decides whether to invoke Advisor.
 
 ## Context Handoffs
 
-Every specialist invocation receives a complete bounded packet because delegated agents do not inherit the caller's conversation context. The calling primary agent curates specialist results before using them in another packet; agent output is not blindly forwarded as authoritative context.
+Every new specialist session receives a complete bounded packet because delegated agents do not inherit the caller's conversation context. The calling primary agent curates specialist results before using them in another packet; agent output is not blindly forwarded as authoritative context. The selected Builder or Builder-high session is preserved and resumed for review feedback on the same implementation workstream.
 
 Every packet identifies the role and `workflow|ad-hoc` mode, exact objective, authoritative requirements and acceptance criteria, in-scope and prohibited changes, applicable accepted decisions, focused repository evidence, working-tree and comparison-base context, prior findings or feedback, validation expectations, and the exact output contract. Workflow packets additionally include the Task key, Subtask ID, frozen contract, accepted dependency outcomes, and relevant lifecycle context. Ad-hoc Builder packets use `none` for Task and Subtask IDs.
 
 Requirements, accepted user decisions, durable decisions, and frozen contracts are authoritative. Explorer observations are freshness-bound repository evidence. Advisor directives govern only their supplied decision scope. Review findings are evidence and remediation guidance rather than automatically trusted patch specifications. Unaccepted implementation decisions do not constrain later work unless Orchestrator explicitly persists an immediately applicable durable invariant.
 
-Packets include the repository root or key, branch and HEAD when relevant, agreed base or base-resolution policy, and known staged, unstaged, and untracked changes. Specialists preserve pre-existing changes and return `blocked` when overlapping dirty work cannot be distinguished safely. Expected touchpoints guide discovery but are not strict file allowlists unless the scope explicitly requires one.
+Packets include the repository root or key, branch and HEAD when relevant, agreed base or base-resolution policy, and known staged, unstaged, and untracked changes. Specialists preserve pre-existing changes and return `blocked` when overlapping dirty work cannot be distinguished safely. Expected touchpoints guide discovery but are not strict file allowlists unless the scope explicitly requires one. A resumed Builder receives the current findings, validation, source state, and authoritative context changes; workflow authority remains with Orchestrator rather than the retained session.
 
 ## Agents
 
@@ -79,12 +79,11 @@ Agent names describe their semantic workflow responsibilities. This keeps routin
 | `advisor` | GPT-5.6 Sol high | Read-only repository inspection | Resolve one precise, high-leverage implementation decision. |
 | `builder` | DeepSeek v4 Flash | Repository editing | Implement one clear bounded workflow or ad-hoc change. |
 | `builder-high` | GPT-5.6 Terra xhigh | Repository editing | Implement difficult, cross-cutting, integration-heavy, or reasoning-intensive workflow or ad-hoc changes. |
-| `remediator` | GPT-5.6 Luna high | Repository editing within supplied finding scope | Address bounded, concrete review findings without reopening implementation design. |
-| `reviewer` | GPT-5.6 Terra xhigh | Read-only repository inspection and read-only Git diff commands | Perform the default independent review. |
+| `reviewer` | GPT-5.6 Terra xhigh | Read-only repository inspection and read-only Git diff commands | Review correctness first, security second, then code quality and simplification. |
 | `expert-reviewer` | GPT-5.6 Sol high | Read-only repository inspection and read-only Git diff commands | Perform risk-triggered or explicitly requested expert review. |
 | `executor` | GPT-5.6 Luna medium | Exact command execution only | Run tests, builds, and other bounded validation commands. |
 
-`builder` is preferred over `worker` because its responsibility is specifically implementation and remediation rather than arbitrary background work. Semantic agents may use shared prompt fragments and skills, but each agent retains a role-specific prompt and least-privilege permission set.
+`builder` is preferred over `worker` because its responsibility is specifically implementation and review-feedback revisions rather than arbitrary background work. Semantic agents may use shared prompt fragments and skills, but each agent retains a role-specific prompt and least-privilege permission set.
 
 ## Planning
 
@@ -134,25 +133,25 @@ Durable advisor decisions are appended to the Task through `devcroft_update_task
 
 ## Implementation
 
-Builder uses DeepSeek v4 Flash for clear bounded work. Builder-high uses Terra xhigh for difficult, cross-cutting, integration-heavy, or reasoning-intensive work. Both share the same stateless contract and permission boundary. Implementation complexity and breadth select the Builder tier; risk alone does not.
+Builder uses DeepSeek v4 Flash for clear bounded work. Builder-high uses Terra xhigh for difficult, cross-cutting, integration-heavy, or reasoning-intensive work. Both share the same workflow-stateless contract and permission boundary. Their implementation session is retained for review feedback, but they never own lifecycle state. Implementation complexity and breadth select the Builder tier; risk alone does not.
 
-Before each fresh planned implementation or remediation workstream, Orchestrator obtains the Subtask context and asks Explorer to reconcile it with the current repository. This is a focused freshness check and relevant-file discovery pass, not a repetition of the original Task research.
+Before each fresh planned implementation workstream, Orchestrator obtains the Subtask context and asks Explorer to reconcile it with the current repository. Review feedback uses the existing evidence unless it introduces a new factual question or the evidence has become stale.
 
 For a planned Subtask, Orchestrator implements directly only when work is localized, mechanically clear, low risk, free of unresolved behavioral choices, and straightforward to validate. Otherwise the selected Builder receives requirements, plan context, repository evidence, applicable Advisor directives, scope limits, working-tree context, and validation expectations. It returns changed files, implementation summary, requested validation, residual risks, any blocker or Advisor request, implementation decisions, deviations from the plan, and `future_impact: none|context_only|replan_required` for Orchestrator routing.
 
 When an implementation result has `future_impact: replan_required`, Orchestrator reports the exact impact and requests explicit replanning authorization. After authorization, Planner revises or confirms the pending suffix through `devcroft_apply_plan` before the current Subtask is completed. Cross-Subtask invariants that must apply immediately are persisted as durable decisions.
 
-Executor runs exact validation commands after implementation and after remediation. It returns commands, exit codes, and relevant output without making architectural or lifecycle decisions.
+Executor runs exact validation commands after implementation and every review-feedback revision. It returns commands, exit codes, and relevant output without making architectural or lifecycle decisions.
 
 ### General ad-hoc implementation
 
 General uses the same implementation and risk-routing principles without Devcroft state. It implements genuinely trivial low-risk work directly. It uses Builder for clear bounded work and Builder-high for difficult or cross-cutting work, after obtaining fresh repository evidence itself or through Explorer. Advisor resolves only a precise consequential decision and never performs broad planning.
 
-Every delegated ad-hoc implementation is validated through Executor and independently reviewed by Reviewer or risk-triggered Expert Reviewer. General may omit independent review only for its own genuinely trivial low-risk direct edit. Findings return to General, Builder, or Builder-high according to implementation complexity; workflow-only Remediator is not used. Stop after at most three consecutive `changes_requested` cycles and ask the user rather than looping indefinitely.
+Every delegated ad-hoc implementation is validated through Executor and independently reviewed by Reviewer or risk-triggered Expert Reviewer. General may omit independent review only for its own genuinely trivial low-risk direct edit. General addresses findings on direct work itself; delegated findings return to the same Builder session with current context. Stop after at most three consecutive `changes_requested` cycles and ask the user rather than looping indefinitely.
 
 ## Review
 
-Terra xhigh is the default Reviewer. Sol high is the Expert Reviewer. Review depth is selected by impact risk independently of the implementation tier.
+Terra xhigh is the default Reviewer. Sol high is the Expert Reviewer. Review depth is selected by impact risk independently of the implementation tier. Both review the complete scope in priority order: correctness, security and privacy, then code quality and simplification.
 
 Expert review replaces the default review when high risk is known before review. It is not automatically stacked after a complete default review. Escalate to Expert Reviewer when:
 
@@ -162,23 +161,21 @@ Expert review replaces the default review when high risk is known before review.
 - The default Reviewer reports insufficient confidence.
 - The user explicitly requests expert review.
 
-Review receives the requirements, Subtask context, agreed diff scope and base, current branch and HEAD when relevant, changed files, implementation result, working-tree context, and validation results. Devcroft does not store full diffs, so Orchestrator invalidates approval after any source revision and requests another review after material remediation.
+Review receives the requirements, Subtask context, agreed diff scope and base, current branch and HEAD when relevant, changed files, implementation result, working-tree context, and validation results. Devcroft does not store full diffs, so Orchestrator invalidates approval after any source revision and requests another review after material feedback revisions.
 
-The remediation loop continues until there are no blocking findings, not until there are no suggestions. Automatic review permits at most three consecutive `changes_requested` verdicts before requiring human intervention.
+The feedback loop continues until there are no blocking findings, not until there are no suggestions. Automatic review permits at most three consecutive `changes_requested` verdicts before requiring human intervention.
 
 Each finding should include a stable ID, severity, blocking status, evidence, rationale, and remediation guidance. Orchestrator records both approval and actionable findings through the MCP.
 
-### Remediation routing
+### Review-feedback routing
 
-Review guidance is evidence and direction, not an automatically trusted patch specification. Orchestrator dispatches Remediator when all blocking findings are concrete, localized, low risk, and do not require a new architectural or behavioral decision. Examples include a missed guard, a localized error path, a test correction, a small compatibility fix with explicit expected behavior, or mechanical cleanup directly required by a finding.
+Review guidance is evidence and direction, not an automatically trusted patch specification. If Orchestrator implemented directly, it addresses findings directly. Otherwise Orchestrator resumes the original Builder or Builder-high session with stable finding IDs, current source and validation state, relevant evidence, scope limits, and any authoritative context changes. If the original session is unavailable, start a fresh session at the same tier with a complete packet; use Builder-high instead only for deliberate capability escalation.
 
-Orchestrator returns ordinary broader findings to Builder and difficult, cross-cutting, integration-heavy, or reasoning-intensive findings to Builder-high. This includes findings that change architecture, public behavior, persistence, authorization, concurrency, or broad implementation structure; span several modules; are unclear or disputed; require an Advisor decision; or follow a failed remediation attempt. Findings from Expert Reviewer use the appropriate Builder tier unless explicitly classified as mechanical.
-
-Remediator receives the current findings, relevant context, affected files, scope limits, and validation expectations. It must map each change to finding IDs and return unresolved findings rather than widening scope. Executor validates every remediation. Default Reviewer verifies the result unless an unresolved finding still meets the expert-review triggers, in which case Expert Reviewer verifies it.
+Builder maps each revision to finding IDs and returns unresolved or disputed findings rather than widening scope. Executor validates every revision. Reviewer verifies the result unless an unresolved finding still meets Expert Reviewer triggers, in which case Expert Reviewer verifies it.
 
 Automated review allows at most three consecutive `changes_requested` verdicts. `devcroft_record_review` tracks the attempt count and moves the Subtask to `blocked` when the budget is exhausted. Approval resets the count; human-requested changes begin a new bounded automated-review cycle. Further work after exhaustion requires user intervention.
 
-Automated approval and human acceptance remain separate. If the user requests changes during human review, Orchestrator records the feedback, returns the Subtask to `in_progress`, dispatches Remediator, Builder, or Builder-high using the same routing rules, reruns validation, and requires another automated review before requesting human acceptance again.
+Automated approval and human acceptance remain separate. If the user requests changes during human review, Orchestrator records the feedback, returns the Subtask to `in_progress`, returns the work to direct implementation or the retained Builder session, reruns validation, and requires another automated review before requesting human acceptance again.
 
 ## Devcroft MCP Interface
 
@@ -289,7 +286,6 @@ sequenceDiagram
     participant Explorer
     participant Advisor
     participant Builders as Builder / Builder-high
-    participant Remediator
     participant Executor
     participant Reviewer
 
@@ -345,12 +341,11 @@ sequenceDiagram
         end
         Orchestrator->>MCP: devcroft_record_review(outcome and review)
         alt Changes requested and budget remains
-            alt Findings are bounded and mechanical
-                Orchestrator->>Remediator: Findings and bounded context
-                Remediator-->>Orchestrator: Remediation result by finding ID
-            else Findings require implementation reasoning
-                Orchestrator->>Builders: Findings and complete work context using the appropriate tier
-                Builders-->>Orchestrator: Revised implementation result
+            alt Orchestrator implemented directly
+                Orchestrator->>Orchestrator: Address findings directly
+            else Builder implemented
+                Orchestrator->>Builders: Resume original session with findings and current context
+                Builders-->>Orchestrator: Revised implementation result by finding ID
             end
             Orchestrator->>Executor: Rerun affected validation
             Executor-->>Orchestrator: Validation result
@@ -374,11 +369,10 @@ sequenceDiagram
             else User requests changes
                 User-->>Orchestrator: Feedback
                 Orchestrator->>MCP: devcroft_update_subtask_state(in_progress, feedback)
-                alt Feedback is bounded and mechanical
-                    Orchestrator->>Remediator: Human feedback and bounded context
-                    Remediator-->>Orchestrator: Remediation result
-                else Feedback requires implementation reasoning
-                    Orchestrator->>Builders: Human feedback and complete work context using the appropriate tier
+                alt Orchestrator implemented directly
+                    Orchestrator->>Orchestrator: Address human feedback directly
+                else Builder implemented
+                    Orchestrator->>Builders: Resume original session with human feedback and current context
                     Builders-->>Orchestrator: Revised implementation result
                 end
                 Orchestrator->>Executor: Rerun affected validation
@@ -390,7 +384,7 @@ sequenceDiagram
 
 ## Legacy Bridge Retirement
 
-The OpenCode workflow now uses Devcroft directly. The Orchestrator prompt and commands must reference only `devcroft_*` tools, while specialists remain stateless and MCP-denied.
+The OpenCode workflow now uses Devcroft directly. The Orchestrator prompt and commands must reference only `devcroft_*` tools, while specialists remain MCP-denied and independent of canonical workflow state.
 
 The integration requires:
 
