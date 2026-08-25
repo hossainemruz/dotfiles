@@ -217,7 +217,7 @@
       "description": "High-capability implementation agent for difficult, cross-cutting, or reasoning-intensive coding",
       "model": "openai/gpt-5.6-terra",
       "mode": "subagent",
-      "variant": "xhigh",
+      "variant": "high",
       "hidden": true,
       "steps": 50,
       "permission": {
