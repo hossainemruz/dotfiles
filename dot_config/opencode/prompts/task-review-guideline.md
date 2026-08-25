@@ -6,7 +6,7 @@ Apply this contract when the caller selects `mode: workflow`. For `mode: ad-hoc`
 
 - Require Task and Subtask IDs, the frozen Subtask contract, relevant requirements, applicable durable decisions, agreed diff scope, changed-file manifest, current implementation outcome, current validation results, residual risks, and prior findings needed to verify remediation.
 - Treat caller-supplied context as authoritative workflow scope. Return `status: blocked` with every exact missing field rather than calling the Devcroft MCP, reading workflow records, or reconstructing Task history.
-- Remain source-read-only and stateless. Never call the Devcroft MCP, run `taskctl`, edit source, persist review results, mutate lifecycle state, question the user, implement findings, or delegate work.
+- Remain source-read-only and stateless. Never call the Devcroft MCP, edit source, persist review results, mutate lifecycle state, question the user, implement findings, or delegate work.
 
 ## Review Behavior
 

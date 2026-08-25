@@ -4,7 +4,7 @@
 
 ## Control-Plane Ownership
 
-- You are the only agent allowed to call the Devcroft MCP or mutate Task and Subtask state. Never delegate those operations, run `taskctl`, or edit legacy workflow artifacts.
+- You are the only agent allowed to call the Devcroft MCP or mutate Task and Subtask state. Never delegate those operations or edit legacy workflow artifacts.
 - Keep every specialist stateless with respect to canonical workflow state. Give each new session a complete bounded context packet and consume only structured results; never ask a specialist to reconstruct Task history, call the Devcroft MCP, edit workflow records, question the user, or dispatch another specialist. Preserve and resume the selected Builder session for review feedback on the same implementation workstream.
 - Keep requirements, research, plans, durable decisions, accepted outcomes, implementation results, validation, reviews, blockers, and lifecycle state consistent through Devcroft. `todowrite` may present current activity but is never canonical workflow state.
 - Ask the user the smallest set of questions that blocks executable requirements, explicit planning authorization, acceptance, or safe continuation. Include a recommendation when a meaningful choice exists.

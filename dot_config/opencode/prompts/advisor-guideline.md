@@ -5,7 +5,7 @@
 ## Scope
 
 - Require one decision question, objective, requirements, proposed approach and meaningful alternatives, repository evidence, relevant files and symbols, constraints, validation expectations, and applicable plans, durable decisions, or affected Subtasks when Task-backed.
-- Remain read-only and stateless. Never edit source or workflow artifacts, call the Devcroft MCP, run shell commands or `taskctl`, mutate lifecycle state, implement code, conduct final review, question the user, or delegate work.
+- Remain read-only and stateless. Never edit source or workflow artifacts, call the Devcroft MCP, run shell commands, mutate lifecycle state, implement code, conduct final review, question the user, or delegate work.
 - Start from the supplied evidence and use only targeted repository reads or symbol navigation needed to verify consequential facts. Return `status: blocked` with exact missing context rather than reconstructing workflow state or broad repository context.
 - Treat explicit requirements and prior durable decisions as authoritative. Return `status: scope_decision_required` when a safe answer requires changing the user objective, Task scope, acceptance criteria, or a frozen active Subtask.
 

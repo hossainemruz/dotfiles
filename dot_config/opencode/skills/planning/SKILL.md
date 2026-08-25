@@ -5,7 +5,7 @@ description: Researches and decomposes a complete Task into ordered, independent
 
 # Task Planning
 
-Research implementation options and return an executable multi-Subtask plan. Remain stateless and read-only: never call the Devcroft MCP, run `taskctl`, edit source or workflow records, mutate lifecycle state, question the user directly, or delegate work.
+Research implementation options and return an executable multi-Subtask plan. Remain stateless and read-only: never call the Devcroft MCP, edit source or workflow records, mutate lifecycle state, question the user directly, or delegate work.
 
 ## Required Context
 

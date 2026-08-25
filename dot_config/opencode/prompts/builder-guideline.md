@@ -4,7 +4,7 @@
 
 ## Contract
 
-- Remain stateless with respect to workflow. Never call the Devcroft MCP, run `taskctl`, read or edit workflow records, perform lifecycle transitions, ask the user, invoke Advisor, dispatch validation, or invoke review agents.
+- Remain stateless with respect to workflow. Never call the Devcroft MCP, read or edit workflow records, perform lifecycle transitions, ask the user, invoke Advisor, dispatch validation, or invoke review agents.
 - Require `mode: workflow|ad-hoc`. Workflow mode requires the exact Task key, Subtask ID, frozen contract, requirements, relevant research, applicable durable decisions, accepted dependency outcomes, repository evidence, scope limits, feedback, and validation expectations. Ad-hoc mode requires the objective, requirements, acceptance criteria, edit scope, repository evidence, working-tree context, validation expectations, and output contract. Return `status: blocked` with every exact missing field rather than reconstructing omitted context.
 - Inspect the supplied relevant files and symbols directly and use targeted discovery only to verify locations, dependencies, or stale evidence. Do not repeat broad Task research.
 - Keep changes inside the supplied workflow contract or ad-hoc scope. Do not silently broaden requirements, redesign pending work, or adopt unaccepted outcomes from another Subtask.

@@ -2,7 +2,7 @@
 
 ## Status
 
-This document records the active OpenCode workflow and Devcroft MCP interface. General is the default primary for unplanned ad-hoc work. Orchestrator is selected for explicitly planned Tasks, and Devcroft is their canonical persistence and lifecycle boundary. The former taskctl bridge is retired and must not be used as a fallback.
+This document records the active OpenCode workflow and Devcroft MCP interface. General is the default primary for unplanned ad-hoc work. Orchestrator is selected for explicitly planned Tasks, and Devcroft is their canonical persistence and lifecycle boundary.
 
 ### Active Devcroft integration
 
@@ -11,7 +11,7 @@ Orchestrator is the sole Devcroft MCP client. Specialists remain independent of 
 - Devcroft stores Tasks, ordered Subtasks, requirements, research, durable decisions, implementation outcomes, validation, reviews, blockers, feedback, and lifecycle state.
 - Automated review and Builder feedback revisions occur before explicit human acceptance.
 - The MCP validates transitions, review budgets, and pending-suffix replacement. Orchestrator follows returned allowed actions and never bypasses a rejected transition.
-- `taskctl`, `workflow-bridge.json`, and legacy workflow artifacts are not canonical and are not read or written by workflow agents.
+- Legacy workflow artifacts are not canonical and are not read or written by workflow agents.
 
 ## Goals
 
@@ -381,16 +381,3 @@ sequenceDiagram
         end
     end
 ```
-
-## Legacy Bridge Retirement
-
-The OpenCode workflow now uses Devcroft directly. The Orchestrator prompt and commands must reference only `devcroft_*` tools, while specialists remain MCP-denied and independent of canonical workflow state.
-
-The integration requires:
-
-- Deny `taskctl` access and remove the temporary bridge prompt from active configuration.
-- Use the corresponding `devcroft_*` tool for every workflow read or mutation.
-- Migrate any still-active legacy Task data into Devcroft before deleting its external artifacts; this is an explicit data-migration operation, not an agent fallback path.
-- Preserve each semantic agent's role-specific prompt, shared prompt fragments, and least-privilege permissions.
-- Preserve routing of every workflow specialist invocation through Orchestrator.
-- Deny `devcroft_*` globally and allow it only for Orchestrator.

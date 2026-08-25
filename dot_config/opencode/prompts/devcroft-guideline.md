@@ -5,7 +5,7 @@
 ## Access Boundary
 
 - Call `devcroft_*` tools directly from Orchestrator only. Never ask a specialist to call the MCP, mutate workflow state, or reconstruct records.
-- Never run `taskctl`, edit legacy workflow artifacts, or maintain parallel workflow state. `todowrite` may show session activity but is not canonical.
+- Never edit legacy workflow artifacts or maintain parallel workflow state. `todowrite` may show session activity but is not canonical.
 - Every mutation names an exact Task key and, when applicable, Subtask ID. Never infer a globally selected Task.
 - Use `devcroft_list_repositories` to resolve repository keys and `devcroft_list_tasks` to locate candidate Tasks. If more than one candidate remains, ask the user rather than guessing.
 - Treat mutation responses as authoritative for resulting state, allowed actions, and next action. Request a fresh context projection only when the next phase needs it.

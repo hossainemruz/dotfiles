@@ -3,7 +3,7 @@ name: code-review
 description: Evidence-based correctness, security, and code-quality review for a working-tree diff, caller-scoped changes, or review findings.
 ---
 
-Produce high-signal reviews focused on real risk. Review source without editing it, and never call the Devcroft MCP, run `taskctl`, mutate workflow state, persist review records, question the user, or delegate work.
+Produce high-signal reviews focused on real risk. Review source without editing it, and never call the Devcroft MCP, mutate workflow state, persist review records, question the user, or delegate work.
 
 ## Core Rules
 
