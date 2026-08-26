@@ -11,13 +11,8 @@ if ! command -v brew >/dev/null 2>&1; then
   fi
 fi
 
-# Environment variables.
-export GOPRIVATE=github.com/qdrant
-export OPENCODE_DISABLE_CLAUDE_CODE_PROMPT=1
-export OPENCODE_DISABLE_AUTOUPDATE=1
-export OPENCODE_EXPERIMENTAL_LSP_TOOL=1
-export OPENCODE_ENABLE_EXA=1
-export OPENCODE_EXPERIMENTAL_BACKGROUND_SUBAGENTS=1
+# Environment variables are set in the shared section at the bottom of this file.
+
 export PATH="$HOME/.local/bin:$PATH"
 
 if command -v mise >/dev/null 2>&1; then
@@ -141,6 +136,14 @@ elif [[ -r /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]]; then
   source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 fi
 {{ end }}
+
+# Environment variables shared by all platforms.
+export GOPRIVATE=github.com/qdrant
+export OPENCODE_DISABLE_CLAUDE_CODE_PROMPT=1
+export OPENCODE_DISABLE_AUTOUPDATE=1
+export OPENCODE_EXPERIMENTAL_LSP_TOOL=1
+export OPENCODE_ENABLE_EXA=1
+export OPENCODE_EXPERIMENTAL_BACKGROUND_SUBAGENTS=1
 
 # uv's `keyring-provider = subprocess` picks the first `keyring` on PATH. The Arch
 # `python-keyring` at /usr/bin/keyring lacks the Google Artifact Registry backend, so
