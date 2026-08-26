@@ -321,11 +321,11 @@
     },
     "reviewer": {
       "description": "Default independent source-read-only reviewer for workflow and ad hoc changes",
-      "model": "openai/gpt-5.6-terra",
-      "variant": "xhigh",
+      "model": "opencode-go/deepseek-v4-pro",
+      "variant": "max",
       "mode": "subagent",
       "hidden": true,
-      "steps": 40,
+      "steps": 50,
       "permission": {
         "question": "deny",
         "read": {
