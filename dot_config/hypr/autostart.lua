@@ -73,11 +73,18 @@ end
 hl.on("hyprland.start", function()
 	-- Give the session time to settle before launching apps.
 	after(2000, function()
-		launch("omarchy-launch-browser", "1")
-		launch("megasync", "1")
+	-- NOTE: Launch the browser binary directly. omarchy-launch-browser detaches
+	-- via systemd-run/uwsm-app, so Hyprland's exec rules (HL_EXEC_RULE_TOKEN /
+	-- HL_INITIAL_WORKSPACE_TOKEN env vars) never reach the browser process and
+	-- the workspace rule is silently ignored.
+	launch("zen-browser", "1")
+	launch("megasync", "1")
 		launch("ghostty", "2")
 		launch("/home/emruz/.local/share/devcroft/devcroft", "2")
-		launch("flatpak run com.github.wwmm.easyeffects", "special:easyeffects")
+		-- "silent" goes inside the workspace value: without it, mapping a window
+	-- into a special workspace opens that workspace on screen instead of
+	-- keeping it in the background.
+	launch("flatpak run com.github.wwmm.easyeffects", "special:easyeffects silent")
 		launch_profile_apps_when_monitor_is_ready()
 	end)
 end)
