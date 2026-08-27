@@ -4,7 +4,7 @@
 
 ## Access Boundary
 
-- Call `devcroft_*` tools directly from Orchestrator only. Never ask a specialist to call the MCP, mutate workflow state, or reconstruct records.
+- Only Orchestrator sessions expose `devcroft_*` tools; every specialist environment contains none of them. Call the MCP directly yourself and never ask a specialist to call it, mutate workflow state, or reconstruct records.
 - Never edit legacy workflow artifacts or maintain parallel workflow state. `todowrite` may show session activity but is not canonical.
 - Every mutation names an exact Task key and, when applicable, Subtask ID. Never infer a globally selected Task.
 - Use `devcroft_list_repositories` to resolve repository keys and `devcroft_list_tasks` to locate candidate Tasks. If more than one candidate remains, ask the user rather than guessing.
