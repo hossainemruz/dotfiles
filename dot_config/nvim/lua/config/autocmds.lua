@@ -29,14 +29,12 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
---- Open markdown in Typora
+-- Preview markdown inside the Devcroft window (replaces Typora).
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "markdown",
   callback = function()
     vim.keymap.set("n", "<leader>fp", function()
-      local filepath = vim.fn.expand("%:p")
-      local command = vim.fn.has("mac") == 1 and { "open", "-a", "Typora", filepath } or { "typora", filepath }
-      vim.fn.jobstart(command, { detach = true })
-    end, { buffer = true, desc = "Open in Typora" })
+      require("config.devcroft").send_preview()
+    end, { buffer = true, desc = "Devcroft: preview Markdown" })
   end,
 })
