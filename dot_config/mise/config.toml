@@ -1,6 +1,59 @@
 [settings]
 minimum_release_age = "3d"
 minimum_release_age_excludes = ["opencode", "claude"]
+
+# System packages
+[bootstrap.brew]
+adopt = true
+
+[bootstrap.packages]
+# Homebrew packages for macOS machines. These are installed by mise's brew backends.
+
+# CLI basics used by these dotfiles and shell helpers.
+
+# AI developer CLIs."brew:bash" = { version = "latest", os = "macos" }
+"brew:git" = { version = "latest", os = "macos" }
+"brew:gnupg" = { version = "latest", os = "macos" }
+"brew:mise" = { version = "latest", os = "macos" }
+"brew:neovim" = { version = "latest", os = "macos" }
+"brew:starship" = { version = "latest", os = "macos" }
+"brew:watch" = { version = "latest", os = "macos" }
+"brew:zsh-autosuggestions" = { version = "latest", os = "macos" }
+"brew:zsh-syntax-highlighting" = { version = "latest", os = "macos" }
+"brew-cask:codex-app" = { version = "latest", os = "macos" }
+
+# Terminal workflow tools.
+"brew:autojump" = { version = "latest", os = "macos" }
+"brew:pv" = { version = "latest", os = "macos" }
+"brew:sevenzip" = { version = "latest", os = "macos" }
+"brew:skopeo" = { version = "latest", os = "macos" }
+"brew:zoxide" = { version = "latest", os = "macos" }
+
+# Fonts and desktop apps.
+"brew-cask:font-jetbrains-mono-nerd-font" = { version = "latest", os = "macos" }
+"brew-cask:ghostty" = { version = "latest", os = "macos" }
+"brew-cask:gcloud-cli" = { version = "latest", os = "macos" }
+"brew-cask:megasync" = { version = "latest", os = "macos" }
+"brew-cask:raycast" = { version = "latest", os = "macos" }
+"brew-cask:slack" = { version = "latest", os = "macos" }
+"brew-cask:whatsapp" = { version = "latest", os = "macos" }
+"brew-cask:zed" = { version = "latest", os = "macos" }
+"brew-cask:zen" = { version = "latest", os = "macos" }
+
+# Native macOS replacements for webapps.
+"brew-cask:chatgpt" = { version = "latest", os = "macos" }
+"brew-cask:grammarly-desktop" = { version = "latest", os = "macos" }
+"brew-cask:notion" = { version = "latest", os = "macos" }
+"brew-cask:proton-drive" = { version = "latest", os = "macos" }
+"brew-cask:proton-mail" = { version = "latest", os = "macos" }
+"brew-cask:proton-pass" = { version = "latest", os = "macos" }
+"brew-cask:protonvpn" = { version = "latest", os = "macos" }
+"brew-cask:todoist-app" = { version = "latest", os = "macos" }
+
+# Local AI tooling.
+"brew-cask:lm-studio" = { version = "latest", os = "macos" }
+
+
 [tools]
 awscli = "latest"
 aws-vault = "latest"
