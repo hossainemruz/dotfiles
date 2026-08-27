@@ -2,11 +2,14 @@
 minimum_release_age = "3d"
 minimum_release_age_excludes = ["opencode", "claude"]
 
-[tasks.upgrade]
-description = "Upgrade mise tools and bootstrap packages"
+[tasks.up-all]
+description = "Update tools and converge system packages"
 run = """
+set -e
+
 mise up
-mise bootstrap packages upgrade
+mise bootstrap packages apply --yes
+mise bootstrap packages upgrade --yes
 """
 
 # System packages
