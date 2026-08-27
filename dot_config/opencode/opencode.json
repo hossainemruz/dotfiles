@@ -174,9 +174,9 @@
     },
     "orchestrator": {
       "description": "Primary control plane for explicit planning and planned Devcroft Task lifecycle",
-      "model": "opencode-go/glm-5.3-flash",
+      "model": "openai/gpt-5.6-terra",
       "mode": "primary",
-      "variant": "max",
+      "variant": "high",
       "permission": {
         "devcroft_*": "allow",
         "question": "allow",
@@ -197,8 +197,8 @@
     },
     "builder": {
       "description": "Default implementation agent for clear bounded workflow or ad-hoc coding",
-      "model": "openai/gpt-5.6-terra",
-      "variant": "high",
+      "model": "opencode-go/glm-5.3-flash",
+      "variant": "max",
       "mode": "subagent",
       "hidden": true,
       "steps": 50,
