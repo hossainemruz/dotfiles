@@ -157,6 +157,7 @@
       "variant": "max",
       "permission": {
         "devcroft_review_*": "allow",
+        "devcroft_repository_list": "allow",
         "question": "allow",
         "todowrite": "allow",
         "task": {
