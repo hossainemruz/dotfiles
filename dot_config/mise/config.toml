@@ -2,6 +2,13 @@
 minimum_release_age = "3d"
 minimum_release_age_excludes = ["opencode", "claude"]
 
+[tasks.upgrade]
+description = "Upgrade mise tools and bootstrap packages"
+run = """
+mise up
+mise bootstrap packages upgrade
+"""
+
 # System packages
 [bootstrap.brew]
 adopt = true
