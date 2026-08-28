@@ -199,7 +199,7 @@
     "builder": {
       "description": "Default implementation agent for clear bounded workflow or ad-hoc coding",
       "model": "opencode-go/glm-5.3-flash",
-      "variant": "max",
+      "variant": "high",
       "mode": "subagent",
       "hidden": true,
       "steps": 50,
@@ -322,8 +322,8 @@
     },
     "reviewer": {
       "description": "Default independent source-read-only reviewer for workflow and ad hoc changes",
-      "model": "opencode-go/deepseek-v4-pro",
-      "variant": "max",
+      "model": "openai/gpt-5.6-terra",
+      "variant": "xhigh",
       "mode": "subagent",
       "hidden": true,
       "steps": 50,
