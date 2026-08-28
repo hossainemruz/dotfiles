@@ -152,9 +152,9 @@
     },
     "general": {
       "description": "Default primary agent for unplanned advice, investigation, review, and ad-hoc implementation",
-      "model": "opencode-go/glm-5.3-flash",
+      "model": "openai/gpt-5.6-terra",
       "mode": "primary",
-      "variant": "max",
+      "variant": "high",
       "permission": {
         "devcroft_review_*": "allow",
         "devcroft_repository_list": "allow",
