@@ -1,6 +1,6 @@
 [settings]
 minimum_release_age = "3d"
-minimum_release_age_excludes = ["opencode", "claude"]
+minimum_release_age_excludes = ["opencode", "claude", "chatgpt"]
 
 [tasks.up-all]
 description = "Update tools and converge system packages"
@@ -30,7 +30,6 @@ adopt = true
 "brew:watch" = { version = "latest", os = "macos" }
 "brew:zsh-autosuggestions" = { version = "latest", os = "macos" }
 "brew:zsh-syntax-highlighting" = { version = "latest", os = "macos" }
-"brew-cask:codex-app" = { version = "latest", os = "macos" }
 
 # Terminal workflow tools.
 "brew:autojump" = { version = "latest", os = "macos" }
@@ -44,7 +43,6 @@ adopt = true
 "brew-cask:ghostty" = { version = "latest", os = "macos" }
 "brew-cask:gcloud-cli" = { version = "latest", os = "macos" }
 "brew-cask:megasync" = { version = "latest", os = "macos" }
-"brew-cask:raycast" = { version = "latest", os = "macos" }
 "brew-cask:slack" = { version = "latest", os = "macos" }
 "brew-cask:whatsapp" = { version = "latest", os = "macos" }
 "brew-cask:zed" = { version = "latest", os = "macos" }
