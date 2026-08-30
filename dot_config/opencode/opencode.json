@@ -202,7 +202,7 @@
       "variant": "high",
       "mode": "subagent",
       "hidden": true,
-      "steps": 50,
+      "steps": 80,
       "permission": {
         "question": "deny",
         "read": {
@@ -221,7 +221,7 @@
       "mode": "subagent",
       "variant": "medium",
       "hidden": true,
-      "steps": 50,
+      "steps": 80,
       "permission": {
         "question": "deny",
         "read": {
@@ -240,7 +240,7 @@
       "mode": "subagent",
       "variant": "high",
       "hidden": true,
-      "steps": 25,
+      "steps": 50,
       "permission": {
         "question": "deny",
         "read": {
@@ -302,7 +302,7 @@
       "mode": "subagent",
       "hidden": true,
       "variant": "medium",
-      "steps": 4,
+      "steps": 10,
       "permission": {
         "read": "deny",
         "edit": "deny",
