@@ -77,8 +77,8 @@ Agent names describe their semantic workflow responsibilities. This keeps routin
 | `planner` | GPT-5.6 Sol xhigh | Read-only repository inspection | Research and decompose a complete Task into reviewable Subtasks. |
 | `explore` | DeepSeek v4 Flash | Read-only repository inspection | Retrieve bounded repository evidence without making implementation decisions. |
 | `advisor` | GPT-5.6 Sol high | Read-only repository inspection | Resolve one precise, high-leverage implementation decision. |
-| `builder` | DeepSeek v4 Flash | Repository editing | Implement one clear bounded workflow or ad-hoc change. |
-| `builder-high` | GPT-5.6 Terra xhigh | Repository editing | Exceptionally implement highest-impact system-critical work that remains beyond Builder after Advisor guidance. |
+| `builder` | GLM-5.3 Flash high | Repository editing | Implement one clear bounded workflow or ad-hoc change. |
+| `builder-high` | GPT-5.6 Sol medium | Repository editing | Exceptionally implement highest-impact system-critical work that remains beyond Builder after Advisor guidance. |
 | `reviewer` | GPT-5.6 Terra xhigh | Read-only repository inspection and read-only Git diff commands | Review correctness first, security second, then code quality and simplification. |
 | `expert-reviewer` | GPT-5.6 Sol high | Read-only repository inspection and read-only Git diff commands | Exceptionally review highest-impact system-critical changes, or perform explicitly requested expert review. |
 | `executor` | GPT-5.6 Luna medium | Exact command execution only | Run tests, builds, and other bounded validation commands. |
@@ -133,7 +133,7 @@ Durable advisor decisions are appended to the Task through `devcroft_update_task
 
 ## Implementation
 
-Builder uses DeepSeek v4 Flash as the default for delegated implementation, including difficult or cross-cutting work once consequential decisions are settled. When complexity comes from an unresolved high-leverage decision, Orchestrator prefers Advisor guidance followed by Builder. Builder-high is reserved for exceptional work that is both among the system's highest-impact, most critical changes and still beyond Builder's reliable implementation capability after focused Advisor guidance. Difficulty, breadth, risk, or unfamiliarity alone does not justify escalation. Both Builders share the same workflow-stateless contract and permission boundary. Their implementation session is retained for review feedback, but they never own lifecycle state.
+Builder uses GLM-5.3 Flash high as the default for delegated implementation, including difficult or cross-cutting work once consequential decisions are settled. When complexity comes from an unresolved high-leverage decision, Orchestrator prefers Advisor guidance followed by Builder. Builder-high uses Sol medium and is reserved for exceptional work that is both among the system's highest-impact, most critical changes and still beyond Builder's reliable implementation capability after focused Advisor guidance. Difficulty, breadth, risk, or unfamiliarity alone does not justify escalation. Both Builders share the same workflow-stateless contract and permission boundary. Their implementation session is retained for review feedback, but they never own lifecycle state.
 
 Before each fresh planned implementation workstream, Orchestrator obtains the Subtask context and asks Explorer to reconcile it with the current repository. Review feedback uses the existing evidence unless it introduces a new factual question or the evidence has become stale.
 
@@ -323,10 +323,10 @@ sequenceDiagram
 
     alt Trivial, localized, and low risk
         Orchestrator->>Orchestrator: Implement frozen Subtask directly
-    else Clear bounded implementation
+    else Default delegated implementation
         Orchestrator->>Builders: Context, evidence, and directive
         Builders-->>Orchestrator: Implementation result
-    else Difficult or cross-cutting implementation
+    else Exceptional highest-impact work beyond Advisor plus Builder
         Orchestrator->>Builders: Dispatch Builder-high with the same bounded contract
         Builders-->>Orchestrator: Implementation result
     end
