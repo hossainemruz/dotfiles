@@ -36,7 +36,7 @@ Orchestrator is the sole Devcroft MCP client. Specialists remain independent of 
 
 ### General
 
-General is the default primary agent for unplanned advice, investigation, review, and ad-hoc implementation. It may perform trivial low-risk changes directly or delegate bounded work through Explorer, Advisor, Builder, Builder-high, Executor, Reviewer, and Expert Reviewer. General never calls Devcroft, invokes Planner, reads workflow records, or coordinates Task lifecycle state.
+General is the default primary agent for unplanned advice, investigation, review, and ad-hoc implementation. It may perform trivial low-risk changes directly or delegate bounded work through Explorer, Advisor, Builder, Builder-high, Executor, Reviewer, and Expert Reviewer. Builder and Reviewer are the defaults; Builder-high and Expert Reviewer are exceptional routes reserved for the highest-impact system-critical work. General never calls Devcroft, invokes Planner, reads workflow records, or coordinates Task lifecycle state.
 
 ### Orchestrator
 
@@ -78,9 +78,9 @@ Agent names describe their semantic workflow responsibilities. This keeps routin
 | `explore` | DeepSeek v4 Flash | Read-only repository inspection | Retrieve bounded repository evidence without making implementation decisions. |
 | `advisor` | GPT-5.6 Sol high | Read-only repository inspection | Resolve one precise, high-leverage implementation decision. |
 | `builder` | DeepSeek v4 Flash | Repository editing | Implement one clear bounded workflow or ad-hoc change. |
-| `builder-high` | GPT-5.6 Terra xhigh | Repository editing | Implement difficult, cross-cutting, integration-heavy, or reasoning-intensive workflow or ad-hoc changes. |
+| `builder-high` | GPT-5.6 Terra xhigh | Repository editing | Exceptionally implement highest-impact system-critical work that remains beyond Builder after Advisor guidance. |
 | `reviewer` | GPT-5.6 Terra xhigh | Read-only repository inspection and read-only Git diff commands | Review correctness first, security second, then code quality and simplification. |
-| `expert-reviewer` | GPT-5.6 Sol high | Read-only repository inspection and read-only Git diff commands | Perform risk-triggered or explicitly requested expert review. |
+| `expert-reviewer` | GPT-5.6 Sol high | Read-only repository inspection and read-only Git diff commands | Exceptionally review highest-impact system-critical changes, or perform explicitly requested expert review. |
 | `executor` | GPT-5.6 Luna medium | Exact command execution only | Run tests, builds, and other bounded validation commands. |
 
 `builder` is preferred over `worker` because its responsibility is specifically implementation and review-feedback revisions rather than arbitrary background work. Semantic agents may use shared prompt fragments and skills, but each agent retains a role-specific prompt and least-privilege permission set.
@@ -133,7 +133,7 @@ Durable advisor decisions are appended to the Task through `devcroft_update_task
 
 ## Implementation
 
-Builder uses DeepSeek v4 Flash for clear bounded work. Builder-high uses Terra xhigh for difficult, cross-cutting, integration-heavy, or reasoning-intensive work. Both share the same workflow-stateless contract and permission boundary. Their implementation session is retained for review feedback, but they never own lifecycle state. Implementation complexity and breadth select the Builder tier; risk alone does not.
+Builder uses DeepSeek v4 Flash as the default for delegated implementation, including difficult or cross-cutting work once consequential decisions are settled. When complexity comes from an unresolved high-leverage decision, Orchestrator prefers Advisor guidance followed by Builder. Builder-high is reserved for exceptional work that is both among the system's highest-impact, most critical changes and still beyond Builder's reliable implementation capability after focused Advisor guidance. Difficulty, breadth, risk, or unfamiliarity alone does not justify escalation. Both Builders share the same workflow-stateless contract and permission boundary. Their implementation session is retained for review feedback, but they never own lifecycle state.
 
 Before each fresh planned implementation workstream, Orchestrator obtains the Subtask context and asks Explorer to reconcile it with the current repository. Review feedback uses the existing evidence unless it introduces a new factual question or the evidence has become stale.
 
@@ -145,21 +145,22 @@ Executor runs exact validation commands after implementation and every review-fe
 
 ### General ad-hoc implementation
 
-General uses the same implementation and risk-routing principles without Devcroft state. It implements genuinely trivial low-risk work directly. It uses Builder for clear bounded work and Builder-high for difficult or cross-cutting work, after obtaining fresh repository evidence itself or through Explorer. Advisor resolves only a precise consequential decision and never performs broad planning.
+General uses the same implementation and risk-routing principles without Devcroft state. It implements genuinely trivial low-risk work directly and uses Builder for delegated implementation by default, after obtaining fresh repository evidence itself or through Explorer. For consequential complexity it prefers a precise Advisor decision followed by Builder. It uses Builder-high only when the work meets the exceptional highest-impact criticality threshold and remains beyond Builder after Advisor guidance. Advisor never performs broad planning.
 
-Every delegated ad-hoc implementation is validated through Executor and independently reviewed by Reviewer or risk-triggered Expert Reviewer. General may omit independent review only for its own genuinely trivial low-risk direct edit. General addresses findings on direct work itself; delegated findings return to the same Builder session with current context. Stop after at most three consecutive `changes_requested` cycles and ask the user rather than looping indefinitely.
+Every delegated ad-hoc implementation is validated through Executor and independently reviewed by Reviewer. Expert Reviewer replaces Reviewer only for changes meeting the exceptional highest-impact criticality threshold or when explicitly requested. General may omit independent review only for its own genuinely trivial low-risk direct edit. General addresses findings on direct work itself; delegated findings return to the same Builder session with current context. Stop after at most three consecutive `changes_requested` cycles and ask the user rather than looping indefinitely.
 
 ## Review
 
-Terra xhigh is the default Reviewer. Sol high is the Expert Reviewer. Review depth is selected by impact risk independently of the implementation tier. Both review the complete scope in priority order: correctness, security and privacy, then code quality and simplification.
+Terra xhigh is the default Reviewer, including for normally sensitive changes. Sol high is the exceptional Expert Reviewer. Both review the complete scope in priority order: correctness, security and privacy, then code quality and simplification.
 
-Expert review replaces the default review when high risk is known before review. It is not automatically stacked after a complete default review. Escalate to Expert Reviewer when:
+Expert review replaces the default review only when the exceptional threshold is known before review. It is not automatically stacked after a complete default review. Escalate to Expert Reviewer only when:
 
-- Security, authorization, concurrency, migration, compatibility, or data-integrity behavior is involved.
-- The implementation introduces an important new module seam or public interface.
-- A default-review finding is disputed or uncertain.
-- The default Reviewer reports insufficient confidence.
+- The change is among the system's highest-impact, most critical changes.
+- A missed defect could cause catastrophic, irreversible, or system-wide harm.
+- Standard review cannot provide adequate confidence even after missing evidence is supplied and any precise unresolved decision is routed through Advisor.
 - The user explicitly requests expert review.
+
+Sensitive security, authorization, concurrency, migration, compatibility, data-integrity, public-interface, or module-seam work does not by category alone meet this threshold. Neither does a disputed finding, unfamiliar design, or low Reviewer confidence.
 
 Review receives the requirements, Subtask context, agreed diff scope and base, current branch and HEAD when relevant, changed files, implementation result, working-tree context, and validation results. Devcroft does not store full diffs, so Orchestrator invalidates approval after any source revision and requests another review after material feedback revisions.
 
@@ -171,7 +172,7 @@ Each finding should include a stable ID, severity, blocking status, evidence, ra
 
 Review guidance is evidence and direction, not an automatically trusted patch specification. If Orchestrator implemented directly, it addresses findings directly. Otherwise Orchestrator resumes the original Builder or Builder-high session with stable finding IDs, current source and validation state, relevant evidence, scope limits, and any authoritative context changes. If the original session is unavailable, start a fresh session at the same tier with a complete packet; use Builder-high instead only for deliberate capability escalation.
 
-Builder maps each revision to finding IDs and returns unresolved or disputed findings rather than widening scope. Executor validates every revision. Reviewer verifies the result unless an unresolved finding still meets Expert Reviewer triggers, in which case Expert Reviewer verifies it.
+Builder maps each revision to finding IDs and returns unresolved or disputed findings rather than widening scope. Executor validates every revision. Reviewer verifies the result unless an unresolved finding meets the exceptional Expert Reviewer threshold, in which case Expert Reviewer verifies it.
 
 Automated review allows at most three consecutive `changes_requested` verdicts. `devcroft_record_review` tracks the attempt count and moves the Subtask to `blocked` when the budget is exhausted. Approval resets the count; human-requested changes begin a new bounded automated-review cycle. Further work after exhaustion requires user intervention.
 

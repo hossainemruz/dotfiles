@@ -14,7 +14,7 @@ Apply this contract when the caller selects `mode: workflow`. For `mode: ad-hoc`
 - After confirming scope, review in order: correctness, security and privacy, then code quality and simplification. Code-quality feedback should identify high-confidence opportunities for reuse, lower complexity, clearer ownership, or less redundant work without turning preferences into findings.
 - Judge the integrated implementation rather than attributing findings to backend Steps.
 - Verify prior blocking findings against the current diff and validation, but independently assess whether material changes introduced new problems.
-- Return `status: expert_review_required` instead of a verdict when the evidence is insufficient or the change reveals security, authorization, concurrency, migration, compatibility, data-integrity, public-interface, or architectural-seam risk that requires expert scrutiny.
+- Return `status: expert_review_required` instead of a verdict only when the change is among the system's highest-impact, most critical changes, a missed defect could cause catastrophic, irreversible, or system-wide harm, and standard review cannot provide adequate confidence. A sensitive category, disputed point, unfamiliar design, or low confidence alone is insufficient: return `blocked` for missing evidence or complete the standard review with appropriately scoped findings.
 - Approval means no blocking findings remain and validation is sufficient. Non-blocking suggestions may accompany approval but must not prolong remediation.
 
 ## Workflow Output
