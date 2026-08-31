@@ -170,7 +170,7 @@ Each finding should include a stable ID, severity, blocking status, evidence, ra
 
 ### Review-feedback routing
 
-Review guidance is evidence and direction, not an automatically trusted patch specification. If Orchestrator implemented directly, it addresses findings directly. Otherwise Orchestrator resumes the original Builder or Builder-high session with stable finding IDs, current source and validation state, relevant evidence, scope limits, and any authoritative context changes. If the original session is unavailable, start a fresh session at the same tier with a complete packet; use Builder-high instead only for deliberate capability escalation.
+Review guidance is evidence and direction, not an automatically trusted patch specification. If Orchestrator implemented directly, it addresses findings directly. Otherwise Orchestrator resumes the original Builder or Builder-high session with stable finding IDs, current source and validation state, relevant evidence, scope limits, and any authoritative context changes. If the original session is unavailable, start a fresh session at the same tier with a complete packet; never promote Builder remediation to Builder-high unless the exceptional highest-impact threshold is met after Advisor guidance.
 
 Builder maps each revision to finding IDs and returns unresolved or disputed findings rather than widening scope. Executor validates every revision. Reviewer verifies the result unless an unresolved finding meets the exceptional Expert Reviewer threshold, in which case Expert Reviewer verifies it.
 
