@@ -58,7 +58,7 @@ Specialists should not delegate to one another. In particular, Builder returns a
 
 ## Context Handoffs
 
-Every new specialist session receives a complete bounded packet because delegated agents do not inherit the caller's conversation context. The calling primary agent curates specialist results before using them in another packet; agent output is not blindly forwarded as authoritative context. The selected Builder or Builder-high session is preserved and resumed for review feedback on the same implementation workstream.
+Every new specialist session receives a complete bounded packet because delegated agents do not inherit the caller's conversation context. The calling primary agent curates specialist results before using them in another packet; agent output is not blindly forwarded as authoritative context. The selected Builder or Builder-high session is preserved and resumed for review feedback and Advisor-resolution continuation on the same implementation workstream.
 
 Every packet identifies the role and `workflow|ad-hoc` mode, exact objective, authoritative requirements and acceptance criteria, in-scope and prohibited changes, applicable accepted decisions, focused repository evidence, working-tree and comparison-base context, prior findings or feedback, validation expectations, and the exact output contract. Workflow packets additionally include the Task key, Subtask ID, frozen contract, accepted dependency outcomes, and relevant lifecycle context. Ad-hoc Builder packets use `none` for Task and Subtask IDs.
 
@@ -131,13 +131,17 @@ A durable decision contains:
 
 Durable advisor decisions are appended to the Task through `devcroft_update_task` with Task-scoped activation and become active immediately. Builder-reported implementation decisions are appended with outcome-scoped activation using the prospective outcome ID, then referenced by `devcroft_record_review`; they and recorded deviations become active cross-Subtask context only after the user accepts that Subtask. Unaccepted implementation outcomes must not constrain later work.
 
+### Directive propagation
+
+When an Advisor directive is accepted for implementation, the calling primary agent propagates it as a structured accepted directive rather than a free-form summary. The selected decision, required invariants, implementation boundaries, prohibited changes, and validation requirements always reach the implementing Builder, together with the rationale, residual risks, relevant evidence, and a rejected alternative when their omission could cause the decision to be reopened or misinterpreted.
+
 ## Implementation
 
 Builder uses GLM-5.3 Flash high as the default for delegated implementation, including difficult or cross-cutting work once consequential decisions are settled. When complexity comes from an unresolved high-leverage decision, Orchestrator prefers Advisor guidance followed by Builder. Builder-high uses Sol medium and is reserved for exceptional work that is both among the system's highest-impact, most critical changes and still beyond Builder's reliable implementation capability after focused Advisor guidance. Difficulty, breadth, risk, or unfamiliarity alone does not justify escalation. Both Builders share the same workflow-stateless contract and permission boundary. Their implementation session is retained for review feedback, but they never own lifecycle state.
 
 Before each fresh planned implementation workstream, Orchestrator obtains the Subtask context and asks Explorer to reconcile it with the current repository. Review feedback uses the existing evidence unless it introduces a new factual question or the evidence has become stale.
 
-For a planned Subtask, Orchestrator implements directly only when work is localized, mechanically clear, low risk, free of unresolved behavioral choices, and straightforward to validate. Otherwise the selected Builder receives requirements, plan context, repository evidence, applicable Advisor directives, scope limits, working-tree context, and validation expectations. It returns changed files, implementation summary, requested validation, residual risks, any blocker or Advisor request, implementation decisions, deviations from the plan, and `future_impact: none|context_only|replan_required` for Orchestrator routing.
+For a planned Subtask, Orchestrator implements directly only when work is localized, mechanically clear, low risk, free of unresolved behavioral choices, and straightforward to validate. Otherwise the selected Builder receives requirements, plan context, repository evidence, applicable Advisor directives, scope limits, working-tree context, and validation expectations. It returns changed files, implementation summary, requested validation, residual risks, any blocker or Advisor request, implementation decisions, deviations from the plan, and `future_impact: none|context_only|replan_required` for Orchestrator routing. When an implementation result is `advisor_required`, Orchestrator consults Advisor, reconciles and persists a durable directive when required, and resumes the same Builder session with the accepted directive as a delta-only packet rather than starting a fresh Builder.
 
 When an implementation result has `future_impact: replan_required`, Orchestrator reports the exact impact and requests explicit replanning authorization. After authorization, Planner revises or confirms the pending suffix through `devcroft_apply_plan` before the current Subtask is completed. Cross-Subtask invariants that must apply immediately are persisted as durable decisions.
 
@@ -326,6 +330,15 @@ sequenceDiagram
     else Default delegated implementation
         Orchestrator->>Builders: Context, evidence, and directive
         Builders-->>Orchestrator: Implementation result
+        opt Builder returned advisor_required
+            Orchestrator->>Advisor: Precise decision packet
+            Advisor-->>Orchestrator: Structured directive
+            opt Decision is durable
+                Orchestrator->>MCP: devcroft_update_task(decision)
+            end
+            Orchestrator->>Builders: Resume same session with accepted directive delta
+            Builders-->>Orchestrator: Implementation result
+        end
     else Exceptional highest-impact work beyond Advisor plus Builder
         Orchestrator->>Builders: Dispatch Builder-high with the same bounded contract
         Builders-->>Orchestrator: Implementation result

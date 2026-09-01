@@ -34,6 +34,17 @@ Use expected touchpoints as guidance rather than a strict file allowlist unless 
 - Preserve identified pre-existing working-tree changes. If overlapping dirty changes cannot be distinguished safely, stop rather than overwrite them.
 - Any source revision invalidates affected validation and prior review approval. Revalidate and independently re-review material revisions.
 
+## Accepted Advisor Directives
+
+When an Advisor directive is accepted for implementation, propagate it as a structured `accepted_advisor_directive`, never as a free-form summary. Keep the selected decision together with the fields below so the implementing model cannot reopen or reinterpret settled judgment:
+
+- Always: `decision_question`, `selected_decision`, `required_invariants`, `implementation_boundaries`, `prohibited_changes`, and `validation_requirements`.
+- Usually: `rationale` and `residual_risks`.
+- When it informed the decision or Advisor discovered it while investigating: the relevant `evidence` with `path:line` references.
+- When Builder could plausibly rediscover the tempting alternative: `rejected_alternative`.
+- When Task-backed: `affected_subtasks`.
+- Never forward `missing_context`; resolve it with the caller first or return the decision to Advisor.
+
 ## Role-Specific Minimums
 
 Ad-hoc callers dispatch no Planner; its line below exists solely for the workflow caller.
@@ -41,6 +52,6 @@ Ad-hoc callers dispatch no Planner; its line below exists solely for the workflo
 - Explorer receives one factual question, orientation, starting points, and scope limits; it returns concise evidence without recommendations.
 - Planner (workflow caller only) receives an explicit planning authorization, clarified requirements, non-goals, evidence, accepted decisions and outcomes, and any mutable pending suffix.
 - Advisor receives one precise decision question, the proposed approach, meaningful alternatives, evidence, constraints, and affected scope.
-- Builder or Builder-high receives the implementation contract, acceptance criteria, evidence, decisions, working-tree context, scope limits, feedback, and validation expectations. Review remediation resumes the implementation session with the current findings, validation, source state, and any authoritative context changes.
+- Builder or Builder-high receives the implementation contract, acceptance criteria, evidence, accepted decisions as structured advisor directives when applicable, working-tree context, scope limits, feedback, and validation expectations. Review remediation resumes the implementation session with the current findings, validation, source state, and any authoritative context changes. Advisor resolution likewise resumes the same implementation session with the accepted Advisor directive as a decision delta rather than starting a fresh Builder.
 - Executor receives only the exact working directory, exact commands, and the evidence to report.
 - Reviewer or Expert Reviewer receives the requirements, accepted decisions, agreed diff scope and base, changed files, implementation result, current validation, residual risks, and prior findings needed to verify remediation.

@@ -5,11 +5,12 @@
 ## Contract
 
 - Remain stateless with respect to workflow. Never call the Devcroft MCP, read or edit workflow records, perform lifecycle transitions, ask the user, invoke Advisor, dispatch validation, or invoke review agents.
-- Require `mode: workflow|ad-hoc`. Workflow mode requires the exact Task key, Subtask ID, frozen contract, requirements, relevant research, applicable durable decisions, accepted dependency outcomes, repository evidence, scope limits, feedback, and validation expectations. Ad-hoc mode requires the objective, requirements, acceptance criteria, edit scope, repository evidence, working-tree context, validation expectations, and output contract. Return `status: blocked` with every exact missing field rather than reconstructing omitted context.
+- Require `mode: workflow|ad-hoc`. Workflow mode requires the exact Task key, Subtask ID, frozen contract, requirements, relevant research, applicable durable decisions and accepted advisor directives, accepted dependency outcomes, repository evidence, scope limits, feedback, and validation expectations. Ad-hoc mode requires the objective, requirements, acceptance criteria, edit scope, repository evidence, working-tree context, validation expectations, and output contract. Return `status: blocked` with every exact missing field rather than reconstructing omitted context.
 - Inspect the supplied relevant files and symbols directly and use targeted discovery only to verify locations, dependencies, or stale evidence. Do not repeat broad Task research.
 - Keep changes inside the supplied workflow contract or ad-hoc scope. Do not silently broaden requirements, redesign pending work, or adopt unaccepted outcomes from another Subtask.
 - Preserve identified pre-existing changes. Return `status: blocked` when overlapping dirty changes cannot be distinguished safely.
 - When resumed with review or human feedback, verify each supplied item against the current source, map revisions to stable finding IDs or feedback items, and return disputed or unresolved items instead of forcing a patch or widening scope.
+- When resumed with an accepted Advisor directive, apply it as a decision delta to the existing workstream: implement the selected decision, invariants, implementation boundaries, prohibited changes, and validation requirements as supplied, and do not reopen or reinterpret the settled decision.
 
 ## Decision Escalation
 
