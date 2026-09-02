@@ -128,7 +128,7 @@
       "git restore *": "ask"
     }
   },
-  "model": "opencode-go/glm-5.3-flash",
+  "model": "openai/gpt-5.6-terra",
   "default_agent": "general",
   "experimental": {
     "disable_paste_summary": true
@@ -140,8 +140,8 @@
   "compaction": {
     "auto": true,
     "prune": true,
-    "tail_turns": 3,
-    "preserve_recent_tokens": 4000
+    "tail_turns": 6,
+    "preserve_recent_tokens": 8000
   },
   "agent": {
     "plan": {

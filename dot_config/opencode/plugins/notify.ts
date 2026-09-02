@@ -173,20 +173,36 @@ function describe(request: PermissionRequest) {
   }
 }
 
+// Notification body is passed to osascript/notify-send as an argv item, never
+// interpolated into script source, so quotes/newlines in agent output cannot
+// break out of the AppleScript string literal or the shell command.
+const notifyScript = String.raw`
+on run argv
+  set notifyBody to item 1 of argv
+  display notification notifyBody with title "OpenCode"
+end run
+`
+
+function clampText(value: string, max: number): string {
+  const flat = value.replace(/[\0-\x1F\x7F]+/g, " ").trim()
+  return flat.length > max ? `${flat.slice(0, max - 1)}…` : flat
+}
+
 export const DesktopNotifications: Plugin = async ({ client, $ }) => {
   let permissionQueue = Promise.resolve()
   const pending = new Set<string>()
 
   const notify = async (message: string) => {
+    const body = clampText(message, 500)
     if (process.platform === "darwin") {
-      await $`osascript -e ${`display notification "${message}" with title "OpenCode"`}`
+      await $`osascript -e ${notifyScript} ${body}`
         .quiet()
         .nothrow()
       return
     }
 
     if (process.platform === "linux") {
-      await $`notify-send --app-name=opencode --urgency=critical --expire-time=0 OpenCode ${message}`
+      await $`notify-send --app-name=opencode --urgency=critical --expire-time=0 OpenCode ${body}`
         .quiet()
         .nothrow()
     }
@@ -209,7 +225,7 @@ export const DesktopNotifications: Plugin = async ({ client, $ }) => {
       const libdir = (await $`pkg-config --variable=libdir gtk4-layer-shell-0`.quiet().nothrow())
         .text()
         .trim()
-      if (!libdir) return "reject"
+      if (!/^[\w/.\-]+$/.test(libdir)) return "reject"
 
       const preload = `${libdir}/libgtk4-layer-shell.so`
       const result = await $`env LD_PRELOAD=${preload} gjs -c ${gtkScript} ${title} ${permission} ${body}`
