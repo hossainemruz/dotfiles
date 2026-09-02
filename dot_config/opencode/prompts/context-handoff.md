@@ -32,6 +32,7 @@ Use expected touchpoints as guidance rather than a strict file allowlist unless 
 - Distinguish authoritative requirements and accepted decisions from repository evidence, implementation proposals, review guidance, and unaccepted implementation decisions.
 - Require a specialist to report every missing field when blocked. Resume the same Builder session with corrected or review context for the same workstream. Start a fresh specialist session only when no reusable session exists, the role changes, or the Builder tier must be deliberately escalated; then provide a complete packet.
 - Preserve identified pre-existing working-tree changes. If overlapping dirty changes cannot be distinguished safely, stop rather than overwrite them.
+- Step exhaustion does not end a specialist session. When a result reports that the specialist's maximum step limit was reached, or its output was cut off before the required output contract, resume the same session by passing the returned task ID as `task_id` with a short continuation delta naming the remaining work and current validation state. The step budget resets on each dispatch. Do not re-dispatch the same workstream as a fresh complete packet; start a fresh session only when the resume call fails.
 - Any source revision invalidates affected validation and prior review approval. Revalidate and independently re-review material revisions.
 
 ## Accepted Advisor Directives

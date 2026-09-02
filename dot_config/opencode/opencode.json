@@ -202,7 +202,7 @@
       "variant": "high",
       "mode": "subagent",
       "hidden": true,
-      "steps": 80,
+      "steps": 120,
       "permission": {
         "question": "deny",
         "read": {
@@ -326,7 +326,7 @@
       "variant": "xhigh",
       "mode": "subagent",
       "hidden": true,
-      "steps": 50,
+      "steps": 80,
       "permission": {
         "question": "deny",
         "read": {
@@ -352,7 +352,7 @@
       "variant": "high",
       "mode": "subagent",
       "hidden": true,
-      "steps": 50,
+      "steps": 80,
       "permission": {
         "question": "deny",
         "read": {
