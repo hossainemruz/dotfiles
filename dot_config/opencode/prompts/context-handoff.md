@@ -53,6 +53,16 @@ Ad-hoc callers dispatch no Planner; its line below exists solely for the workflo
 - Explorer receives one factual question, orientation, starting points, and scope limits; it returns concise evidence without recommendations.
 - Planner (workflow caller only) receives an explicit planning authorization, clarified requirements, non-goals, evidence, accepted decisions and outcomes, and any mutable pending suffix.
 - Advisor receives one precise decision question, the proposed approach, meaningful alternatives, evidence, constraints, and affected scope.
-- Builder or Builder-high receives the implementation contract, acceptance criteria, evidence, accepted decisions as structured advisor directives when applicable, working-tree context, scope limits, feedback, and validation expectations. Review remediation resumes the implementation session with the current findings, validation, source state, and any authoritative context changes. Advisor resolution likewise resumes the same implementation session with the accepted Advisor directive as a decision delta rather than starting a fresh Builder.
+- Builder pool member (`builder`, `builder-high`, `builder-terra`) receives the implementation contract, acceptance criteria, evidence, accepted decisions as structured advisor directives when applicable, working-tree context, scope limits, feedback, and validation expectations. Review remediation resumes the implementation session with the current findings, validation, source state, and any authoritative context changes. Advisor resolution likewise resumes the same implementation session with the accepted Advisor directive as a decision delta rather than starting a fresh Builder.
 - Executor receives only the exact working directory, exact commands, and the evidence to report.
-- Reviewer or Expert Reviewer receives the requirements, accepted decisions, agreed diff scope and base, changed files, implementation result, current validation, residual risks, and prior findings needed to verify remediation.
+- Reviewer pool member (`reviewer`, `reviewer-sol`, `reviewer-glm`) or Expert Reviewer receives the requirements, accepted decisions, agreed diff scope and base, changed files, implementation result, current validation, residual risks, and prior findings needed to verify remediation.
+
+## Model pool
+
+The task tool has no runtime model parameter, so each role × model combination is a separate subagent. Pool members share the role's prompt, permissions, and steps; only `model` (and cost-driven `variant`) differs.
+
+- Builder pool: `@builder` (`opencode-go/glm-5.3-flash`, default), `@builder-high` (`openai/gpt-5.6-sol`, exceptional tier), `@builder-terra` (`openai/gpt-5.6-terra`, strong tier).
+- Reviewer pool: `@reviewer` (`openai/gpt-5.6-terra`, default), `@reviewer-sol` (`openai/gpt-5.6-sol`, strong), `@reviewer-glm` (`opencode-go/glm-5.3-flash`, fast pass). `@expert-reviewer` stays outside the pool: it adds the expert-reviewer guideline and remains reserved for the highest-impact criticality threshold.
+- The caller's default routing applies unless the user names a pool model for the request ("use sol as builder", "review with glm"); a user override wins for that request and its follow-ups.
+- Stay on the selected pool member for the whole workstream: resume the same session for remediation, Advisor deltas, and re-review. Never stack two pool members on the same work in one cycle.
+- Accepted shorthands are `glm`/`flash` for glm members, `sol` for sol members, and `terra` for terra members. Anything else: ask, don't guess.
