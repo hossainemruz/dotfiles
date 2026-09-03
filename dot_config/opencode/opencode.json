@@ -165,11 +165,11 @@
           "explore": "allow",
           "advisor": "allow",
           "executor": "allow",
+          "executor-flash": "allow",
           "builder": "allow",
-          "builder-high": "allow",
           "builder-terra": "allow",
+          "builder-sol": "allow",
           "reviewer": "allow",
-          "reviewer-sol": "allow",
           "reviewer-glm": "allow",
           "expert-reviewer": "allow"
         }
@@ -191,11 +191,11 @@
           "explore": "allow",
           "advisor": "allow",
           "executor": "allow",
+          "executor-flash": "allow",
           "builder": "allow",
-          "builder-high": "allow",
           "builder-terra": "allow",
+          "builder-sol": "allow",
           "reviewer": "allow",
-          "reviewer-sol": "allow",
           "reviewer-glm": "allow",
           "expert-reviewer": "allow"
         }
@@ -221,11 +221,11 @@
       },
       "prompt": "{file:./prompts/engineering-voice.md}\n\n{file:./prompts/builder-guideline.md}\n\n{file:./prompts/tool-routing.md}\n\n{file:./prompts/markdown-style.md}"
     },
-    "builder-high": {
-      "description": "Exceptional implementation agent reserved for highest-impact system-critical work beyond Advisor plus Builder",
+    "builder-sol": {
+      "description": "Critical-task implementation agent (sol model pool member) for highest-impact system-critical work or explicit request",
       "model": "openai/gpt-5.6-sol",
       "mode": "subagent",
-      "variant": "medium",
+      "variant": "high",
       "hidden": true,
       "steps": 80,
       "permission": {
@@ -241,10 +241,10 @@
       "prompt": "{file:./prompts/engineering-voice.md}\n\n{file:./prompts/builder-guideline.md}\n\n{file:./prompts/tool-routing.md}\n\n{file:./prompts/markdown-style.md}"
     },
     "builder-terra": {
-      "description": "Strong-tier implementation agent (terra model pool member) for clear bounded workflow or ad-hoc coding",
+      "description": "Strong-tier implementation agent (terra model pool member) for explicitly requested implementation",
       "model": "openai/gpt-5.6-terra",
       "mode": "subagent",
-      "variant": "medium",
+      "variant": "high",
       "hidden": true,
       "steps": 80,
       "permission": {
@@ -345,6 +345,30 @@
       },
       "prompt": "{file:./prompts/executor-guideline.md}"
     },
+    "executor-flash": {
+      "description": "Fast execution subagent (flash model pool member) for bash commands, tests, builds, and validation",
+      "model": "opencode-go/deepseek-v4-flash",
+      "mode": "subagent",
+      "hidden": true,
+      "variant": "medium",
+      "steps": 10,
+      "permission": {
+        "read": "deny",
+        "edit": "deny",
+        "glob": "deny",
+        "grep": "deny",
+        "list": "deny",
+        "lsp": "deny",
+        "webfetch": "deny",
+        "websearch": "deny",
+        "question": "deny",
+        "skill": "deny",
+        "todowrite": "deny",
+        "fff_*": "deny",
+        "task": "deny"
+      },
+      "prompt": "{file:./prompts/executor-guideline.md}"
+    },
     "reviewer": {
       "description": "Default independent source-read-only reviewer for workflow and ad hoc changes",
       "model": "openai/gpt-5.6-terra",
@@ -371,36 +395,10 @@
       },
       "prompt": "{file:./prompts/engineering-voice.md}\n\n{file:./skills/code-review/SKILL.md}\n\n{file:./prompts/task-review-guideline.md}\n\n{file:./prompts/tool-routing.md}\n\n{file:./prompts/markdown-style.md}"
     },
-    "reviewer-sol": {
-      "description": "Independent source-read-only reviewer (sol model pool member) for workflow and ad hoc changes",
-      "model": "openai/gpt-5.6-sol",
-      "variant": "xhigh",
-      "mode": "subagent",
-      "hidden": true,
-      "steps": 80,
-      "permission": {
-        "question": "deny",
-        "read": {
-          ".work/*": "deny"
-        },
-        "bash": {
-          "*": "deny",
-          "git diff": "allow",
-          "git diff *": "allow",
-          "git status --short": "allow",
-          "git status --short *": "allow",
-          "git log": "allow",
-          "git log *": "allow"
-        },
-        "edit": "deny",
-        "task": "deny"
-      },
-      "prompt": "{file:./prompts/engineering-voice.md}\n\n{file:./skills/code-review/SKILL.md}\n\n{file:./prompts/task-review-guideline.md}\n\n{file:./prompts/tool-routing.md}\n\n{file:./prompts/markdown-style.md}"
-    },
     "reviewer-glm": {
-      "description": "Fast independent source-read-only reviewer (glm model pool member) for workflow and ad hoc changes",
+      "description": "Fast independent source-read-only reviewer (glm model pool member) for explicitly requested review",
       "model": "opencode-go/glm-5.3-flash",
-      "variant": "high",
+      "variant": "max",
       "mode": "subagent",
       "hidden": true,
       "steps": 80,

@@ -36,7 +36,7 @@ Orchestrator is the sole Devcroft MCP client. Specialists remain independent of 
 
 ### General
 
-General is the default primary agent for unplanned advice, investigation, review, and ad-hoc implementation. It may perform trivial low-risk changes directly or delegate bounded work through Explorer, Advisor, Builder, Builder-high, Executor, Reviewer, and Expert Reviewer. Builder and Reviewer are the defaults; Builder-high and Expert Reviewer are exceptional routes reserved for the highest-impact system-critical work. General never calls Devcroft, invokes Planner, reads workflow records, or coordinates Task lifecycle state.
+General is the default primary agent for unplanned advice, investigation, review, and ad-hoc implementation. It may perform trivial low-risk changes directly or delegate bounded work through Explorer, Advisor, the Builder, Executor, and Reviewer pools, and Expert Reviewer. Builder, Reviewer, and Executor are the defaults; builder-sol and Expert Reviewer are critical routes reserved for the highest-impact system-critical work or explicit request. General never calls Devcroft, invokes Planner, reads workflow records, or coordinates Task lifecycle state.
 
 ### Orchestrator
 
@@ -52,13 +52,13 @@ Orchestrator is the workflow control plane and sole Devcroft MCP client. It owns
 
 ### Specialists
 
-Planner, Explorer, Advisor, Builder, Builder-high, Reviewer, Expert Reviewer, and Executor never mutate workflow state or call the Devcroft MCP. Each specialist receives a complete bounded context packet and returns a structured result to the calling primary agent.
+Planner, Explorer, Advisor, the Builder, Reviewer, and Executor pool members, and Expert Reviewer never mutate workflow state or call the Devcroft MCP. Each specialist receives a complete bounded context packet and returns a structured result to the calling primary agent.
 
 Specialists should not delegate to one another. In particular, Builder returns an `advisor_required` result when it encounters an unresolved architectural decision; the calling primary agent decides whether to invoke Advisor.
 
 ## Context Handoffs
 
-Every new specialist session receives a complete bounded packet because delegated agents do not inherit the caller's conversation context. The calling primary agent curates specialist results before using them in another packet; agent output is not blindly forwarded as authoritative context. The selected Builder or Builder-high session is preserved and resumed for review feedback and Advisor-resolution continuation on the same implementation workstream. Step exhaustion is not session termination: a specialist that reaches its maximum step limit returns a summary and remains resumable through its task ID with a short continuation delta rather than a fresh complete packet.
+Every new specialist session receives a complete bounded packet because delegated agents do not inherit the caller's conversation context. The calling primary agent curates specialist results before using them in another packet; agent output is not blindly forwarded as authoritative context. The selected Builder pool session is preserved and resumed for review feedback and Advisor-resolution continuation on the same implementation workstream. Step exhaustion is not session termination: a specialist that reaches its maximum step limit returns a summary and remains resumable through its task ID with a short continuation delta rather than a fresh complete packet.
 
 Every packet identifies the role and `workflow|ad-hoc` mode, exact objective, authoritative requirements and acceptance criteria, in-scope and prohibited changes, applicable accepted decisions, focused repository evidence, working-tree and comparison-base context, prior findings or feedback, validation expectations, and the exact output contract. Workflow packets additionally include the Task key, Subtask ID, frozen contract, accepted dependency outcomes, and relevant lifecycle context. Ad-hoc Builder packets use `none` for Task and Subtask IDs.
 
@@ -78,10 +78,13 @@ Agent names describe their semantic workflow responsibilities. This keeps routin
 | `explore` | DeepSeek v4 Flash | Read-only repository inspection | Retrieve bounded repository evidence without making implementation decisions. |
 | `advisor` | GPT-5.6 Sol high | Read-only repository inspection | Resolve one precise, high-leverage implementation decision. |
 | `builder` | GLM-5.3 Flash high | Repository editing | Implement one clear bounded workflow or ad-hoc change. |
-| `builder-high` | GPT-5.6 Sol medium | Repository editing | Exceptionally implement highest-impact system-critical work that remains beyond Builder after Advisor guidance. |
+| `builder-terra` | GPT-5.6 Terra high | Repository editing | Implement explicitly requested Terra implementation. |
+| `builder-sol` | GPT-5.6 Sol high | Repository editing | Implement highest-impact system-critical work or explicitly requested Sol implementation. |
 | `reviewer` | GPT-5.6 Terra xhigh | Read-only repository inspection and read-only Git diff commands | Review correctness first, security second, then code quality and simplification. |
+| `reviewer-glm` | GLM-5.3 Flash max | Read-only repository inspection and read-only Git diff commands | Fast review pass on explicit request. |
 | `expert-reviewer` | GPT-5.6 Sol high | Read-only repository inspection and read-only Git diff commands | Exceptionally review highest-impact system-critical changes, or perform explicitly requested expert review. |
 | `executor` | GPT-5.6 Luna medium | Exact command execution only | Run tests, builds, and other bounded validation commands. |
+| `executor-flash` | DeepSeek v4 Flash | Exact command execution only | Fast validation pass on explicit request. |
 
 `builder` is preferred over `worker` because its responsibility is specifically implementation and review-feedback revisions rather than arbitrary background work. Semantic agents may use shared prompt fragments and skills, but each agent retains a role-specific prompt and least-privilege permission set.
 
@@ -137,7 +140,7 @@ When an Advisor directive is accepted for implementation, the calling primary ag
 
 ## Implementation
 
-Builder uses GLM-5.3 Flash high as the default for delegated implementation, including difficult or cross-cutting work once consequential decisions are settled. When complexity comes from an unresolved high-leverage decision, Orchestrator prefers Advisor guidance followed by Builder. Builder-high uses Sol medium and is reserved for exceptional work that is both among the system's highest-impact, most critical changes and still beyond Builder's reliable implementation capability after focused Advisor guidance. Difficulty, breadth, risk, or unfamiliarity alone does not justify escalation. Both Builders share the same workflow-stateless contract and permission boundary. Their implementation session is retained for review feedback, but they never own lifecycle state.
+The Builder pool shares one workflow-stateless contract and permission boundary. `builder` (GLM-5.3 Flash high) is the default for delegated implementation, including difficult or cross-cutting work once consequential decisions are settled. `builder-terra` (GPT-5.6 Terra high) is dispatched on explicit request. `builder-sol` (GPT-5.6 Sol high) is reserved for critical tasks or explicit request when the work is among the system's highest-impact, most critical changes and still beyond Builder's reliable implementation capability after focused Advisor guidance. Difficulty, breadth, risk, or unfamiliarity alone does not justify escalation. The selected Builder pool session is retained for review feedback, but it never owns lifecycle state.
 
 Before each fresh planned implementation workstream, Orchestrator obtains the Subtask context and asks Explorer to reconcile it with the current repository. Review feedback uses the existing evidence unless it introduces a new factual question or the evidence has become stale.
 
@@ -149,7 +152,7 @@ Executor runs exact validation commands after implementation and every review-fe
 
 ### General ad-hoc implementation
 
-General uses the same implementation and risk-routing principles without Devcroft state. It implements genuinely trivial low-risk work directly and uses Builder for delegated implementation by default, after obtaining fresh repository evidence itself or through Explorer. For consequential complexity it prefers a precise Advisor decision followed by Builder. It uses Builder-high only when the work meets the exceptional highest-impact criticality threshold and remains beyond Builder after Advisor guidance. Advisor never performs broad planning.
+General uses the same implementation and risk-routing principles without Devcroft state. It implements genuinely trivial low-risk work directly and uses Builder for delegated implementation by default, after obtaining fresh repository evidence itself or through Explorer. For consequential complexity it prefers a precise Advisor decision followed by Builder. It uses builder-sol for critical tasks or on explicit request when the work remains beyond Builder after Advisor guidance. Advisor never performs broad planning.
 
 Every delegated ad-hoc implementation is validated through Executor and independently reviewed by Reviewer. Expert Reviewer replaces Reviewer only for changes meeting the exceptional highest-impact criticality threshold or when explicitly requested. General may omit independent review only for its own genuinely trivial low-risk direct edit. General addresses findings on direct work itself; delegated findings return to the same Builder session with current context. Stop after at most three consecutive `changes_requested` cycles and ask the user rather than looping indefinitely.
 
@@ -174,7 +177,7 @@ Each finding should include a stable ID, severity, blocking status, evidence, ra
 
 ### Review-feedback routing
 
-Review guidance is evidence and direction, not an automatically trusted patch specification. If Orchestrator implemented directly, it addresses findings directly. Otherwise Orchestrator resumes the original Builder or Builder-high session with stable finding IDs, current source and validation state, relevant evidence, scope limits, and any authoritative context changes. If the original session is unavailable, start a fresh session at the same tier with a complete packet; never promote Builder remediation to Builder-high unless the exceptional highest-impact threshold is met after Advisor guidance.
+Review guidance is evidence and direction, not an automatically trusted patch specification. If Orchestrator implemented directly, it addresses findings directly. Otherwise Orchestrator resumes the original Builder pool session with stable finding IDs, current source and validation state, relevant evidence, scope limits, and any authoritative context changes. If the original session is unavailable, start a fresh session at the same tier with a complete packet; never promote Builder remediation to builder-sol unless the critical-task threshold is met after Advisor guidance.
 
 Builder maps each revision to finding IDs and returns unresolved or disputed findings rather than widening scope. Executor validates every revision. Reviewer verifies the result unless an unresolved finding meets the exceptional Expert Reviewer threshold, in which case Expert Reviewer verifies it.
 
@@ -290,7 +293,7 @@ sequenceDiagram
     participant Planner
     participant Explorer
     participant Advisor
-    participant Builders as Builder / Builder-high
+    participant Builders as Builder pool
     participant Executor
     participant Reviewer
 
@@ -340,7 +343,7 @@ sequenceDiagram
             Builders-->>Orchestrator: Implementation result
         end
     else Exceptional highest-impact work beyond Advisor plus Builder
-        Orchestrator->>Builders: Dispatch Builder-high with the same bounded contract
+        Orchestrator->>Builders: Dispatch builder-sol with the same bounded contract
         Builders-->>Orchestrator: Implementation result
     end
     Orchestrator->>Executor: Run validation
