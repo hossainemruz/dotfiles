@@ -15,17 +15,11 @@
       "command": [
         "fff-mcp"
       ]
-    },
-    "devcroft": {
-      "type": "remote",
-      "url": "http://127.0.0.1:8756/mcp",
-      "enabled": true
     }
   },
   "small_model": "opencode-go/deepseek-v4-flash",
   "subagent_depth": 2,
   "permission": {
-    "devcroft_*": "deny",
     "todowrite": "deny",
     "read": {
       "~/.ssh/*": "deny",
@@ -61,8 +55,6 @@
     },
     "external_directory": {
       "/tmp/*": "allow",
-      "~/.config/agent-workflows": "allow",
-      "~/.config/agent-workflows/*": "allow",
       "~/.config/ghostty": "allow",
       "~/.config/ghostty/*": "allow",
       "~/.config/hunk": "allow",
@@ -151,13 +143,11 @@
       "disable": true
     },
     "general": {
-      "description": "Default primary agent for unplanned advice, investigation, review, and ad-hoc implementation",
+      "description": "Delegating primary agent for advice, investigation, review, and ad-hoc implementation",
       "model": "openai/gpt-5.6-terra",
       "mode": "primary",
       "variant": "high",
       "permission": {
-        "devcroft_review_*": "allow",
-        "devcroft_repository_list": "allow",
         "question": "allow",
         "todowrite": "allow",
         "task": {
@@ -177,13 +167,11 @@
       "prompt": "{file:./prompts/engineering-voice.md}\n\n{file:./prompts/general-guideline.md}\n\n{file:./prompts/context-handoff.md}\n\n{file:./prompts/tool-routing.md}\n\n{file:./prompts/markdown-style.md}"
     },
     "open-source": {
-      "description": "Autonomous primary agent for open-source work",
+      "description": "Autonomous primary for public open-source work; provider may retain data for training",
       "model": "opencode-go/muse-spark-1.3-contributor",
       "mode": "primary",
       "variant": "high",
       "permission": {
-        "devcroft_review_*": "allow",
-        "devcroft_repository_list": "allow",
         "question": "allow",
         "todowrite": "allow",
         "task": {
@@ -200,36 +188,10 @@
           "expert-reviewer": "allow"
         }
       },
-      "prompt": "Work autonomously: investigate, implement, validate, and review work yourself. Do not delegate work to subagents unless the user explicitly asks you to delegate.\n\n{file:./prompts/engineering-voice.md}\n\n{file:./prompts/general-guideline.md}\n\n{file:./prompts/context-handoff.md}\n\n{file:./prompts/tool-routing.md}\n\n{file:./prompts/markdown-style.md}"
-    },
-    "orchestrator": {
-      "description": "Primary control plane for explicit planning and planned Devcroft Task lifecycle",
-      "model": "openai/gpt-5.6-terra",
-      "mode": "primary",
-      "variant": "high",
-      "permission": {
-        "devcroft_*": "allow",
-        "question": "allow",
-        "todowrite": "allow",
-        "task": {
-          "*": "deny",
-          "planner": "allow",
-          "explore": "allow",
-          "advisor": "allow",
-          "executor": "allow",
-          "executor-flash": "allow",
-          "builder": "allow",
-          "builder-terra": "allow",
-          "builder-sol": "allow",
-          "reviewer": "allow",
-          "reviewer-glm": "allow",
-          "expert-reviewer": "allow"
-        }
-      },
-      "prompt": "{file:./prompts/engineering-voice.md}\n\n{file:./prompts/orchestrator-guideline.md}\n\n{file:./prompts/devcroft-guideline.md}\n\n{file:./prompts/context-handoff.md}\n\n{file:./prompts/tool-routing.md}\n\n{file:./prompts/markdown-style.md}"
+      "prompt": "{file:./prompts/engineering-voice.md}\n\n{file:./prompts/open-source-guideline.md}\n\n{file:./prompts/context-handoff.md}\n\n{file:./prompts/tool-routing.md}\n\n{file:./prompts/markdown-style.md}"
     },
     "builder": {
-      "description": "Default implementation agent for clear bounded workflow or ad-hoc coding",
+      "description": "Default implementation agent for clear bounded ad-hoc coding",
       "model": "opencode-go/glm-5.3-flash",
       "variant": "high",
       "mode": "subagent",
@@ -237,12 +199,6 @@
       "steps": 120,
       "permission": {
         "question": "deny",
-        "read": {
-          ".work/*": "deny"
-        },
-        "edit": {
-          ".work/*": "deny"
-        },
         "task": "deny"
       },
       "prompt": "{file:./prompts/engineering-voice.md}\n\n{file:./prompts/builder-guideline.md}\n\n{file:./prompts/tool-routing.md}\n\n{file:./prompts/markdown-style.md}"
@@ -256,12 +212,6 @@
       "steps": 80,
       "permission": {
         "question": "deny",
-        "read": {
-          ".work/*": "deny"
-        },
-        "edit": {
-          ".work/*": "deny"
-        },
         "task": "deny"
       },
       "prompt": "{file:./prompts/engineering-voice.md}\n\n{file:./prompts/builder-guideline.md}\n\n{file:./prompts/tool-routing.md}\n\n{file:./prompts/markdown-style.md}"
@@ -275,12 +225,6 @@
       "steps": 80,
       "permission": {
         "question": "deny",
-        "read": {
-          ".work/*": "deny"
-        },
-        "edit": {
-          ".work/*": "deny"
-        },
         "task": "deny"
       },
       "prompt": "{file:./prompts/engineering-voice.md}\n\n{file:./prompts/builder-guideline.md}\n\n{file:./prompts/tool-routing.md}\n\n{file:./prompts/markdown-style.md}"
@@ -294,9 +238,6 @@
       "steps": 50,
       "permission": {
         "question": "deny",
-        "read": {
-          ".work/*": "deny"
-        },
         "edit": "deny",
         "bash": {
           "*": "deny",
@@ -307,27 +248,6 @@
       },
       "prompt": "{file:./prompts/engineering-voice.md}\n\n{file:./prompts/advisor-guideline.md}\n\n{file:./prompts/tool-routing.md}\n\n{file:./prompts/markdown-style.md}"
     },
-    "planner": {
-      "description": "Research and structured implementation planning subagent",
-      "model": "openai/gpt-5.6-sol",
-      "mode": "subagent",
-      "variant": "xhigh",
-      "hidden": true,
-      "permission": {
-        "question": "deny",
-        "read": {
-          ".work/*": "deny"
-        },
-        "edit": "deny",
-        "bash": {
-          "*": "deny",
-          "git diff": "allow",
-          "git diff *": "allow"
-        },
-        "task": "deny"
-      },
-      "prompt": "{file:./prompts/engineering-voice.md}\n\n{file:./skills/planning/SKILL.md}\n\n{file:./prompts/tool-routing.md}\n\n{file:./prompts/markdown-style.md}"
-    },
     "explore": {
       "description": "Read-only codebase evidence retrieval; no implementation recommendations",
       "model": "opencode-go/deepseek-v4-flash",
@@ -336,9 +256,6 @@
       "steps": 25,
       "permission": {
         "question": "deny",
-        "read": {
-          ".work/*": "deny"
-        },
         "edit": "deny",
         "bash": {
           "*": "deny"
@@ -396,7 +313,7 @@
       "prompt": "{file:./prompts/executor-guideline.md}"
     },
     "reviewer": {
-      "description": "Default independent source-read-only reviewer for workflow and ad hoc changes",
+      "description": "Default independent source-read-only reviewer for ad-hoc changes",
       "model": "openai/gpt-5.6-terra",
       "variant": "xhigh",
       "mode": "subagent",
@@ -404,9 +321,6 @@
       "steps": 80,
       "permission": {
         "question": "deny",
-        "read": {
-          ".work/*": "deny"
-        },
         "bash": {
           "*": "deny",
           "git diff": "allow",
@@ -419,7 +333,7 @@
         "edit": "deny",
         "task": "deny"
       },
-      "prompt": "{file:./prompts/engineering-voice.md}\n\n{file:./skills/code-review/SKILL.md}\n\n{file:./prompts/task-review-guideline.md}\n\n{file:./prompts/tool-routing.md}\n\n{file:./prompts/markdown-style.md}"
+      "prompt": "{file:./prompts/engineering-voice.md}\n\n{file:./skills/code-review/SKILL.md}\n\n{file:./prompts/tool-routing.md}\n\n{file:./prompts/markdown-style.md}"
     },
     "reviewer-glm": {
       "description": "Fast independent source-read-only reviewer (glm model pool member) for explicitly requested review",
@@ -430,9 +344,6 @@
       "steps": 80,
       "permission": {
         "question": "deny",
-        "read": {
-          ".work/*": "deny"
-        },
         "bash": {
           "*": "deny",
           "git diff": "allow",
@@ -445,10 +356,10 @@
         "edit": "deny",
         "task": "deny"
       },
-      "prompt": "{file:./prompts/engineering-voice.md}\n\n{file:./skills/code-review/SKILL.md}\n\n{file:./prompts/task-review-guideline.md}\n\n{file:./prompts/tool-routing.md}\n\n{file:./prompts/markdown-style.md}"
+      "prompt": "{file:./prompts/engineering-voice.md}\n\n{file:./skills/code-review/SKILL.md}\n\n{file:./prompts/tool-routing.md}\n\n{file:./prompts/markdown-style.md}"
     },
     "expert-reviewer": {
-      "description": "Exceptional expert review reserved for highest-impact system-critical workflow or ad hoc changes",
+      "description": "Exceptional expert review reserved for highest-impact system-critical changes",
       "model": "openai/gpt-5.6-sol",
       "variant": "high",
       "mode": "subagent",
@@ -456,9 +367,6 @@
       "steps": 80,
       "permission": {
         "question": "deny",
-        "read": {
-          ".work/*": "deny"
-        },
         "bash": {
           "*": "deny",
           "git diff": "allow",
@@ -471,7 +379,7 @@
         "edit": "deny",
         "task": "deny"
       },
-      "prompt": "{file:./prompts/engineering-voice.md}\n\n{file:./skills/code-review/SKILL.md}\n\n{file:./prompts/task-review-guideline.md}\n\n{file:./prompts/expert-reviewer-guideline.md}\n\n{file:./prompts/tool-routing.md}\n\n{file:./prompts/markdown-style.md}"
+      "prompt": "{file:./prompts/engineering-voice.md}\n\n{file:./skills/code-review/SKILL.md}\n\n{file:./prompts/expert-reviewer-guideline.md}\n\n{file:./prompts/tool-routing.md}\n\n{file:./prompts/markdown-style.md}"
     }
   }
 }

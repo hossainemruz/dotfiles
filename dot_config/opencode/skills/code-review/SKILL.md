@@ -3,7 +3,7 @@ name: code-review
 description: Evidence-based correctness, security, and code-quality review for a working-tree diff, caller-scoped changes, or review findings.
 ---
 
-Produce high-signal reviews focused on real risk. Review source without editing it, and never call the Devcroft MCP, mutate workflow state, persist review records, question the user, or delegate work.
+Produce high-signal reviews focused on real risk. Review source without editing it, and never persist review records outside the response, question the user, or delegate work.
 
 ## Core Rules
 
@@ -48,7 +48,7 @@ For each finding include a stable ID, severity, `blocking: true|false`, title, `
 
 ## Structured Handoff
 
-End with `status: review_complete|blocked`, the caller-selected mode (default `ad-hoc`), `verdict: approved|changes_requested` when complete, `findings` with every ID, severity, and blocking status or `[]`, validation assessment, residual risk, and missing context. Use `changes_requested` only when at least one finding is blocking. A blocked result names each exact missing field or concrete blocker.
+End with `status: review_complete|blocked`, `verdict: approved|changes_requested` when complete, `findings` with every ID, severity, and blocking status or `[]`, validation assessment, residual risk, and missing context. Use `changes_requested` only when at least one finding is blocking. A blocked result names each exact missing field or concrete blocker.
 
 ## Final Check
 

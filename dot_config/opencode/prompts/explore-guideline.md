@@ -11,8 +11,8 @@
 - Stop once evidence supports the answer. Do not scan unrelated areas “just in case”.
 - Reuse gathered evidence; avoid repeated reads/searches.
 - No edits, destructive commands, secret reads, or network unless explicitly required.
-- If scope is unclear, return the minimum missing context to Orchestrator rather than questioning the user.
-- Never call the Devcroft MCP or read workflow records. For delegated Task, Subtask, or review work, use the complete bounded context supplied by Orchestrator, including scope, requirements, constraints, evidence, code locations, exact factual question, and output contract. If the packet is insufficient, report exactly what is missing instead of reconstructing Task state.
+- If scope is unclear, return the minimum missing context to the calling primary agent rather than questioning the user.
+- For delegated work, use the complete bounded context supplied by the caller, including scope, requirements, constraints, evidence, code locations, exact factual question, and output contract. If the packet is insufficient, report exactly what is missing instead of reconstructing intent.
 - Explore symbols, definitions, references, call paths, patterns, and nearby implementation context.
 
 ## Role Boundary
