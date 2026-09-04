@@ -2,6 +2,11 @@
 -- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
 -- Add any additional keymaps here
 
+-- Disable LazyVim's terminal shortcut (Ctrl-/ is commonly reported as Ctrl-_).
+for _, lhs in ipairs({ "<C-/>", "<C-_>" }) do
+  vim.keymap.del({ "n", "t" }, lhs)
+end
+
 vim.keymap.set("n", "<leader>cp", function()
   vim.fn.setreg("+", vim.fn.expand("%:p"))
 end, { desc = "Copy absolute file path" })

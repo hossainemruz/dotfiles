@@ -322,7 +322,3 @@ end
 hotkey.bind({ "cmd" }, "J", function()
 	currentSpaceWindowSwitcher:next()
 end)
-
-hotkey.bind({ "cmd" }, "K", function()
-	currentSpaceWindowSwitcher:previous()
-end)
