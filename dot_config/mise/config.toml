@@ -43,6 +43,7 @@ adopt = true
 "brew-cask:ghostty" = { version = "latest", os = "macos" }
 "brew-cask:gcloud-cli" = { version = "latest", os = "macos" }
 "brew-cask:megasync" = { version = "latest", os = "macos" }
+"brew-cask:omniwm" = { version = "latest", os = "macos" }
 "brew-cask:slack" = { version = "latest", os = "macos" }
 "brew-cask:whatsapp" = { version = "latest", os = "macos" }
 "brew-cask:zed" = { version = "latest", os = "macos" }
