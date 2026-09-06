@@ -28,9 +28,12 @@ run_once_install_webapps.sh
 
 {{ if eq .chezmoi.os "linux" -}}
 # macOS-specific files
+.config/omniwm/
 .hammerspoon/
 Library/LaunchAgents/com.hossainemruz.dagu.plist
+Library/LaunchAgents/com.hossainemruz.omniwm-scratchpads.plist
 .zprofile
 activate_dagu_launchd.sh
+activate_omniwm_scratchpads_launchd.sh
 run_once_before_install_homebrew.sh
 {{ end -}}

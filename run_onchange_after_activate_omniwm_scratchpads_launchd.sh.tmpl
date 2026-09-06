@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+# (Re)activate the OmniWM scratchpad seeder after login items change.
+# agent: {{ include "Library/LaunchAgents/com.hossainemruz.omniwm-scratchpads.plist.tmpl" | sha256sum }}
+# launcher: {{ include "dot_local/bin/executable_omniwm-seed-scratchpads" | sha256sum }}
+
+export PATH="$HOME/.local/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin"
+
+label=com.hossainemruz.omniwm-scratchpads
+domain="gui/$(id -u)"
+plist="$HOME/Library/LaunchAgents/$label.plist"
+
+mkdir -p "$HOME/.local/state/omniwm-scratchpads"
+
+if /bin/launchctl print "$domain/$label" >/dev/null 2>&1; then
+  /bin/launchctl bootout "$domain" "$plist"
+fi
+
+/bin/launchctl enable "$domain/$label"
+/bin/launchctl bootstrap "$domain" "$plist"

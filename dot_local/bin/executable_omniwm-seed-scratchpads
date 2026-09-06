@@ -1,0 +1,91 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+# Seed OmniWM scratchpads at login: open each app if needed and assign
+# its focused window to the desired scratchpad slot, parked and ready
+# for your Toggle hotkey.
+#
+# EDIT ME: one entry per scratchpad app, as "bundle-id|App Name|slot".
+# Slot must be 1-10 and match your Toggle/Assign hotkeys in OmniWM.
+# Find the bundle ID with:
+#   defaults read /path/to/App.app/Contents/Info.plist CFBundleIdentifier
+#   # or while running: omniwmctl query apps --format table
+export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin"
+
+SEEDS=(
+  "com.apple.Safari.WebApp.0071FF75-06AB-4940-8ACF-AD86FB5BA48E|X|1"
+  "com.openai.codex|ChatGPT|2"
+)
+
+log() { printf '[omniwm-seed] %s\n' "$*"; }
+
+count_scratchpad_windows() {
+  # $1 = bundle-id — prints number of windows already in any scratchpad slot
+  omniwmctl query windows --scratchpad --bundle-id "$1" --format json 2>/dev/null \
+    | python3 -c "import json,sys; d=json.load(sys.stdin); print(len(d['result']['payload']['windows']))"
+}
+
+count_app_windows() {
+  # $1 = bundle-id — prints number of managed windows regardless of slot
+  omniwmctl query windows --bundle-id "$1" --format json 2>/dev/null \
+    | python3 -c "import json,sys; d=json.load(sys.stdin); print(len(d['result']['payload']['windows']))"
+}
+
+# 1. Wait for OmniWM IPC (OmniWM may start after this agent on fresh login).
+for _ in $(seq 1 60); do
+  if omniwmctl ping >/dev/null 2>&1; then
+    break
+  fi
+  sleep 1
+done
+if ! omniwmctl ping >/dev/null 2>&1; then
+  log "ERROR: omniwmctl ping failed after 60s (is OmniWM running with IPC enabled?)."
+  exit 1
+fi
+
+# 2. Seed each slot. Idempotent: already-seeded slots are skipped.
+for seed in "${SEEDS[@]}"; do
+  bundle_id="${seed%%|*}"
+  rest="${seed#*|}"
+  app_name="${rest%%|*}"
+  slot="${rest##*|}"
+
+  if [[ "$(count_scratchpad_windows "$bundle_id")" -gt 0 ]]; then
+    log "$app_name already in a scratchpad slot, skipping."
+    continue
+  fi
+
+  if [[ "$(count_app_windows "$bundle_id")" -eq 0 ]]; then
+    log "Opening $app_name..."
+    open -a "$app_name"
+  else
+    log "$app_name running but not in scratchpad, claiming its focused window."
+  fi
+
+  # Wait for a managed window to appear (up to ~15s).
+  appeared=false
+  for _ in $(seq 1 75); do
+    if [[ "$(count_app_windows "$bundle_id")" -gt 0 ]]; then
+      appeared=true
+      break
+    fi
+    sleep 0.2
+  done
+  if [[ "$appeared" != true ]]; then
+    log "ERROR: no OmniWM window appeared for $app_name, skipping slot $slot."
+    continue
+  fi
+
+  # assign acts on the focused window, so front the app first.
+  open -a "$app_name"
+  sleep 0.5
+  log "Assigning focused $app_name window to scratchpad $slot (parks it)..."
+  if omniwmctl command scratchpad assign "$slot"; then
+    log "$app_name seeded in slot $slot."
+  else
+    log "ERROR: assign failed for $app_name slot $slot."
+  fi
+  sleep 0.3
+done
+
+log "Done."
