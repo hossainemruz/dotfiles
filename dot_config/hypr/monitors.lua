@@ -7,3 +7,8 @@ hl.monitor({
   scale = 1,
   transform = 0,
 })
+
+hl.monitor({
+  output = "HDMI-A-1",
+  disabled = true,
+})
