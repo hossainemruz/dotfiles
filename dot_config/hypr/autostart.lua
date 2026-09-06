@@ -1,6 +1,3 @@
-local SECONDARY_MONITOR = "HDMI-A-1"
-local MONITOR_TIMEOUT_MS = 30000
-
 -- Retain timers until they fire so they are not garbage-collected early.
 local pending_timers = {}
 
@@ -31,45 +28,6 @@ local function launch_profile_apps()
 	end)
 end
 
-local function launch_profile_apps_when_monitor_is_ready()
-	if hl.get_monitor(SECONDARY_MONITOR) then
-		launch_profile_apps()
-		return
-	end
-
-	local launched = false
-	local monitor_subscription
-	local timeout_timer
-
-	local function finish_waiting()
-		if launched then
-			return
-		end
-		launched = true
-
-		if monitor_subscription then
-			monitor_subscription:remove()
-		end
-		if timeout_timer then
-			timeout_timer:set_enabled(false)
-			pending_timers[timeout_timer] = nil
-		end
-
-		launch_profile_apps()
-	end
-
-	monitor_subscription = hl.on("monitor.added", function(monitor)
-		if monitor.name == SECONDARY_MONITOR then
-			finish_waiting()
-		end
-	end)
-
-	timeout_timer = after(MONITOR_TIMEOUT_MS, function()
-		print("Second monitor not detected after 30 seconds; continuing anyway.")
-		finish_waiting()
-	end)
-end
-
 hl.on("hyprland.start", function()
 	-- Give the session time to settle before launching apps.
 	after(2000, function()
@@ -85,6 +43,6 @@ hl.on("hyprland.start", function()
 	-- into a special workspace opens that workspace on screen instead of
 	-- keeping it in the background.
 	launch("flatpak run com.github.wwmm.easyeffects", "special:easyeffects silent")
-		launch_profile_apps_when_monitor_is_ready()
+		launch_profile_apps()
 	end)
 end)

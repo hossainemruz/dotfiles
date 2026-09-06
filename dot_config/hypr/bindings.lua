@@ -49,5 +49,5 @@ bind("SUPER + L", "Previous layout window", hl.dsp.layout("cycleprev"))
 bind("SUPER + N", "Swap with next window", hl.dsp.layout("swapnext"))
 
 -- Window switcher
--- Cross-workspace window switcher customized for SUPER+J/K.
+-- Cross-workspace window switcher customized for SUPER+J.
 dofile(os.getenv("HOME") .. "/.config/hypr/window_switcher.lua")

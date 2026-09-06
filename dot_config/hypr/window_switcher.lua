@@ -1,5 +1,5 @@
 -- Cross-workspace window switcher ordered by most recently used. Hold SUPER,
--- tap J or K to move through the list, and release SUPER to focus the selected
+-- tap J to move through the list, and release SUPER to focus the selected
 -- window. SUPER+ESCAPE cancels.
 
 local altswitch = { windows = {}, index = 1, active = false }
@@ -98,9 +98,6 @@ hl.unbind("SUPER + K")
 hl.bind("SUPER + J", function()
 	altswitch_step(1)
 end, { description = "Switch window" })
-hl.bind("SUPER + K", function()
-	altswitch_step(-1)
-end, { description = "Switch window (reverse)" })
 hl.bind("SUPER + ESCAPE", altswitch_teardown, { non_consuming = true, description = "Cancel window switch" })
 
 -- A modifier release bind does not fire after another key is pressed, so read

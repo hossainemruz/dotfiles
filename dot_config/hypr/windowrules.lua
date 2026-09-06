@@ -8,8 +8,8 @@ o.window({ float = false, workspace = "f[1]" }, { border_size = 0, rounding = 0 
 hl.workspace_rule({ workspace = "1", monitor = "DP-3", ["default"] = true })
 hl.workspace_rule({ workspace = "2", monitor = "DP-3", ["default"] = false })
 hl.workspace_rule({ workspace = "3", monitor = "DP-3", ["default"] = false })
-hl.workspace_rule({ workspace = "4", monitor = "HDMI-A-1", ["default"] = true })
-hl.workspace_rule({ workspace = "5", monitor = "HDMI-A-1", ["default"] = true })
+hl.workspace_rule({ workspace = "4", monitor = "DP-3", ["default"] = false })
+hl.workspace_rule({ workspace = "5", monitor = "DP-3", ["default"] = false })
 
 hl.on("hyprland.start", function()
 	hl.dispatch(hl.dsp.focus({ workspace = "1" }))
