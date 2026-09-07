@@ -34,7 +34,7 @@ local special_workspaces = {
 	N = "scratchpad",
 	O = "omarchy-cheat-sheet",
 	P = "proton-pass",
-	T = "termspace",
+	ESCAPE = "termspace",
 	U = "ai-usagebar",
 	V = "neovim-cheat-sheet",
 }
