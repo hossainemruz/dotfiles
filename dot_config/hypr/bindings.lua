@@ -47,6 +47,9 @@ end
 bind("SUPER + H", "Next layout window", hl.dsp.layout("cyclenext"))
 bind("SUPER + L", "Previous layout window", hl.dsp.layout("cycleprev"))
 bind("SUPER + N", "Swap with next window", hl.dsp.layout("swapnext"))
+-- Scrolling layout navigation
+bind("SUPER + period", "Next column", hl.dsp.layout("move +col"))
+bind("SUPER + comma", "Previous column", hl.dsp.layout("move -col"))
 
 -- Window switcher
 -- Cross-workspace window switcher customized for SUPER+J.
