@@ -21,6 +21,7 @@ bind("SUPER + ALT + SLASH", "Passwords", "uwsm app -- 1password")
 
 bind("SUPER + ALT + Y", "YouTube", 'omarchy-launch-webapp "https://youtube.com/" --profile-directory=Personal')
 bind("SUPER + ALT + X", "X", 'omarchy-launch-webapp "https://x.com/" --profile-directory=Personal')
+bind("ALT + grave", "Quake Terminal", hl.dsp.workspace.toggle_special("termspace"))
 
 local special_workspaces = {
 	C = "chatgpt",
@@ -34,7 +35,6 @@ local special_workspaces = {
 	N = "scratchpad",
 	O = "omarchy-cheat-sheet",
 	P = "proton-pass",
-	ESCAPE = "termspace",
 	U = "ai-usagebar",
 	V = "neovim-cheat-sheet",
 }
