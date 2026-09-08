@@ -201,9 +201,9 @@ minHeight = 220.0
 minWidth = 574.0
 
 [[appRules]]
+assignToWorkspace = "1"
 bundleId = "app.zen-browser.zen"
 id = "1CF39647-F30D-4E76-9686-79B551F1B094"
-assignToWorkspace = "1"
 minHeight = 495.0
 minWidth = 500.0
 
@@ -232,9 +232,9 @@ minHeight = 500.0
 minWidth = 800.0
 
 [[appRules]]
+assignToWorkspace = "2"
 bundleId = "com.mitchellh.ghostty"
 id = "7876C9EF-437E-4D4F-9C27-B1B02F4AABCE"
-assignToWorkspace = "2"
 minHeight = 48.0
 minWidth = 90.0
 
@@ -263,7 +263,7 @@ binding = "Option+Command+C"
 id = "toggleScratchpad.2"
 
 [[hotkeys]]
-binding = "Unassigned"
+binding = "Option+Shift+Command+C"
 id = "assignFocusedWindowToScratchpad.2"
 
 [[hotkeys]]
@@ -487,7 +487,7 @@ binding = "Unassigned"
 id = "switchWorkspace.previous"
 
 [[hotkeys]]
-binding = "Option+Left Arrow"
+binding = "Option+Comma"
 id = "focus.left"
 
 [[hotkeys]]
@@ -499,7 +499,7 @@ binding = "Option+Up Arrow"
 id = "focus.up"
 
 [[hotkeys]]
-binding = "Option+Right Arrow"
+binding = "Option+Period"
 id = "focus.right"
 
 [[hotkeys]]
@@ -835,11 +835,11 @@ binding = "Unassigned"
 id = "moveColumnToIndex.9"
 
 [[hotkeys]]
-binding = "Option+Period"
+binding = "Unassigned"
 id = "cycleSizeForward"
 
 [[hotkeys]]
-binding = "Option+Comma"
+binding = "Unassigned"
 id = "cycleSizeBackward"
 
 [[hotkeys]]
