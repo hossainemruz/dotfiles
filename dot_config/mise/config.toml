@@ -1,6 +1,12 @@
 [settings]
 minimum_release_age = "3d"
-minimum_release_age_excludes = ["opencode", "claude", "chatgpt"]
+minimum_release_age_excludes = [
+  "opencode",
+  "claude",
+  "chatgpt",
+  "codex",
+  "oh-my-pi",
+]
 
 [tasks.up-all]
 description = "Update tools and converge system packages"
@@ -21,7 +27,6 @@ adopt = true
 
 # CLI basics used by these dotfiles and shell helpers.
 
-# AI developer CLIs."brew:bash" = { version = "latest", os = "macos" }
 "brew:git" = { version = "latest", os = "macos" }
 "brew:gnupg" = { version = "latest", os = "macos" }
 "brew:mise" = { version = "latest", os = "macos" }
@@ -104,6 +109,8 @@ uv = "latest"
 watchexec = "latest"
 yazi = "latest"
 zellij = "latest"
-opencode = "latest"
-codex = "latest"
+# AI tools cli
 claude = "latest"
+codex = "latest"
+oh-my-pi = "latest"
+opencode = "latest"
