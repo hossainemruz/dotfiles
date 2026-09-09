@@ -683,7 +683,7 @@ binding = "Unassigned"
 id = "moveWindowToMonitor.down"
 
 [[hotkeys]]
-binding = "Option+Return"
+binding = "Command+F"
 id = "toggleFullscreen"
 
 [[hotkeys]]
