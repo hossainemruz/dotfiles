@@ -13,7 +13,7 @@ end, { desc = "Copy absolute file path" })
 
 -- Devcroft code references ---------------------------------------------------
 -- The loopback client lives in lua/config/devcroft.lua; autocmds bind
--- <leader>fp for markdown previews there.
+-- <leader>fp to `devcroft preview <PATH>` for markdown previews.
 local devcroft = require("config.devcroft")
 
 -- Reference the current line to the Devcroft Agent.

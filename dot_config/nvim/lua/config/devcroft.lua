@@ -1,9 +1,8 @@
--- Client for Devcroft's authenticated loopback editor APIs.
+-- Client for Devcroft's authenticated loopback editor API (code references).
 -- Works only inside a terminal spawned from Devcroft's Editor tab, which
 -- injects service-owned credentials:
---   references: DEVCROFT_REFERENCE_API_URL / _TOKEN (+ _REPOSITORY_KEY)
---   previews:   DEVCROFT_PREVIEW_API_URL / _TOKEN (+ _REPOSITORY_KEY)
--- Every function degrades to a warning when those variables are absent.
+--   DEVCROFT_REFERENCE_API_URL / _TOKEN (+ _REPOSITORY_KEY)
+-- Markdown previews use `devcroft preview <PATH>` instead (see autocmds).
 local M = {}
 
 local request_seq = 0
@@ -85,36 +84,6 @@ function M.send_reference(start_line, end_line)
       endLine = end_line,
     }),
     "Reference"
-  )
-end
-
---- Preview the current buffer's saved content inside the Devcroft window.
-function M.send_preview()
-  local url = vim.env.DEVCROFT_PREVIEW_API_URL
-  local token = vim.env.DEVCROFT_PREVIEW_API_TOKEN
-  local repository_key = vim.env.DEVCROFT_REPOSITORY_KEY
-  if not (url and token and repository_key) then
-    vim.notify("Devcroft preview API is unavailable outside its Editor tab.", vim.log.levels.WARN)
-    return
-  end
-  local path = relative_path()
-  if not path then
-    vim.notify("Current file is not inside the Devcroft checkout root.", vim.log.levels.ERROR)
-    return
-  end
-  -- Previews render what is on disk; save first so the snapshot is fresh.
-  if vim.bo.modified then
-    vim.cmd.write()
-  end
-  post(
-    url,
-    token,
-    vim.json.encode({
-      requestId = request_id(),
-      repositoryKey = repository_key,
-      path = path,
-    }),
-    "Preview"
   )
 end
 

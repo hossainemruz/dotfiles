@@ -29,12 +29,28 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
--- Preview markdown inside the Devcroft window (replaces Typora).
+-- Preview markdown in a Devcroft dialog (replaces Typora).
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "markdown",
   callback = function()
     vim.keymap.set("n", "<leader>fp", function()
-      require("config.devcroft").send_preview()
+      -- Preview renders what is on disk; save first so the snapshot is fresh.
+      if vim.bo.modified then
+        vim.cmd.write()
+      end
+      local path = vim.api.nvim_buf_get_name(0)
+      if path == "" then
+        vim.notify("No file to preview.", vim.log.levels.WARN)
+        return
+      end
+      vim.system({ "devcroft", "preview", path }, { detach = true }, function(result)
+        if result.code ~= 0 then
+          local output = ((result.stdout or "") .. (result.stderr or "")):gsub("%s+$", "")
+          vim.schedule(function()
+            vim.notify(("Preview failed (%s): %s"):format(result.code, output), vim.log.levels.ERROR)
+          end)
+        end
+      end)
     end, { buffer = true, desc = "Devcroft: preview Markdown" })
   end,
 })
