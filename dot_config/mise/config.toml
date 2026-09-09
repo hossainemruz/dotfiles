@@ -8,6 +8,9 @@ minimum_release_age_excludes = [
   "oh-my-pi",
 ]
 
+[settings.upgrade]
+auto_prune = false
+
 [tasks.up-all]
 description = "Update tools and converge system packages"
 run = """
