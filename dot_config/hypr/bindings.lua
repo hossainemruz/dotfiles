@@ -69,7 +69,3 @@ bind("SUPER + L", "Previous layout window", hl.dsp.layout("cycleprev"))
 -- Scrolling layout navigation, master layout swap.
 bind("SUPER + period", "Next column / swap next", layout_aware_step(true))
 bind("SUPER + comma", "Previous column / swap previous", layout_aware_step(false))
-
--- Window switcher
--- Cross-workspace window switcher customized for SUPER+J.
-dofile(os.getenv("HOME") .. "/.config/hypr/window_switcher.lua")
