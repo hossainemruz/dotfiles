@@ -49,7 +49,7 @@ o.window("(protonvpn-app)", {
 })
 
 o.window(
-	"^(chrome-qdrant.atlassian.net__jira_software_c_projects_CRC_boards_201-Work|chrome-app.todoist.com__-Work|chrome-app.todoist.com__-Personal)$",
+	"^chrome-qdrant.atlassian.net__jira_software_c_projects_CRC_boards_201-Work$",
 	{ name = "Workspace 4 Apps", workspace = "4" }
 )
 

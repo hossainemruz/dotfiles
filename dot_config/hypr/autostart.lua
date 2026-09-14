@@ -22,9 +22,6 @@ local function launch_profile_apps()
 	launch("slack", "3")
 	after(1000, function()
 		launch('omarchy-launch-webapp "https://qdrant.atlassian.net/jira/software/c/projects/CRC/boards/201" --profile-directory=Work')
-		after(1000, function()
-			launch('omarchy-launch-webapp "https://app.todoist.com" --profile-directory=Work')
-		end)
 	end)
 end
 
@@ -36,13 +33,12 @@ hl.on("hyprland.start", function()
 	-- HL_INITIAL_WORKSPACE_TOKEN env vars) never reach the browser process and
 	-- the workspace rule is silently ignored.
 	launch("zen-browser", "1")
-	launch("megasync", "1")
-		launch("ghostty", "2")
-		launch("/home/emruz/.local/share/devcroft/devcroft", "2")
+	launch("megasync", "1 silent")
+	launch("/home/emruz/.local/bin/devcroft app", "2")
 		-- "silent" goes inside the workspace value: without it, mapping a window
 	-- into a special workspace opens that workspace on screen instead of
 	-- keeping it in the background.
 	launch("flatpak run com.github.wwmm.easyeffects", "special:easyeffects silent")
-		launch_profile_apps()
+	launch_profile_apps()
 	end)
 end)
