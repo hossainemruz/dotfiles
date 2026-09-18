@@ -19,6 +19,9 @@ set -e
 mise up
 mise bootstrap packages apply --yes
 mise bootstrap packages upgrade --yes
+if [ "$(uname -s)" = "Linux" ] && command -v flatpak >/dev/null 2>&1; then
+  flatpak update --system -y
+fi
 """
 
 # System packages
@@ -69,6 +72,24 @@ adopt = true
 
 # Local AI tooling.
 "brew-cask:lm-studio" = { version = "latest", os = "macos" }
+
+# Flatpak apps for Linux machines. These are installed system-wide by mise's
+# flatpak backend (requires the flatpak CLI and the Flathub remote).
+"flatpak:com.collaboraoffice.Office" = { version = "latest", os = "linux" }
+"flatpak:com.github.wwmm.easyeffects" = { version = "latest", os = "linux" }
+"flatpak:com.rustdesk.RustDesk" = { version = "latest", os = "linux" }
+"flatpak:de.haeckerfelix.Fragments" = { version = "latest", os = "linux" }
+"flatpak:io.github.BrisklyDev.Brisk" = { version = "latest", os = "linux" }
+"flatpak:io.github.kolunmi.Bazaar" = { version = "latest", os = "linux" }
+"flatpak:io.github.linx_systems.ClamUI" = { version = "latest", os = "linux" }
+"flatpak:io.github.wiiznokes.fan-control" = { version = "latest", os = "linux" }
+"flatpak:io.missioncenter.MissionCenter" = { version = "latest", os = "linux" }
+"flatpak:it.mijorus.gearlever" = { version = "latest", os = "linux" }
+"flatpak:me.iepure.devtoolbox" = { version = "latest", os = "linux" }
+"flatpak:me.proton.Mail" = { version = "latest", os = "linux" }
+"flatpak:me.proton.Pass" = { version = "latest", os = "linux" }
+"flatpak:org.inkscape.Inkscape" = { version = "latest", os = "linux" }
+"flatpak:org.nickvision.tubeconverter" = { version = "latest", os = "linux" }
 
 
 [tools]
