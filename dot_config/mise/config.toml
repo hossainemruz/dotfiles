@@ -41,6 +41,7 @@ adopt = true
 "brew:watch" = { version = "latest", os = "macos" }
 "brew:zsh-autosuggestions" = { version = "latest", os = "macos" }
 "brew:zsh-syntax-highlighting" = { version = "latest", os = "macos" }
+"brew:anomalyco/tap/opencode-v2" = { version = "latest", os = "macos" }
 
 # Terminal workflow tools.
 "brew:autojump" = { version = "latest", os = "macos" }
