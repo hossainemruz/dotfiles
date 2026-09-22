@@ -20,7 +20,7 @@ bind("SUPER + ALT + F", "File manager", "uwsm app -- nautilus --new-window")
 bind("SUPER + ALT + SLASH", "Passwords", "uwsm app -- 1password")
 
 bind("SUPER + ALT + Y", "YouTube", 'omarchy-launch-webapp "https://youtube.com/" --profile-directory=Personal')
-bind("SUPER + ALT + X", "X", 'omarchy-launch-webapp "https://x.com/" --profile-directory=Personal')
+bind("SUPER + ALT + X", "X", 'uwsm-app -- /usr/bin/chromium --app=https://x.com/ --user-data-dir=$HOME/.config/chromium-x --disable-accelerated-video-decode --no-first-run --no-default-browser-check')
 bind("ALT + grave", "Quake Terminal", hl.dsp.workspace.toggle_special("termspace"))
 
 local special_workspaces = {
