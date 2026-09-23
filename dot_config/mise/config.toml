@@ -85,7 +85,6 @@ adopt = true
 "flatpak:io.github.wiiznokes.fan-control" = { version = "latest", os = "linux" }
 "flatpak:io.missioncenter.MissionCenter" = { version = "latest", os = "linux" }
 "flatpak:it.mijorus.gearlever" = { version = "latest", os = "linux" }
-"flatpak:me.iepure.devtoolbox" = { version = "latest", os = "linux" }
 "flatpak:me.proton.Mail" = { version = "latest", os = "linux" }
 "flatpak:me.proton.Pass" = { version = "latest", os = "linux" }
 "flatpak:org.inkscape.Inkscape" = { version = "latest", os = "linux" }
