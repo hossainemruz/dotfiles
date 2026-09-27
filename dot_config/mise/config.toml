@@ -2,6 +2,7 @@
 minimum_release_age = "3d"
 minimum_release_age_excludes = [
   "opencode",
+  "opencode-v2",
   "claude",
   "chatgpt",
   "codex",
@@ -70,7 +71,8 @@ adopt = true
 "brew-cask:protonvpn" = { version = "latest", os = "macos" }
 "brew-cask:todoist-app" = { version = "latest", os = "macos" }
 
-# Local AI tooling.
+# AI tooling.
+"brew:opencode-v2" = { version = "latest", os = "macos" }
 "brew-cask:lm-studio" = { version = "latest", os = "macos" }
 
 # Flatpak apps for Linux machines. These are installed system-wide by mise's
