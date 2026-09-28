@@ -17,7 +17,7 @@
       ]
     }
   },
-  "small_model": "opencode-go/deepseek-v4-flash",
+  "small_model": "opencode-go/deepseek-v4.1-flash",
   "subagent_depth": 2,
   "permission": {
     "todowrite": "deny",
@@ -256,7 +256,7 @@
     },
     "explore": {
       "description": "Read-only codebase evidence retrieval; no implementation recommendations",
-      "model": "opencode-go/deepseek-v4-flash",
+      "model": "opencode-go/deepseek-v4.1-flash",
       "mode": "subagent",
       "hidden": true,
       "steps": 25,
@@ -296,7 +296,7 @@
     },
     "executor-flash": {
       "description": "Fast execution subagent (flash model pool member) for bash commands, tests, builds, and validation",
-      "model": "opencode-go/deepseek-v4-flash",
+      "model": "opencode-go/deepseek-v4.1-flash",
       "mode": "subagent",
       "hidden": true,
       "variant": "medium",
