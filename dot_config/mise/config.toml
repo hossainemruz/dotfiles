@@ -72,7 +72,7 @@ adopt = true
 "brew-cask:todoist-app" = { version = "latest", os = "macos" }
 
 # AI tooling.
-"brew:opencode-v2" = { version = "latest", os = "macos" }
+"brew:anomalyco/tap/opencode-v2" = { version = "latest", os = "macos" }
 "brew-cask:lm-studio" = { version = "latest", os = "macos" }
 
 # Flatpak apps for Linux machines. These are installed system-wide by mise's
