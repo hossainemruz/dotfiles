@@ -1,31 +1,41 @@
-import type { Plugin } from "@opencode-ai/plugin"
+import { execFile } from "node:child_process"
+import { Plugin } from "@opencode/plugin"
 
-type PermissionResponse = "once" | "always" | "reject"
+type Decision = "once" | "always" | "reject"
 
 type PermissionRequest = {
   id: string
   sessionID: string
-  permission?: string
-  type?: string
-  title?: string
-  patterns?: unknown[]
-  pattern?: string | string[]
+  action: string
+  resources: string[]
   metadata?: Record<string, unknown>
+  message?: string
+}
+
+type PermissionAskedEvent = {
+  type: "permission.asked"
+  data: PermissionRequest
+  location?: { directory?: string }
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null
 }
 
-function isPermissionAsked(event: unknown): event is {
-  type: "permission.asked"
-  properties: PermissionRequest
-} {
-  if (!isRecord(event) || event.type !== "permission.asked" || !isRecord(event.properties)) {
+function isPermissionAsked(event: unknown): event is PermissionAskedEvent {
+  if (!isRecord(event) || event.type !== "permission.asked" || !isRecord(event.data)) {
     return false
   }
 
-  return typeof event.properties.id === "string" && typeof event.properties.sessionID === "string"
+  return typeof event.data.id === "string" && typeof event.data.sessionID === "string"
+}
+
+function eventDirectory(event: unknown): string | undefined {
+  if (!isRecord(event) || !isRecord(event.location)) {
+    return undefined
+  }
+
+  return typeof event.location.directory === "string" ? event.location.directory : undefined
 }
 
 const appleScript = String.raw`
@@ -160,16 +170,13 @@ app.run([])
 `
 
 function describe(request: PermissionRequest) {
-  const permission = request.permission ?? request.type ?? "unknown"
-  const pattern = request.patterns ?? request.pattern ?? []
-  const patterns = (Array.isArray(pattern) ? pattern : [pattern]).map(String)
   const command = request.metadata?.command
-  const details = typeof command === "string" ? [command] : patterns
+  const details = typeof command === "string" ? [command] : request.resources
 
   return {
     title: "An OpenCode agent is requesting permission",
-    permission: `Permission: ${permission}`,
-    body: (details.join("\n") || request.title || "No additional details").slice(0, 4000),
+    permission: `Permission: ${request.action}`,
+    body: (details.join("\n") || request.message || "No additional details").slice(0, 4000),
   }
 }
 
@@ -188,104 +195,139 @@ function clampText(value: string, max: number): string {
   return flat.length > max ? `${flat.slice(0, max - 1)}…` : flat
 }
 
-export const DesktopNotifications: Plugin = async ({ client, $ }) => {
-  let permissionQueue = Promise.resolve()
-  const pending = new Set<string>()
+// Dialog commands run without a timeout: the prompt must be able to wait for
+// the user's answer, and failures resolve to an empty answer (reject).
+function run(command: string, args: string[]): Promise<string> {
+  return new Promise((resolve) => {
+    execFile(command, args, { maxBuffer: 64 * 1024 }, (error, stdout) => {
+      resolve(error ? "" : stdout)
+    })
+  })
+}
 
-  const notify = async (message: string) => {
-    const body = clampText(message, 500)
-    if (process.platform === "darwin") {
-      await $`osascript -e ${notifyScript} ${body}`
-        .quiet()
-        .nothrow()
-      return
-    }
-
-    if (process.platform === "linux") {
-      await $`notify-send --app-name=opencode --urgency=critical --expire-time=0 OpenCode ${body}`
-        .quiet()
-        .nothrow()
-    }
+async function notify(message: string) {
+  const body = clampText(message, 500)
+  if (process.platform === "darwin") {
+    await run("osascript", ["-e", notifyScript, body])
+    return
   }
 
-  const prompt = async (request: PermissionRequest): Promise<PermissionResponse> => {
-    const { title, permission, body } = describe(request)
+  if (process.platform === "linux") {
+    await run("notify-send", [
+      "--app-name=opencode",
+      "--urgency=critical",
+      "--expire-time=0",
+      "OpenCode",
+      body,
+    ])
+  }
+}
 
-    if (process.platform === "darwin") {
-      const result = await $`osascript -e ${appleScript} ${title} ${`${permission}\n\n${body}`}`
-        .quiet()
-        .nothrow()
-      const answer = result.text().trim()
-      if (answer === "Allow Once") return "once"
-      if (answer === "Always Allow") return "always"
-      return "reject"
-    }
+async function prompt(request: PermissionRequest): Promise<Decision> {
+  const { title, permission, body } = describe(request)
 
-    if (process.platform === "linux") {
-      const libdir = (await $`pkg-config --variable=libdir gtk4-layer-shell-0`.quiet().nothrow())
-        .text()
-        .trim()
-      if (!/^[\w/.\-]+$/.test(libdir)) return "reject"
-
-      const preload = `${libdir}/libgtk4-layer-shell.so`
-      const result = await $`env LD_PRELOAD=${preload} gjs -c ${gtkScript} ${title} ${permission} ${body}`
-        .quiet()
-        .nothrow()
-      const answer = result.text().trim()
-      if (answer === "once" || answer === "always") return answer
-      return "reject"
-    }
-
+  if (process.platform === "darwin") {
+    const answer = (
+      await run("osascript", ["-e", appleScript, title, `${permission}\n\n${body}`])
+    ).trim()
+    if (answer === "Allow Once") return "once"
+    if (answer === "Always Allow") return "always"
     return "reject"
   }
 
-  const handlePermission = async (request: PermissionRequest) => {
-    let response: PermissionResponse = "reject"
+  if (process.platform === "linux") {
+    const libdir = (await run("pkg-config", ["--variable=libdir", "gtk4-layer-shell-0"])).trim()
+    if (!/^[\w/.\-]+$/.test(libdir)) return "reject"
 
-    try {
-      response = await prompt(request)
-    } catch (error) {
-      console.error("Failed to show OpenCode permission prompt", error)
+    const preload = `${libdir}/libgtk4-layer-shell.so`
+    const answer = (
+      await run("env", [
+        `LD_PRELOAD=${preload}`,
+        "gjs",
+        "-c",
+        gtkScript,
+        title,
+        permission,
+        body,
+      ])
+    ).trim()
+    if (answer === "once" || answer === "always") return answer
+    return "reject"
+  }
+
+  return "reject"
+}
+
+export default Plugin.define({
+  id: "desktop-notifications",
+  async setup(ctx) {
+    let queue: Promise<void> = Promise.resolve()
+    const handled = new Set<string>()
+    const controller = new AbortController()
+
+    // Every loaded location runs its own plugin instance and receives the
+    // server-wide event stream, so an event's own location decides which
+    // instance answers it. Events without a location fall back to the
+    // instance that sees them.
+    const owned = (event: unknown) => {
+      const directory = eventDirectory(event)
+      return directory === undefined || directory === ctx.location.directory
     }
 
-    await client.postSessionIdPermissionsPermissionId({
-      path: {
-        id: request.sessionID,
-        permissionID: request.id,
-      },
-      body: { response },
-      throwOnError: true,
-    })
-  }
+    const answer = async (request: PermissionRequest) => {
+      let decision: Decision = "reject"
 
-  const enqueuePermission = (request: PermissionRequest) => {
-    if (pending.has(request.id)) return permissionQueue
-    pending.add(request.id)
+      try {
+        decision = await prompt(request)
+      } catch (error) {
+        console.error("Failed to show OpenCode permission prompt", error)
+      }
 
-    permissionQueue = permissionQueue
-      .then(() => handlePermission(request))
-      .catch(async (error) => {
+      try {
+        await ctx.permission.reply({
+          sessionID: request.sessionID,
+          requestID: request.id,
+          decision,
+        })
+      } catch (error) {
         console.error("Failed to answer OpenCode permission request", error)
         await notify("Failed to answer permission request")
-      })
-      .finally(() => pending.delete(request.id))
-
-    return permissionQueue
-  }
-
-  return {
-    event: async ({ event }) => {
-      // The installed plugin package still types the pre-1.18 event union, so narrow the
-      // runtime 1.18 `permission.asked` event structurally until that dependency catches up.
-      const current: unknown = event
-      if (isPermissionAsked(current)) {
-        await enqueuePermission(current.properties)
-        return
       }
+    }
 
-      if (isRecord(current) && current.type === "question.asked") {
-        await notify("Question requires input")
+    const enqueue = (request: PermissionRequest) => {
+      if (handled.has(request.id)) return
+      handled.add(request.id)
+
+      queue = queue
+        .then(() => answer(request))
+        .catch((error) => {
+          console.error("Failed to handle OpenCode permission request", error)
+        })
+    }
+
+    const consume = (async () => {
+      try {
+        for await (const event of ctx.event.subscribe({ signal: controller.signal })) {
+          if (isPermissionAsked(event)) {
+            if (owned(event)) enqueue(event.data)
+            continue
+          }
+
+          if (isRecord(event) && event.type === "form.created" && owned(event)) {
+            await notify("Question requires input")
+          }
+        }
+      } catch (error) {
+        if (!controller.signal.aborted) {
+          console.error("OpenCode event subscription failed", error)
+        }
       }
-    },
-  }
-}
+    })()
+
+    return async () => {
+      controller.abort()
+      await consume.catch(() => {})
+    }
+  },
+})
