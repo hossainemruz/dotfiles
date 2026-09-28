@@ -1,5 +1,5 @@
 import { execFile } from "node:child_process"
-import { Plugin } from "@opencode/plugin"
+import type * as PluginApi from "@opencode/plugin"
 
 type Decision = "once" | "always" | "reject"
 
@@ -258,7 +258,11 @@ async function prompt(request: PermissionRequest): Promise<Decision> {
   return "reject"
 }
 
-export default Plugin.define({
+// A plain definition is what Plugin.define returns (it is an identity
+// function). Importing the package only for its type keeps the plugin
+// loadable without a runtime package dependency, so the file watcher can
+// reload it without restarting the server after an install.
+const DesktopNotifications: PluginApi.Plugin = {
   id: "desktop-notifications",
   async setup(ctx) {
     let queue: Promise<void> = Promise.resolve()
@@ -330,4 +334,6 @@ export default Plugin.define({
       await consume.catch(() => {})
     }
   },
-})
+}
+
+export default DesktopNotifications
