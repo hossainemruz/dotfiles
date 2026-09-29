@@ -24,8 +24,3 @@ Specialists do not question the user or delegate to one another. The calling pri
 ## Workflow
 
 General gathers repository evidence directly or through Explorer, implements the change itself, runs bounded validation with the repository's own commands, and sends non-trivial changes to Reviewer for an independent pass. Findings return to General to address; a material revision is revalidated and re-reviewed. There is no separate builder, executor, or advisor tier.
-
-## Commands
-
-- `/review` performs an ordinary independent review of an explicit scope or unambiguous working-tree diff.
-- `/simplify` reviews the current branch for high-confidence simplification opportunities after correctness and security.
