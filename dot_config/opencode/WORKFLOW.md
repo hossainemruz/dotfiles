@@ -2,19 +2,15 @@
 
 ## Status
 
-`open-source` is the default primary agent because most work is on public open-source projects. It remains explicit and separate because its provider may retain prompts and repository context for training. Use `general` instead for work that should use the delegated agent workflow or should not be sent through that provider.
+`general` is the default primary agent, running on `opencode-go/deepseek-v4.1-flash`. It delegates through the specialist workflow below for implementation, validation, and review, and its provider may retain prompts and repository context for training.
 
 There is no persistent workflow control plane. The active primary agent owns the current conversation, and `todowrite` is only session-local activity tracking.
 
 ## Primary Agents
 
-### Open Source
-
-`open-source` works autonomously by default and does not delegate unless the user explicitly asks. This keeps its use and any cross-provider context sharing visible.
-
 ### General
 
-`general` is the delegating primary agent for advice, investigation, review, and ad-hoc implementation. It owns requirements interpretation, user questions, scope decisions, specialist routing, and the final response.
+`general` is the delegating primary agent for advice, investigation, review, and ad-hoc implementation. It owns requirements interpretation, user questions, scope decisions, specialist routing, and the final response. It implements directly when work is localized, mechanically clear, low risk, free of unresolved behavioral choices, and straightforward to validate.
 
 ## Specialists
 
