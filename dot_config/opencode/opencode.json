@@ -15,6 +15,14 @@
       "command": [
         "fff-mcp"
       ]
+    },
+    "cua-driver": {
+      "type": "local",
+      "command": [
+        "/Users/emruz/.local/bin/cua-driver",
+        "mcp"
+      ],
+      "enabled": true
     }
   },
   "small_model": "opencode-go/deepseek-v4.1-flash",
