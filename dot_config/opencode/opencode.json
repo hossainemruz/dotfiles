@@ -215,7 +215,7 @@
     "expert-reviewer": {
       "description": "Expert source-read-only reviewer for high-impact changes",
       "model": "openai/gpt-6.1-sol",
-      "variant": "high",
+      "variant": "xhigh",
       "mode": "subagent",
       "hidden": true,
       "steps": 80,
