@@ -29,3 +29,4 @@ Use expected touchpoints as guidance rather than a strict file allowlist unless 
 
 - `@explore` receives one factual question, orientation, starting points, and scope limits; it returns concise evidence with `path:line` references and no recommendations.
 - `@reviewer` receives the requirements, accepted decisions, agreed diff scope and base, changed files, implementation result, current validation, residual risks, and prior findings needed to verify remediation. Resume the same Reviewer session for re-review of a material revision.
+- `@expert-reviewer` receives the same packet as `@reviewer` for a high-impact change, plus the impact classification and the specific risk areas that justify escalation. Resume the same Expert Reviewer session for re-review of a material revision.

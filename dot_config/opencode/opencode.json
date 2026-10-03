@@ -166,7 +166,8 @@
         "task": {
           "*": "deny",
           "explore": "allow",
-          "reviewer": "allow"
+          "reviewer": "allow",
+          "expert-reviewer": "allow"
         }
       },
       "prompt": "{file:./prompts/engineering-voice.md}\n\n{file:./prompts/general-guideline.md}\n\n{file:./prompts/context-handoff.md}\n\n{file:./prompts/tool-routing.md}\n\n{file:./prompts/markdown-style.md}"
@@ -190,8 +191,31 @@
     },
     "reviewer": {
       "description": "Independent source-read-only reviewer for ad-hoc changes",
+      "model": "opencode-go/deepseek-v4.1-flash",
+      "variant": "max",
+      "mode": "subagent",
+      "hidden": true,
+      "steps": 80,
+      "permission": {
+        "question": "deny",
+        "bash": {
+          "*": "deny",
+          "git diff": "allow",
+          "git diff *": "allow",
+          "git status --short": "allow",
+          "git status --short *": "allow",
+          "git log": "allow",
+          "git log *": "allow"
+        },
+        "edit": "deny",
+        "task": "deny"
+      },
+      "prompt": "{file:./prompts/engineering-voice.md}\n\n{file:./skills/code-review/SKILL.md}\n\n{file:./prompts/tool-routing.md}\n\n{file:./prompts/markdown-style.md}"
+    },
+    "expert-reviewer": {
+      "description": "Expert source-read-only reviewer for high-impact changes",
       "model": "openai/gpt-6.1-sol",
-      "variant": "xhigh",
+      "variant": "high",
       "mode": "subagent",
       "hidden": true,
       "steps": 80,
