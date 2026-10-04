@@ -70,6 +70,8 @@ adopt = true
 "brew-cask:proton-pass" = { version = "latest", os = "macos" }
 "brew-cask:protonvpn" = { version = "latest", os = "macos" }
 "brew-cask:todoist-app" = { version = "latest", os = "macos" }
+"brew-cask:1password" = { version = "latest", os = "macos" }
+"brew-cask:tailscale-app" = { version = "latest", os = "macos" }
 
 # AI tooling.
 "brew:anomalyco/tap/opencode-v2" = { version = "latest", os = "macos" }
