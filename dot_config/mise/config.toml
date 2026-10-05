@@ -43,6 +43,13 @@ adopt = true
 "brew:zsh-autosuggestions" = { version = "latest", os = "macos" }
 "brew:zsh-syntax-highlighting" = { version = "latest", os = "macos" }
 
+# Container tools
+"brew:podman" = { version = "latest", os = "macos" }
+"brew:colima" = { version = "latest", os = "macos" }
+"brew:docker" = { version = "latest", os = "macos" }
+"brew:docker-compose" = { version = "latest", os = "macos" }
+"brew:docker-buildx" = { version = "latest", os = "macos" }
+
 # Terminal workflow tools.
 "brew:autojump" = { version = "latest", os = "macos" }
 "brew:pv" = { version = "latest", os = "macos" }
