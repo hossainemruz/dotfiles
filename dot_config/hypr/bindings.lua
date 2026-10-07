@@ -67,6 +67,15 @@ local function layout_aware_step(next)
 	end
 end
 
+-- Omarchy's default sends dwindle's "togglesplit" unconditionally, which
+-- errors on scrolling/master layouts. Only dispatch it where it exists.
+bind("SUPER + J", "Toggle window split", function()
+	local workspace = hl.get_active_workspace and hl.get_active_workspace()
+	if workspace and workspace.tiled_layout == "dwindle" then
+		hl.dispatch(hl.dsp.layout("togglesplit"))
+	end
+end)
+
 hl.unbind("SUPER + N") -- Freed; swap lives on comma/period now.
 
 -- Monocle/master layout navigation.
