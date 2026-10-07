@@ -276,7 +276,8 @@ async function prompt(request: PermissionRequest): Promise<Decision> {
   return "reject"
 }
 
-// OpenCode >=1.18.29 calls server(); V2 calls setup() and ignores server().
+// V1 uses server(); V2 uses setup(). Some V1 releases additionally call
+// setup() with a transitional context that cannot subscribe to events.
 // Keep one default export so neither loader sees helper functions as plugins.
 const DesktopNotifications = {
   id: "desktop-notifications",
@@ -312,9 +313,16 @@ const DesktopNotifications = {
       },
     }
   },
-  async setup(ctx: V2Context) {
+  async setup(ctx: Partial<V2Context>) {
+    // The V1 compatibility loader provides only transform APIs here. Its
+    // separate server() entry point handles notifications through V1 hooks.
+    if (!ctx.event || typeof ctx.event.subscribe !== "function" ||
+        !ctx.permission || typeof ctx.permission.reply !== "function" || !ctx.location) {
+      return
+    }
+    const { event: events, permission, location } = ctx
     const enqueue = permissionQueue(async (request, decision) => {
-      await ctx.permission.reply({ sessionID: request.sessionID, requestID: request.id, decision })
+      await permission.reply({ sessionID: request.sessionID, requestID: request.id, decision })
     })
     const controller = new AbortController()
 
@@ -324,12 +332,12 @@ const DesktopNotifications = {
     // instance that sees them.
     const owned = (event: unknown) => {
       const directory = eventDirectory(event)
-      return directory === undefined || directory === ctx.location.directory
+      return directory === undefined || directory === location.directory
     }
 
     const consume = (async () => {
       try {
-        for await (const event of ctx.event.subscribe({ signal: controller.signal })) {
+        for await (const event of events.subscribe({ signal: controller.signal })) {
           if (isPermissionAsked(event)) {
             if (owned(event)) enqueue(event.data)
             continue
