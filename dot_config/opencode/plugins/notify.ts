@@ -1,5 +1,4 @@
 import { execFile } from "node:child_process"
-import type * as PluginApi from "@opencode/plugin"
 
 type Decision = "once" | "always" | "reject"
 
@@ -16,6 +15,25 @@ type PermissionAskedEvent = {
   type: "permission.asked"
   data: PermissionRequest
   location?: { directory?: string }
+}
+
+// Structural types avoid requiring either version's plugin package at runtime.
+type V2Context = {
+  location: { directory: string }
+  event: { subscribe(options: { signal: AbortSignal }): AsyncIterable<unknown> }
+  permission: {
+    reply(input: { sessionID: string; requestID: string; decision: Decision }): Promise<unknown>
+  }
+}
+
+type V1Input = {
+  client: {
+    postSessionIdPermissionsPermissionId(input: {
+      path: { id: string; permissionID: string }
+      body: { response: Decision }
+      throwOnError: true
+    }): Promise<unknown>
+  }
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -258,15 +276,46 @@ async function prompt(request: PermissionRequest): Promise<Decision> {
   return "reject"
 }
 
-// A plain definition is what Plugin.define returns (it is an identity
-// function). Importing the package only for its type keeps the plugin
-// loadable without a runtime package dependency, so the file watcher can
-// reload it without restarting the server after an install.
-const DesktopNotifications: PluginApi.Plugin = {
+// OpenCode >=1.18.29 calls server(); V2 calls setup() and ignores server().
+// Keep one default export so neither loader sees helper functions as plugins.
+const DesktopNotifications = {
   id: "desktop-notifications",
-  async setup(ctx) {
-    let queue: Promise<void> = Promise.resolve()
-    const handled = new Set<string>()
+  async server({ client }: V1Input) {
+    const enqueue = permissionQueue(async (request, decision) => {
+      await client.postSessionIdPermissionsPermissionId({
+        path: { id: request.sessionID, permissionID: request.id },
+        body: { response: decision },
+        throwOnError: true,
+      })
+    })
+
+    return {
+      async event({ event }: { event: unknown }) {
+        if (!isRecord(event)) return
+        if (event.type === "question.asked") {
+          await notify("Question requires input")
+          return
+        }
+        // V1 exposes payloads as properties and filters events by directory.
+        if (event.type !== "permission.asked" || !isRecord(event.properties)) return
+        const request = event.properties
+        if (typeof request.id !== "string" || typeof request.sessionID !== "string") return
+        if (typeof request.permission !== "string" || !Array.isArray(request.patterns)) return
+        if (!request.patterns.every((pattern) => typeof pattern === "string")) return
+        enqueue({
+          id: request.id,
+          sessionID: request.sessionID,
+          action: request.permission,
+          resources: request.patterns,
+          metadata: isRecord(request.metadata) ? request.metadata : undefined,
+        })
+      },
+    }
+  },
+  async setup(ctx: V2Context) {
+    const enqueue = permissionQueue(async (request, decision) => {
+      await ctx.permission.reply({ sessionID: request.sessionID, requestID: request.id, decision })
+    })
     const controller = new AbortController()
 
     // Every loaded location runs its own plugin instance and receives the
@@ -276,38 +325,6 @@ const DesktopNotifications: PluginApi.Plugin = {
     const owned = (event: unknown) => {
       const directory = eventDirectory(event)
       return directory === undefined || directory === ctx.location.directory
-    }
-
-    const answer = async (request: PermissionRequest) => {
-      let decision: Decision = "reject"
-
-      try {
-        decision = await prompt(request)
-      } catch (error) {
-        console.error("Failed to show OpenCode permission prompt", error)
-      }
-
-      try {
-        await ctx.permission.reply({
-          sessionID: request.sessionID,
-          requestID: request.id,
-          decision,
-        })
-      } catch (error) {
-        console.error("Failed to answer OpenCode permission request", error)
-        await notify("Failed to answer permission request")
-      }
-    }
-
-    const enqueue = (request: PermissionRequest) => {
-      if (handled.has(request.id)) return
-      handled.add(request.id)
-
-      queue = queue
-        .then(() => answer(request))
-        .catch((error) => {
-          console.error("Failed to handle OpenCode permission request", error)
-        })
     }
 
     const consume = (async () => {
@@ -334,6 +351,31 @@ const DesktopNotifications: PluginApi.Plugin = {
       await consume.catch(() => {})
     }
   },
+}
+
+function permissionQueue(reply: (request: PermissionRequest, decision: Decision) => Promise<void>) {
+  let queue: Promise<void> = Promise.resolve()
+  const handled = new Set<string>()
+  return (request: PermissionRequest) => {
+    if (handled.has(request.id)) return
+    handled.add(request.id)
+    queue = queue.then(async () => {
+      let decision: Decision = "reject"
+      try {
+        decision = await prompt(request)
+      } catch (error) {
+        console.error("Failed to show OpenCode permission prompt", error)
+      }
+      try {
+        await reply(request, decision)
+      } catch (error) {
+        console.error("Failed to answer OpenCode permission request", error)
+        await notify("Failed to answer permission request")
+      }
+    }).catch((error) => {
+      console.error("Failed to handle OpenCode permission request", error)
+    })
+  }
 }
 
 export default DesktopNotifications
