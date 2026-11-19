@@ -146,6 +146,7 @@ yazi = "latest"
 zellij = "latest"
 "github:huacnlee/disktree" = "latest"
 # AI tools cli
+agy = "latest"
 claude = "latest"
 codex = "latest"
 oh-my-pi = "latest"
