@@ -70,6 +70,7 @@ adopt = true
 
 # Native macOS replacements for webapps.
 "brew-cask:chatgpt" = { version = "latest", os = "macos" }
+"brew-cask:claude" = { version = "latest", os = "macos" }
 "brew-cask:grammarly-desktop" = { version = "latest", os = "macos" }
 "brew-cask:notion" = { version = "latest", os = "macos" }
 "brew-cask:proton-drive" = { version = "latest", os = "macos" }
