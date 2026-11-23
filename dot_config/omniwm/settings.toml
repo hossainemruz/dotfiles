@@ -1,12 +1,8 @@
-monitorBarOverrides = []
-monitorDwindleOverrides = []
-monitorGapOverrides = []
-monitorNiriOverrides = []
-monitorOrientationOverrides = []
-schemaVersion = 3
+schemaVersion = 5
 
 [appearance]
 mode = "dark"
+tabRailAppIcons = false
 
 [borders]
 enabled = false
@@ -20,6 +16,7 @@ red = 0.08458520228437894
 
 [clipboard]
 historyEnabled = false
+ignoredTypes = []
 maxItemBytes = 8388608
 maxItems = 200
 maxTotalBytes = 67108864
@@ -34,12 +31,14 @@ useGlobalGaps = true
 
 [focus]
 crossesMonitorAtEdge = false
-followsMouse = true
+edgeNavigationInterval = 1.5
+followsMouse = false
+followsMouseOnlyFullyVisible = false
 followsWindowToMonitor = true
 lockModifier = "off"
 moveCrossesMonitorAtEdge = false
 moveMouseToFocusedWindow = true
-raiseOnMouseFocus = false
+raiseOnMouseFocus = true
 
 [gaps]
 fullscreenUsesOuterGaps = false
@@ -52,6 +51,7 @@ right = 0.0
 top = 0.0
 
 [general]
+animationSpeed = 2.0
 animationsEnabled = true
 defaultLayoutType = "niri"
 hotkeysEnabled = true
@@ -60,17 +60,31 @@ ipcEnabled = true
 preventSleepEnabled = false
 systemHyperTrigger = "None"
 updateChecksEnabled = true
+workspaceAutoBackAndForth = false
 
 [gestures]
+adoptNativeMoveAcrossDisplays = false
+adoptNativeResize = false
+dwindleGroupDragAcrossDisplays = "group"
 fingerCount = 3
 invertDirection = true
 mouseMoveModifierKey = "option"
 mouseResizeModifierKey = "option"
+mouseWheelSensitivity = 1.0
+overviewGestureEnabled = false
+overviewGestureFingerCount = 4
+resizePreviewStyle = "live"
 scrollEnabled = true
 scrollModifierKey = "optionShift"
 scrollSensitivity = 5.0
 trackpadScrollStyle = "snap"
+windowGestureSensitivity = 1.0
+windowMoveEnabled = false
+windowMoveFingerCount = 4
+windowResizeEnabled = false
+windowResizeFingerCount = 3
 workspaceSwipeAxis = "vertical"
+workspaceSwipeEdgeBehavior = "cycle"
 workspaceSwipeEnabled = false
 workspaceSwipeFingerCount = 3
 
@@ -79,21 +93,42 @@ enabled = true
 hiddenBundleIDs = []
 rehideIntervalSeconds = 5.0
 
+[island]
+enabled = false
+
+[keyboardModes]
+
+[launcher]
+appFolders = []
+cliFolders = []
+entries = []
+shell = "system"
+shellExecutable = ""
+terminal = "terminal"
+
 [mouseWarp]
 constrainToArrangement = false
-enabled = true
+enabled = false
 margin = 1
 
 [niri]
+allowOverscroll = false
 alwaysCenterSingleColumn = true
-centerFocusedColumn = "always"
-containerPrimarySpanPresets = [0.3333333333333333, 0.5, 0.6666666666666666]
-defaultContainerPrimarySpan = 0.98
+centerFocusedColumn = "never"
+containerPrimarySpanPresets = [0.3333333333333333, 0.5, 0.95]
+edgeGaps = false
 infiniteLoop = false
+moveWindowStacksIntoColumn = true
+overscrollVisibleStripPercent = 5
+resizeStepPercent = 5
 singleWindowFit = "fill"
-visibleContainerCount = 2
+visibleContainerCount = 1
 
 [overview]
+enabled = true
+invertScrollDirection = false
+matchFocusBorder = true
+mouseScrollSpeed = 1.0
 zoom = 1.0
 
 [overview.backdrop]
@@ -126,44 +161,110 @@ red = 0.3
 animationDuration = 0.2
 autoHide = false
 backgroundBlurRadius = 0
-backgroundEffect = "standardBlur"
+backgroundEffect = "glassRegular"
 enabled = true
-heightPercent = 50.0
+heightPercent = 70.0
 monitorMode = "focusedWindow"
 opacity = 1.0
 position = "center"
-widthPercent = 50.0
+provider = "ghostty"
+widthPercent = 70.0
 
 [routing]
-arrangements = []
 mode = "macOS"
+
+[[routing.arrangements]]
+id = "BEF9C011-CAFE-4518-B99D-B0E94C69012C"
+
+[[routing.arrangements.monitors]]
+gridColumn = 1
+gridRow = 0
+monitorDisplayUUID = "41461342-0BC8-4CCA-B311-2D30D819C169"
+monitorName = "USB Display: LG ULTRAGEAR"
+
+[[routing.arrangements.monitors]]
+gridColumn = 0
+gridRow = 0
+monitorDisplayUUID = "37D8832A-2D66-02CA-B9F7-8F30A301B230"
+monitorName = "Built-in Retina Display"
+
+[[routing.arrangements]]
+id = "F7B4E36E-0360-40DC-9159-269CA1739427"
+
+[[routing.arrangements.monitors]]
+gridColumn = 1
+gridRow = 0
+monitorDisplayUUID = "5AA0FAE6-E956-4811-BEDB-E118073C6050"
+monitorName = "LG ULTRAGEAR"
+
+[[routing.arrangements.monitors]]
+gridColumn = 0
+gridRow = 0
+monitorDisplayUUID = "37D8832A-2D66-02CA-B9F7-8F30A301B230"
+monitorName = "Built-in Retina Display"
 
 [scratchpads]
 
 [scratchpads.labels]
 
+[shellPermissions]
+programs = []
+widgets = []
+
+[shellPermissions.services]
+lyrics = true
+weather = true
+
 [statusBar]
 showAppNames = false
+showIcon = true
 showWorkspaceName = true
 useWorkspaceId = false
 
+[statusMenu]
+hiddenControls = []
+hiddenMenuItems = []
+showControlHelp = true
+showControls = true
+showMenuItems = true
+
+[windowSwitcher]
+commandTab = "activeWorkspace"
+enabled = true
+optionTab = "allWorkspaces"
+order = "omniLayout"
+scope = "allWorkspaces"
+showFooter = true
+
 [workspaceBar]
+autoHide = false
+autoHideHideDelayMilliseconds = 0.0
+autoHideRevealDelayMilliseconds = 0.0
 backgroundOpacity = 0.1
 deduplicateAppIcons = false
-enabled = false
+enabled = true
 excludedBundleIDs = []
+fullWidth = false
+fullWidthNotchMode = "rightOfNotch"
 height = 24.0
 hideEmptyWorkspaces = false
 hideInNativeFullscreen = false
+hoverPreviewsEnabled = true
 notchActiveZoneWidth = 180.0
 notchMode = "moveBelowMenuBar"
+notificationBadgeRefreshIntervalSeconds = 5.0
+notificationBadges = "off"
 position = "overlappingMenuBar"
 reserveLayoutSpace = false
 revealHoldMilliseconds = 200.0
 revealModifier = "off"
+showAccentHighlights = true
 showFloatingWindows = false
+showItemBackgrounds = true
 showLabels = true
+solidBlackBackground = false
 systemStatsButton = false
+transparentBackground = false
 windowLevel = "popup"
 xOffset = 0.0
 yOffset = 0.0
@@ -201,7 +302,7 @@ minHeight = 220.0
 minWidth = 574.0
 
 [[appRules]]
-assignToWorkspace = "1"
+assignToWorkspace = "2"
 bundleId = "app.zen-browser.zen"
 id = "1CF39647-F30D-4E76-9686-79B551F1B094"
 minHeight = 495.0
@@ -232,7 +333,6 @@ minHeight = 500.0
 minWidth = 800.0
 
 [[appRules]]
-assignToWorkspace = "2"
 bundleId = "com.mitchellh.ghostty"
 id = "7876C9EF-437E-4D4F-9C27-B1B02F4AABCE"
 minHeight = 48.0
@@ -872,27 +972,27 @@ id = "resetWindowSecondarySpan"
 
 [[hotkeys]]
 binding = "Option+Minus"
-id = "setContainerPrimarySpan.decrease10Percent"
+id = "resizeContainerPrimarySpan.shrink"
 
 [[hotkeys]]
 binding = "Option+Equal"
-id = "setContainerPrimarySpan.increase10Percent"
+id = "resizeContainerPrimarySpan.grow"
 
 [[hotkeys]]
 binding = "Unassigned"
-id = "setWindowPrimarySpan.decrease10Percent"
+id = "resizeWindowPrimarySpan.shrink"
 
 [[hotkeys]]
 binding = "Unassigned"
-id = "setWindowPrimarySpan.increase10Percent"
+id = "resizeWindowPrimarySpan.grow"
 
 [[hotkeys]]
 binding = "Option+Shift+Minus"
-id = "setWindowSecondarySpan.decrease10Percent"
+id = "resizeWindowSecondarySpan.shrink"
 
 [[hotkeys]]
 binding = "Option+Shift+Equal"
-id = "setWindowSecondarySpan.increase10Percent"
+id = "resizeWindowSecondarySpan.grow"
 
 [[hotkeys]]
 binding = "Option+Shift+B"
@@ -955,12 +1055,88 @@ binding = "Unassigned"
 id = "preselectClear"
 
 [[hotkeys]]
+binding = "Unassigned"
+id = "volumeUp"
+
+[[hotkeys]]
+binding = "Unassigned"
+id = "volumeDown"
+
+[[hotkeys]]
+binding = "Unassigned"
+id = "volumeMute"
+
+[[hotkeys]]
+binding = "Unassigned"
+id = "mediaPlayPause"
+
+[[hotkeys]]
+binding = "Unassigned"
+id = "mediaNext"
+
+[[hotkeys]]
+binding = "Unassigned"
+id = "mediaPrevious"
+
+[[hotkeys]]
+binding = "Unassigned"
+id = "toggleShortcutPause"
+
+[[hotkeys]]
+binding = "Unassigned"
+id = "beginPrefix"
+
+[[hotkeys]]
+binding = "Unassigned"
+id = "toggleWindowMode"
+
+[[hotkeys]]
+binding = "Unassigned"
+id = "exitKeyboardMode"
+
+[[hotkeys]]
+binding = "Unassigned"
+id = "openShellApp.example"
+
+[[hotkeys]]
+binding = "Unassigned"
+id = "newShellAppWindow.example"
+
+[[hotkeys]]
 binding = "Control+Option+Space"
 id = "openCommandPalette"
 
 [[hotkeys]]
+binding = "Unassigned"
+id = "openCommandPalette.windows"
+
+[[hotkeys]]
+binding = "Unassigned"
+id = "openCommandPalette.menu"
+
+[[hotkeys]]
+binding = "Unassigned"
+id = "openCommandPalette.clipboard"
+
+[[hotkeys]]
+binding = "Unassigned"
+id = "openCommandPalette.commands"
+
+[[hotkeys]]
+binding = "Unassigned"
+id = "openCommandPalette.applications"
+
+[[hotkeys]]
+binding = "Unassigned"
+id = "openCommandPalette.files"
+
+[[hotkeys]]
 binding = "Option+Shift+R"
 id = "raiseAllFloatingWindows"
+
+[[hotkeys]]
+binding = "Unassigned"
+id = "toggleFloatingFocus"
 
 [[hotkeys]]
 binding = "Unassigned"
@@ -977,6 +1153,14 @@ id = "closeFocusedWindow"
 [[hotkeys]]
 binding = "Control+Option+M"
 id = "openMenuAnywhere"
+
+[[hotkeys]]
+binding = "Unassigned"
+id = "setWindowMark"
+
+[[hotkeys]]
+binding = "Unassigned"
+id = "removeWindowMark"
 
 [[hotkeys]]
 binding = "Unassigned"
@@ -1002,6 +1186,46 @@ id = "toggleOverview"
 binding = "Unassigned"
 id = "toggleSystemStats"
 
+[[hotkeys]]
+binding = "Unassigned"
+id = "toggleShellWidget.battery-details"
+
+[[hotkeys]]
+binding = "Unassigned"
+id = "toggleShellWidget.clock"
+
+[[hotkeys]]
+binding = "Unassigned"
+id = "toggleShellWidget.control-center"
+
+[[hotkeys]]
+binding = "Unassigned"
+id = "toggleShellWidget.hidden-bar"
+
+[[hotkeys]]
+binding = "Unassigned"
+id = "toggleShellWidget.media"
+
+[[hotkeys]]
+binding = "Unassigned"
+id = "toggleShellWidget.notifications"
+
+[[hotkeys]]
+binding = "Unassigned"
+id = "toggleShellWidget.system-stats"
+
+[[hotkeys]]
+binding = "Unassigned"
+id = "toggleShellWidget.volume"
+
+[[hotkeys]]
+binding = "Unassigned"
+id = "toggleShellWidget.wifi"
+
+[[hotkeys]]
+binding = "Unassigned"
+id = "toggleShellWidget.workspaces"
+
 [[workspaces]]
 id = "AD36F001-C57E-41A5-AC1D-DF5249D007F0"
 layoutType = "niri"
@@ -1016,7 +1240,7 @@ layoutType = "niri"
 name = "2"
 
 [workspaces.monitorAssignment]
-type = "main"
+type = "secondary"
 
 [[workspaces]]
 id = "BEB842B5-E894-4791-9FD1-397C3CDD3538"
@@ -1024,54 +1248,4 @@ layoutType = "niri"
 name = "3"
 
 [workspaces.monitorAssignment]
-type = "main"
-
-[[workspaces]]
-id = "248AA883-2261-4D45-943C-79C0E46A232B"
-layoutType = "niri"
-name = "4"
-
-[workspaces.monitorAssignment]
-type = "main"
-
-[[workspaces]]
-id = "8B8C45D6-CE9E-41D9-BD50-BE4989D5E3DE"
-layoutType = "niri"
-name = "5"
-
-[workspaces.monitorAssignment]
-type = "main"
-
-[[workspaces]]
-displayName = "❤️"
-id = "5953F2BF-A378-4266-91B2-287174C4FA4D"
-layoutType = "niri"
-name = "6"
-
-[workspaces.monitorAssignment]
 type = "secondary"
-
-[[workspaces]]
-displayName = "🚀"
-id = "A7D5E104-6985-4516-8ED5-07F144F2A33D"
-layoutType = "niri"
-name = "7"
-
-[workspaces.monitorAssignment]
-type = "secondary"
-
-[[workspaces]]
-id = "0E18F6B0-345A-4078-8B21-33641F07A861"
-layoutType = "niri"
-name = "8"
-
-[workspaces.monitorAssignment]
-type = "main"
-
-[[workspaces]]
-id = "8D4D711C-2B2F-4FEC-86BF-FA952037738A"
-layoutType = "niri"
-name = "9"
-
-[workspaces.monitorAssignment]
-type = "main"
