@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Change title — explained</title>
+<!--
+  Devcroft tutorial template. Keep this file self-contained and offline:
+  inline CSS/JS/SVG only, no CDN links, no fetch, data: images only.
+  Replace every placeholder, cite repository-relative path:line for each
+  substantive claim, and label inference and simulations. See
+  references/tutorials.md for the full contract.
+-->
+<style>
+  :root {
+    color-scheme: light dark;
+    --bg: #f5f7fa; --surface: #ffffff; --border: #d6dee8; --text: #131a23;
+    --muted: #526174; --accent: #8a4b00; --soft: rgba(138, 75, 0, .10);
+    --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0e151d; --surface: #151f2a; --border: #2a3a4d; --text: #e6edf5;
+      --muted: #9fb0c3; --accent: #ffb547; --soft: rgba(255, 181, 71, .14);
+    }
+  }
+  html { font-size: 17px; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font: 400 1rem/1.6 var(--font); -webkit-font-smoothing: antialiased;
+  }
+  code { font: .875em var(--mono); }
+  .shell { max-width: 76rem; margin: 0 auto; padding: 2rem 1.5rem 4.5rem; display: grid; gap: 2.5rem; }
+  @media (min-width: 62.5rem) {
+    .shell { grid-template-columns: 11rem minmax(0, 1fr); gap: 3rem; align-items: start; }
+    .toc { position: sticky; top: 1.5rem; }
+  }
+  .toc ol { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: .5rem 1rem; }
+  @media (min-width: 62.5rem) { .toc ol { flex-direction: column; } }
+  .toc a { color: var(--muted); text-decoration: none; font-size: .875rem; }
+  .toc a:hover, .toc a:focus-visible { color: var(--text); }
+  main { display: grid; gap: 3rem; min-width: 0; }
+  header { display: grid; gap: .75rem; }
+  .eyebrow { margin: 0; font: 600 .75rem/1.4 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+  h1 { margin: 0; font-size: clamp(2rem, 5vw, 3rem); line-height: 1.05; letter-spacing: -.02em; text-wrap: balance; max-width: 20ch; }
+  h2 { margin: 0; font-size: 1.5rem; line-height: 1.2; letter-spacing: -.015em; text-wrap: balance; }
+  p { margin: 0; max-width: 68ch; }
+  .lead { font-size: 1.2rem; color: var(--muted); }
+  .lead b { color: var(--text); }
+  .meta { font: 500 .8125rem/1.5 var(--mono); color: var(--muted); }
+  section { display: grid; gap: 1rem; min-width: 0; }
+  .sec-head { border-top: 1px solid var(--border); padding-top: 1.25rem; display: grid; gap: .5rem; }
+  figure { margin: 0; display: grid; gap: .5rem; }
+  .frame { border: 1px solid var(--border); border-radius: 6px; background: var(--surface); padding: 1rem; overflow-x: auto; }
+  svg { display: block; width: 100%; min-width: 640px; height: auto; }
+  figcaption { color: var(--muted); max-width: 68ch; }
+  .fig-n { color: var(--text); font: 600 .8125rem var(--mono); margin-right: .4rem; }
+  .node { fill: var(--surface); stroke: var(--border); stroke-width: 1.5; }
+  .label { fill: var(--text); font: 600 14px var(--font); }
+  .sub { fill: var(--muted); font: 500 12px var(--mono); }
+  .edge { stroke: var(--muted); stroke-width: 1.75; fill: none; marker-end: url(#arrow); }
+  .edge-label { fill: var(--muted); font: 500 12px var(--mono); }
+  .open { display: grid; gap: .5rem; }
+  .open li { max-width: 68ch; }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+  <nav class="toc" aria-label="Sections">
+    <ol>
+      <li><a href="#change">The change</a></li>
+      <li><a href="#questions">Open questions</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <header>
+      <p class="eyebrow">PR-000 · path/to/change</p>
+      <h1>The main idea as a headline</h1>
+      <p class="lead">One sentence that states the answer. <b>Bold the one thing to remember.</b></p>
+      <p class="meta">branch · N commits ahead · N files · +adds −dels</p>
+    </header>
+
+    <section id="change">
+      <div class="sec-head">
+        <p class="eyebrow">The change</p>
+        <h2>A heading that states the takeaway</h2>
+      </div>
+
+      <figure class="frame">
+        <svg viewBox="0 0 760 220" role="img" aria-label="Before and after the change">
+          <defs>
+            <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--muted)"></path>
+            </marker>
+          </defs>
+          <rect class="node" x="20" y="60" width="200" height="80" rx="6"></rect>
+          <text class="label" x="120" y="95" text-anchor="middle">Before</text>
+          <text class="sub" x="120" y="118" text-anchor="middle">path/file.ext:42</text>
+          <path class="edge" d="M 240 100 H 380"></path>
+          <text class="edge-label" x="310" y="90" text-anchor="middle">replaces</text>
+          <rect class="node" x="400" y="60" width="200" height="80" rx="6"></rect>
+          <text class="label" x="500" y="95" text-anchor="middle">After</text>
+          <text class="sub" x="500" y="118" text-anchor="middle">path/file.ext:88</text>
+        </svg>
+        <figcaption><span class="fig-n">Fig. 1</span> Claim in one sentence, citing <code>path/file.ext:42</code>.</figcaption>
+      </figure>
+
+      <p>Short prose keeps one idea per sentence. Cite evidence, and label what is
+      inference instead of observation.</p>
+    </section>
+
+    <section id="questions">
+      <div class="sec-head">
+        <p class="eyebrow">Open questions</p>
+        <h2>What remains uncertain</h2>
+      </div>
+      <ul class="open">
+        <li>Question or unverified assumption, with the path that would confirm it.</li>
+      </ul>
+    </section>
+  </main>
+</div>
+</body>
+</html>

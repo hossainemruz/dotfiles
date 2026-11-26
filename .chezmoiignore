@@ -13,6 +13,7 @@ icons/
 .config/opencode/node_modules/
 .config/opencode/.gitignore
 .config/opencode/package.json
+**/.DS_Store
 
 {{ if eq .chezmoi.os "darwin" -}}
 # Linux-specific files
