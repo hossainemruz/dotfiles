@@ -1,6 +1,7 @@
 [settings]
 minimum_release_age = "3d"
 minimum_release_age_excludes = [
+  "agy",
   "opencode",
   "opencode-v2",
   "claude",
